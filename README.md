@@ -10,6 +10,9 @@
 
 ## Milestone 1 (Friday 3rd April, 5pm)
 
+**Milestone 1**, handed in in the format of a Jupiter notebook, the dynamic Google Colab version is accessible at the following link:
+
+
 **10% of the final grade**
 
 
