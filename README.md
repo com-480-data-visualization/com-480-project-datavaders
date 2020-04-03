@@ -10,10 +10,9 @@
 
 ## Milestone 1 (Friday 3rd April, 5pm)
 
-**Milestone 1**, handed in in the format of a Jupiter notebook, the dynamic Google Colab version is accessible at the following link:
-
-
 **10% of the final grade**
+
+Presented in the format of a Jupiter notebook via Google Colab, this submission outlines the dataset, problem statement, and related work. It also details the data pre-processing and exploratory visualizations that have been conducted thus far. The data is cleaned and displayed using Python (with help from plotly and pandas). Please view the submission online [here](https://colab.research.google.com/drive/1j7axnePlb2V8sSxtjjNgg-mB9HgubnF6).
 
 
 ## Milestone 2 (Friday 1st May, 5pm)
