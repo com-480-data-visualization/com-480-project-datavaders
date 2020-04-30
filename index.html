@@ -1,14 +1,42 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-
-<!-- Load d3.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.js"></script>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="style.css" rel="stylesheet" type="text/css">
+  <!-- Load minified d3.js library -->
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script src="https://d3js.org/d3.v5.min.js"></script>
-
-<!-- Create an element where the map will take place -->
-
-<svg class='ranking'></svg>
+  <title>Data Visualization</title>
+</head>
+<body>
+  <p>Widget #1 (World Chloropleth): Summary visual of all country happiness scores worldwide across different years.</p>
+  <svg id="my_dataviz" width="400" height="300"></svg>
+  <p>Widget #2 (Scatter Plot): View correlations between country happiness score and various sub-metrics across different years.</p>
+  <div>
+    <select id="submetric" name="submetric" onchange="changeSubmetric(this)">
+      <option value="gdp_per_capita">GDP Per Capita</option>
+      <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
+      <option value="freedom_to_life_choice">Freedom</option>
+      <option value="generosity">Generosity</option>
+      <option value="corruption_perceptions">Perceived Corruption</option>
+    </select>
+    <select id="year" name="year" onchange="changeYear(this)">
+      <option value="2015">2015</option>
+      <option value="2016">2016</option>
+      <option value="2017">2017</option>
+      <option value="2018">2018</option>
+      <option value="2019" selected>2019</option>
+    </select>
+  <div id="scatter"></div>
+  <p>Widget #3 (Stacked Bar Chart): View the total happiness score of each country, as well as a breakdown of sub-metrics within.</p>
+  <svg class='ranking'></svg>
 <script src='bar_chart.js'></script>
-
-
+  
+  <script src="scatter.js"></script>
+  <script src="map.js"></script>
+</body>
+</html>

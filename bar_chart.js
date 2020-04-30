@@ -21,7 +21,7 @@ var x = d3.scaleLinear()
 var z = d3.scaleOrdinal()
     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 let datacsv = null;
-d3.csv("./Preprocessing/2015.csv").then(function(d) {
+d3.csv("./Preprocessing/2015.csv", function(d) {
     datacsv = d;
     var data = datacsv;
     console.log(data);
@@ -54,7 +54,7 @@ d3.csv("./Preprocessing/2015.csv").then(function(d) {
 
     g.append("g")
         .attr("class", "axis")
-        .attr("transform", "translate(0,"+height+")")
+        .attr("transform", "translate(0,"+(height + 1450)+")")
         .call(d3.axisBottom(x).ticks(null, "s"))
     .append("text")
         .attr("y", 2)
@@ -75,7 +75,7 @@ d3.csv("./Preprocessing/2015.csv").then(function(d) {
     .data(keys.slice().reverse())
     .enter().append("g")
     //.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-    .attr("transform", function(d, i) { return "translate(-50," + (300 + i * 20) + ")"; });
+    .attr("transform", function(d, i) { return "translate(500," + (500 + i * 20) + ")"; });
 
     legend.append("rect")
         .attr("x", width - 19)
