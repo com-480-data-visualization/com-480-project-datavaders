@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+.right_column {
+  display: flex;
+  flex-direction: column;
+}
+
+.ranking_wrapper {
+  height: 200px;
+  overflow-y: scroll;
+}
+

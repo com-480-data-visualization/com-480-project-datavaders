@@ -14,45 +14,55 @@
   <title>Data Visualization</title>
 </head>
 <body>
-  <div>
-  <p>Widget #1 (World Chloropleth): Summary visual of all country happiness scores worldwide across different years.</p>
-  <select id="map_year" name="map_year" onchange="changeMapYear(this)">
-    <option value="2015">2015</option>
-    <option value="2016">2016</option>
-    <option value="2017">2017</option>
-    <option value="2018">2018</option>
-    <option value="2019" selected>2019</option>
-  </select>
+  <div class="container">
+    <div class="map_layout">
+      <div>
+      <p>Widget #1 (World Chloropleth): Summary visual of all country happiness scores worldwide across different years.</p>
+      <select id="map_year" name="map_year" onchange="changeMapYear(this)">
+        <option value="2015">2015</option>
+        <option value="2016">2016</option>
+        <option value="2017">2017</option>
+        <option value="2018">2018</option>
+        <option value="2019" selected>2019</option>
+      </select>
+      </div>
+      <svg id="map" width="700" height="500"></svg>
+    </div>
+    <div class="right_column">
+      <div class="scatter_layout">
+        <p>Widget #2 (Scatter Plot): View correlations between country happiness score and various sub-metrics across different years.</p>
+        <div>
+          <select id="submetric" name="submetric" onchange="changeSubmetric(this)">
+            <option value="gdp_per_capita">GDP Per Capita</option>
+            <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
+            <option value="freedom_to_life_choice">Freedom</option>
+            <option value="generosity">Generosity</option>
+            <option value="corruption_perceptions">Perceived Corruption</option>
+          </select>
+          <select id="year" name="year" onchange="changeYear(this)">
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option value="2019" selected>2019</option>
+          </select>
+        <div id="scatter"></div>
+        <div>
+      </div>
+      <div class="bar_layout">
+        <p>Widget #3 (Stacked Bar Chart): View the total happiness score of each country, as well as a breakdown of sub-metrics within.</p>
+        <select id="bar_year" name="bar_year" onchange="changeBarYear(this)">
+          <option value="2015">2015</option>
+          <option value="2016">2016</option>
+          <option value="2017">2017</option>
+          <option value="2018">2018</option>
+          <option value="2019" selected>2019</option>
+        </select>
+        </div>
+        <svg class='ranking'></svg>
+      </div>
+    </div>
   </div>
-  <svg id="map" width="960" height="600"></svg>
-  <p>Widget #2 (Scatter Plot): View correlations between country happiness score and various sub-metrics across different years.</p>
-  <div>
-    <select id="submetric" name="submetric" onchange="changeSubmetric(this)">
-      <option value="gdp_per_capita">GDP Per Capita</option>
-      <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
-      <option value="freedom_to_life_choice">Freedom</option>
-      <option value="generosity">Generosity</option>
-      <option value="corruption_perceptions">Perceived Corruption</option>
-    </select>
-    <select id="year" name="year" onchange="changeYear(this)">
-      <option value="2015">2015</option>
-      <option value="2016">2016</option>
-      <option value="2017">2017</option>
-      <option value="2018">2018</option>
-      <option value="2019" selected>2019</option>
-    </select>
-  <div id="scatter"></div>
-  <div>
-  <p>Widget #3 (Stacked Bar Chart): View the total happiness score of each country, as well as a breakdown of sub-metrics within.</p>
-  <select id="bar_year" name="bar_year" onchange="changeBarYear(this)">
-    <option value="2015">2015</option>
-    <option value="2016">2016</option>
-    <option value="2017">2017</option>
-    <option value="2018">2018</option>
-    <option value="2019" selected>2019</option>
-  </select>
-  </div>
-  <svg class='ranking'></svg>
 <script src='bar_chart.js'></script>
   
   <script src="scatter.js"></script>

@@ -14,8 +14,8 @@ const getMaxValueRoundedUp = () => {
 
 // Set the dimensions and margins of the scatter plot.
 let scatter_margin = {top: 10, right: 30, bottom: 40, left: 50},
-    scatter_width = 1200 - scatter_margin.left - scatter_margin.right,
-    scatter_height = 520 - scatter_margin.top - scatter_margin.bottom;
+    scatter_width = 600 - scatter_margin.left - scatter_margin.right,
+    scatter_height = 260 - scatter_margin.top - scatter_margin.bottom;
 
 // Append the svg object to the body of the page.
 let scatter_svg = d3.select("#scatter")

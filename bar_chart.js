@@ -3,11 +3,11 @@ var keys;
 
 let bar_year = '2019';
 
-var width = 1080,
-    height = 1800;
+var width = 600,
+    height = 260;
 
 var svg = d3.select(".ranking").attr("width", width).attr("height", height),
-    margin = {top: 20, right: 20, bottom: 30, left: 150},
+    margin = {top: 20, right: 20, bottom: 30, left: 250},
     width = +svg.attr("width") - margin.left - margin.right,
     height = +svg.attr("height") - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -24,13 +24,13 @@ var z = d3.scaleOrdinal()
     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
 const bar_update = () => {
-    d3.selectAll('rect').remove();
-    d3.selectAll('text').remove();
+    d3.select('.ranking').selectAll('rect').remove();
+    d3.select('.ranking').selectAll('text').remove();
     d3.selectAll('tick').remove();
     let datacsv = null;
 d3.csv(`./Preprocessing/${bar_year}.csv`, function(d) {
     datacsv = d;
-    var data = datacsv;
+    var data = datacsv.slice(0, 10);
     console.log(data);
     dataset = data;
     if (bar_year === '2015') {
@@ -110,7 +110,7 @@ d3.csv(`./Preprocessing/${bar_year}.csv`, function(d) {
     .selectAll("g")
     .data(keys.slice().reverse())
     .enter().append("g")
-    .attr("transform", function(d, i) { return "translate(0," + (500 + i * 20) + ")"; });
+    .attr("transform", function(d, i) { return "translate(-400," + (35 + i * 20) + ")"; });
     // .attr("transform", function(d, i) { return "translate(500," + (500 + i * 20) + ")"; });
 
     legend.append("rect")
