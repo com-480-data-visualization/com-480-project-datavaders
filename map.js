@@ -271,7 +271,6 @@ const map_update = () => {
   .await(ready);
 
   function ready(error, topo) {
-  if (error) throw error;
 
   // Draw the map
   map_svg.append("g")
