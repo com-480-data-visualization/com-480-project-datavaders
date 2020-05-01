@@ -261,7 +261,7 @@ const map_update = () => {
 
   // Load external data and boot
   d3.queue()
-  .defer(d3.json, "http://enjalot.github.io/wwsd/data/world/world-110m.geojson")
+  .defer(d3.json, "https://enjalot.github.io/wwsd/data/world/world-110m.geojson")
   .defer(d3.csv, "./Preprocessing/finaldf.csv", function(d) { 
     if (d.year === map_year) {
       map_data.set(map_codes.get(d.country), Number(d.score)); 
@@ -271,6 +271,7 @@ const map_update = () => {
   .await(ready);
 
   function ready(error, topo) {
+  if (error) throw error;
 
   // Draw the map
   map_svg.append("g")
