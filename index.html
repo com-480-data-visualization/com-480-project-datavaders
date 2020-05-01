@@ -13,7 +13,16 @@
   <title>Data Visualization</title>
 </head>
 <body>
+  <div>
   <p>Widget #1 (World Chloropleth): Summary visual of all country happiness scores worldwide across different years.</p>
+  <select id="map_year" name="map_year" onchange="changeMapYear(this)">
+    <option value="2015">2015</option>
+    <option value="2016">2016</option>
+    <option value="2017">2017</option>
+    <option value="2018">2018</option>
+    <option value="2019" selected>2019</option>
+  </select>
+  </div>
   <svg id="my_dataviz" width="400" height="300"></svg>
   <p>Widget #2 (Scatter Plot): View correlations between country happiness score and various sub-metrics across different years.</p>
   <div>

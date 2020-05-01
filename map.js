@@ -215,45 +215,63 @@ let map_codes = new Map([
   ['Taiwan', 'TWN']
 ]);
 
-// Create the map.
-var svg = d3.select("svg"),
-  width = +svg.attr("width"),
-  height = +svg.attr("height");
+let map_year = '2015';
+
+const map_update = () => {
+  var svg = null;
+  // Create the map.
+svg = d3.select("svg"),
+width = +svg.attr("width"),
+height = +svg.attr("height");
 
 // Map and projection
 var path = d3.geoPath();
 var projection = d3.geoMercator()
-  .scale(70)
-  .center([0,20])
-  .translate([width / 2, height / 2]);
+.scale(70)
+.center([0,20])
+.translate([width / 2, height / 2]);
 
 // Data and color scale
 var data = d3.map();
 var colorScale = d3.scaleThreshold()
-  .domain([2, 3, 4, 5, 6, 7])
-  .range(d3.schemeBlues[7]);
+.domain([2, 3, 4, 5, 6, 7])
+.range(d3.schemeBlues[7]);
 
 // Load external geojson world map as well as preprocessed data from from Preprocessing/finaldf.csv. 
 d3.queue()
-  .defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
-  .defer(d3.csv, "./Preprocessing/finaldf.csv", function(d) { data.set(map_codes.get(d.country), Number(d.score)); })
-  .await(ready);
+.defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
+.defer(d3.csv, "./Preprocessing/finaldf.csv", function(d) {
+  if (d.year === map_year) {
+    data.set(map_codes.get(d.country), Number(d.score)); 
+  } 
+})
+.await(ready);
 
 function ready(error, topo) {
 
-  // Draw the map
-  svg.append("g")
-    .selectAll("path")
-    .data(topo.features)
-    .enter()
-    .append("path")
-      // draw each country
-      .attr("d", d3.geoPath()
-        .projection(projection)
-      )
-      // set the color of each country
-      .attr("fill", function (d) {
-        d.total = data.get(d.id) || 0;
-        return colorScale(d.total);
-      });
-    }
+// Draw the map
+svg.append("g")
+  .selectAll("path")
+  .data(topo.features)
+  .enter()
+  .append("path")
+    // draw each country
+    .attr("d", d3.geoPath()
+      .projection(projection)
+    )
+    // set the color of each country
+    .attr("fill", function (d) {
+      d.total = data.get(d.id) || 0;
+      return colorScale(d.total);
+    });
+  }
+}
+
+map_update();
+
+changeMapYear = () => {
+  map_year = document.getElementById('map_year').value;
+  map_update();
+}
+
+
