@@ -19,7 +19,7 @@ The final, processed dataset to be worked with can be found at Preprocessing/fin
 ## Milestone 2 (Friday 1st May, 5pm)
 
 **10% of the final grade**
-
+You can access the pdf report [by clicking here](milestonetwo_report.pdf), and the website skeleton [by clicking here](https://com-480-data-visualization.github.io/com-480-project-datavaders/).
 
 
 
