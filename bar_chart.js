@@ -1,6 +1,8 @@
 var dataset;
 var keys;
 
+let bar_year = '2019';
+
 var width = 1080,
     height = 1800;
 
@@ -20,18 +22,51 @@ var x = d3.scaleLinear()
 
 var z = d3.scaleOrdinal()
     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-let datacsv = null;
-d3.csv("./Preprocessing/2015.csv", function(d) {
+
+const bar_update = () => {
+    d3.selectAll('rect').remove();
+    d3.selectAll('text').remove();
+    d3.selectAll('tick').remove();
+    let datacsv = null;
+d3.csv(`./Preprocessing/${bar_year}.csv`, function(d) {
     datacsv = d;
     var data = datacsv;
     console.log(data);
     dataset = data;
-    keys = d.columns.slice(5,12);
+    if (bar_year === '2015') {
+        keys = d.columns.slice(5,12);
+    } else if (bar_year === '2016') {
+        keys = d.columns.slice(6);
+    } else if (bar_year === '2017') {
+        keys = d.columns.slice(5);
+    } else if (bar_year === '2018' || bar_year === '2019') {
+        keys = d.columns.slice(3);
+    }
+    
 
     // Sort row on basis of Happiness Score
-    data.sort(function(a, b) { return b['Happiness Score'] - a['Happiness Score']; });
-    y.domain(data.map(function(d) { return d.Country; }));
-    x.domain([0, d3.max(data, function(d) { return d['Happiness Score']; })]).nice();
+    if (bar_year === '2015' || bar_year === '2016') {
+        data.sort(function(a, b) { return b['Happiness Score'] - a['Happiness Score']; });
+    } else if (bar_year === '2017') {
+        data.sort(function(a, b) { return b['Happiness.Score'] - a['Happiness.Score']; });
+    } else if (bar_year === '2018' || bar_year === '2019') {
+        data.sort(function(a, b) { return b['Score'] - a['Score']; });
+    }
+    
+    if (bar_year === '2015' || bar_year === '2016') {
+        y.domain(data.map(function(d) { return d['Country']; }));
+    } else if (bar_year === '2017') {
+        y.domain(data.map(function(d) { return d['Country']; }));
+    } else if (bar_year === '2018' || bar_year === '2019') {
+        y.domain(data.map(function(d) { return d['Country or region']; }));
+    }
+    if (bar_year === '2015' || bar_year === '2016') {
+        x.domain([0, d3.max(data, function(d) { return d['Happiness Score']; })]).nice();
+    } else if (bar_year === '2017') {
+        x.domain([0, d3.max(data, function(d) { return d['Happiness.Score']; })]).nice();
+    } else if (bar_year === '2018' || bar_year === '2019') {
+        x.domain([0, d3.max(data, function(d) { return d['Score']; })]).nice();
+    }
     z.domain(keys);
 
     g.append("g")
@@ -42,7 +77,8 @@ d3.csv("./Preprocessing/2015.csv", function(d) {
     .selectAll("rect")
     .data(function(d) { return d; })
     .enter().append("rect")
-        .attr("y", function(d) { return y(d.data.Country); })
+        .attr("y", function(d) { return y(d.data[
+            bar_year === '2015' || bar_year === '2016' || bar_year === '2017' ? 'Country' : 'Country or region']); })
         .attr("x", function(d) { return x(d[0]); })
         .attr("width", function(d) { return x(d[1]) - x(d[0]); })
         .attr("height", y.bandwidth());
@@ -54,7 +90,7 @@ d3.csv("./Preprocessing/2015.csv", function(d) {
 
     g.append("g")
         .attr("class", "axis")
-        .attr("transform", "translate(0,"+(height + 1450)+")")
+        .attr("transform", "translate(0,"+(height)+")")
         .call(d3.axisBottom(x).ticks(null, "s"))
     .append("text")
         .attr("y", 2)
@@ -74,8 +110,8 @@ d3.csv("./Preprocessing/2015.csv", function(d) {
     .selectAll("g")
     .data(keys.slice().reverse())
     .enter().append("g")
-    //.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-    .attr("transform", function(d, i) { return "translate(500," + (500 + i * 20) + ")"; });
+    .attr("transform", function(d, i) { return "translate(0," + (500 + i * 20) + ")"; });
+    // .attr("transform", function(d, i) { return "translate(500," + (500 + i * 20) + ")"; });
 
     legend.append("rect")
         .attr("x", width - 19)
@@ -90,6 +126,15 @@ d3.csv("./Preprocessing/2015.csv", function(d) {
         .attr("dy", "0.32em")
         .text(function(d) { return d; });
   });
+
+}
+
+bar_update();
+
+changeBarYear = () => {
+    bar_year = document.getElementById('bar_year').value;
+    bar_update();
+  }
 
 
 
