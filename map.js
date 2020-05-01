@@ -217,53 +217,75 @@ let map_codes = new Map([
 
 let map_year = '2015';
 
+   // The svg
+ map_svg = d3.select("#map"),
+ map_width = +map_svg.attr("width"),
+ map_height = +map_svg.attr("height");
+ 
+   // Map and projection
+   var map_path = d3.geoPath();
+   var map_projection = d3.geoNaturalEarth()
+   .scale(map_width / 2 / Math.PI)
+   .translate([map_width / 2, map_height / 2])
+   var map_path = d3.geoPath()
+   .projection(map_projection);
+ 
+   // Data and color scale
+   var map_data = d3.map();
+   var colorScheme = d3.schemeBlues[7];
+   colorScheme.unshift("#eee")
+   var colorScale = d3.scaleThreshold()
+   .domain([1, 2, 3, 4, 5, 6, 7])
+   .range(colorScheme);
+ 
+   // Legend
+   var map_g = map_svg.append("g")
+   .attr("class", "legendThreshold")
+   .attr("transform", "translate(20,50)");
+   map_g.append("text")
+   .attr("class", "caption")
+   .attr("x", 0)
+   .attr("y", -6)
+   .text("Happiness Score");
+   var map_labels = ['N/A', '1-2', '2-3', '3-4', '4-5', '5-6', '6-7', '>7'];
+   var map_legend = d3.legendColor()
+   .labels(function (d) { return map_labels[d.i]; })
+   .shapePadding(4)
+   .scale(colorScale);
+   map_svg.select(".legendThreshold")
+   .call(map_legend);
+
+
+
 const map_update = () => {
-  var svg = null;
-  // Create the map.
-svg = d3.select("svg"),
-width = +svg.attr("width"),
-height = +svg.attr("height");
 
-// Map and projection
-var path = d3.geoPath();
-var projection = d3.geoMercator()
-.scale(70)
-.center([0,20])
-.translate([width / 2, height / 2]);
+  // Load external data and boot
+  d3.queue()
+  .defer(d3.json, "http://enjalot.github.io/wwsd/data/world/world-110m.geojson")
+  .defer(d3.csv, "./Preprocessing/finaldf.csv", function(d) { 
+    if (d.year === map_year) {
+      map_data.set(map_codes.get(d.country), Number(d.score)); 
+    }
+    
+  })
+  .await(ready);
 
-// Data and color scale
-var data = d3.map();
-var colorScale = d3.scaleThreshold()
-.domain([2, 3, 4, 5, 6, 7])
-.range(d3.schemeBlues[7]);
+  function ready(error, topo) {
+  if (error) throw error;
 
-// Load external geojson world map as well as preprocessed data from from Preprocessing/finaldf.csv. 
-d3.queue()
-.defer(d3.json, "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
-.defer(d3.csv, "./Preprocessing/finaldf.csv", function(d) {
-  if (d.year === map_year) {
-    data.set(map_codes.get(d.country), Number(d.score)); 
-  } 
-})
-.await(ready);
-
-function ready(error, topo) {
-
-// Draw the map
-svg.append("g")
-  .selectAll("path")
-  .data(topo.features)
-  .enter()
-  .append("path")
-    // draw each country
-    .attr("d", d3.geoPath()
-      .projection(projection)
-    )
-    // set the color of each country
-    .attr("fill", function (d) {
-      d.total = data.get(d.id) || 0;
-      return colorScale(d.total);
-    });
+  // Draw the map
+  map_svg.append("g")
+      .attr("class", "countries")
+      .selectAll("path")
+      .data(topo.features)
+      .enter().append("path")
+          .attr("fill", function (d){
+              // Pull data for this country
+              d.total = map_data.get(d.id) || 0;
+              // Set the color
+              return colorScale(d.total);
+          })
+          .attr("d", map_path);
   }
 }
 
