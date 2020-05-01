@@ -41,7 +41,7 @@ const update = () => {
 
   // Create x-axis.
   let scatter_x = d3.scaleLinear()
-  .domain([2, 8])
+  .domain([0, getMaxValueRoundedUp()])
   .range([0, scatter_width ])
   
   scatter_svg.append("g")
@@ -51,7 +51,7 @@ const update = () => {
 
   // Create y-axis
   let scatter_y = d3.scaleLinear()
-  .domain([0, getMaxValueRoundedUp()])
+  .domain([2, 8])
   .range([scatter_height, 0])
   .nice()
   
@@ -67,7 +67,7 @@ const update = () => {
   .attr("text-anchor", "end")
   .attr("x", scatter_width/2 + scatter_margin.left)
   .attr("y", scatter_height + scatter_margin.top + 20)
-  .text("happiness score");
+  .text(getSubMetricName(scatter_submetric));
 
   // Label y-axis.
   scatter_svg.append("text")
@@ -75,7 +75,7 @@ const update = () => {
   .attr("transform", "rotate(-90)")
   .attr("y", -scatter_margin.left + 20)
   .attr("x", -scatter_margin.top - scatter_height/2 + 20)
-  .text(getSubMetricName(scatter_submetric))
+  .text("happiness score")
 
   // Assign point colour by region.
   let scatter_color = d3.scaleOrdinal()
@@ -108,8 +108,8 @@ const update = () => {
   .data(scatter_data.filter(d => d.year === scatter_year))
   .enter()
   .append("circle")
-  .attr("cx", function (d) { return scatter_x(d.score); })
-  .attr("cy", function (d) { return scatter_y(Number(d[scatter_submetric])); })
+  .attr("cx", function (d) { return scatter_x(Number(d[scatter_submetric])); })
+  .attr("cy", function (d) { return scatter_y(d.score); })
   .attr("r", 5)
   .style("fill", function (d) { return scatter_color(d.region) } )
 }
