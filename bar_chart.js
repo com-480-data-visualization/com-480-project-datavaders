@@ -31,7 +31,6 @@ const bar_update = () => {
 d3.csv(`./Preprocessing/${bar_year}.csv`, function(d) {
     datacsv = d;
     var data = datacsv.slice(0, 10);
-    console.log(data);
     dataset = data;
     if (bar_year === '2015') {
         keys = d.columns.slice(5,12);
