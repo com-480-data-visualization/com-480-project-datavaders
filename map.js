@@ -1,4 +1,8 @@
-// Country names mapping to country codes.
+/*
+  Chloropleth map component.
+*/
+
+// Map storing country name/country code pairs.
 let map_codes = new Map([
   ['Antigua and Barbuda', 'ATG'],
   ['Algeria', 'DZA'],
@@ -215,83 +219,135 @@ let map_codes = new Map([
   ['Taiwan', 'TWN']
 ]);
 
-let map_year = '2015';
+// Map storing country code/country names pairs.
+let map_names = new Map();
+for (let [name, code] of map_codes.entries()) {
+  map_names.set(code, name);
+}
 
-   // The svg
- map_svg = d3.select("#map"),
- map_width = +map_svg.attr("width"),
- map_height = +map_svg.attr("height");
+// Helper function to lighten color tones upon mouseover.
+// TODO: Adjust this if color schemes are adjusted.
+const lighten = (color) => {
+  switch (color) {
+    case '#eff3ff':
+      return '#fcfdff'
+    case '#c6dbef':
+      return 'eff5fb'
+    case '#9ecae1':
+      return '#c4dfed'
+    case '#6baed6':
+      return '#93c5e1'
+    case '#4292c6':
+      return '#6aa9d2'
+    case '#2171b5':
+      return '#308ad9'
+    case '#084594':
+      return '#0a5cc7'
+  }
+}
+
+// Initialize the default year.
+let map_year = '2019';
+
+// Bind the svg to the html element.
+let map_svg = d3.select("#map"),
+map_width = +map_svg.attr("width"),
+map_height = +map_svg.attr("height");
  
-   // Map and projection
-   var map_path = d3.geoPath();
-   var map_projection = d3.geoNaturalEarth()
-   .scale(map_width / 2 / Math.PI)
-   .translate([map_width / 2, map_height / 2])
-   var map_path = d3.geoPath()
-   .projection(map_projection);
+// Set the map dimensions.
+let map_projection = d3.geoNaturalEarth()
+  .scale(map_width / 2 / Math.PI)
+  .translate([map_width / 2, map_height / 2])
+let map_path = d3.geoPath()
+  .projection(map_projection);
  
-   // Data and color scale
-   var map_data = d3.map();
-   var colorScheme = d3.schemeBlues[7];
-   colorScheme.unshift("#eee")
-   var colorScale = d3.scaleThreshold()
-   .domain([1, 2, 3, 4, 5, 6, 7])
-   .range(colorScheme);
+// Set the color scale.
+let map_data = d3.map();
+let map_colorScheme = d3.schemeBlues[7];
+map_colorScheme.unshift("#eee")
+let colorScale = d3.scaleThreshold()
+  .domain([1, 2, 3, 4, 5, 6, 7])
+  .range(map_colorScheme);
  
-   // Legend
-   var map_g = map_svg.append("g")
-   .attr("class", "legendThreshold")
-   .attr("transform", "translate(20,50)");
-   map_g.append("text")
-   .attr("class", "caption")
-   .attr("x", 0)
-   .attr("y", -6)
-   .text("Happiness Score");
-   var map_labels = ['N/A', '1-2', '2-3', '3-4', '4-5', '5-6', '6-7', '>7'];
-   var map_legend = d3.legendColor()
-   .labels(function (d) { return map_labels[d.i]; })
-   .shapePadding(4)
-   .scale(colorScale);
-   map_svg.select(".legendThreshold")
-   .call(map_legend);
+// Set the legend.
+let map_g = map_svg.append("g")
+  .attr("class", "legendThreshold")
+  .attr("transform", "translate(20,50)");
+map_g.append("text")
+  .attr("class", "caption")
+  .attr("x", 0)
+  .attr("y", -6)
+  .text("Happiness Score");
+let map_labels = ['N/A', '1-2', '2-3', '3-4', '4-5', '5-6', '6-7', '>7'];
+let map_legend = d3.legendColor()
+  .labels(function (d) { return map_labels[d.i]; })
+  .shapePadding(4)
+  .scale(colorScale);
+map_svg.select(".legendThreshold")
+  .call(map_legend);
 
+// Set the tooltip.
+let map_tooltip = d3.select(".map_tooltip");
 
-
+// Update the map based on the currently selected data.
 const map_update = () => {
 
-  // Load external data and boot
+  // Load geojson and csv data.
   d3.queue()
-  .defer(d3.json, "https://enjalot.github.io/wwsd/data/world/world-110m.geojson")
-  .defer(d3.csv, "./Preprocessing/finaldf.csv", function(d) { 
-    if (d.year === map_year) {
-      map_data.set(map_codes.get(d.country), Number(d.score)); 
-    }
-    
-  })
-  .await(ready);
+    .defer(d3.json, "https://enjalot.github.io/wwsd/data/world/world-110m.geojson")
+    .defer(d3.csv, `./Preprocessing/finaldf.csv`, function(d) { 
+      if (d.year === map_year) {
+        map_data.set(map_codes.get(d.country), Number(d.score)); 
+      }
+    })
+    .await(ready);
 
   function ready(error, topo) {
-  if (error) throw error;
+    if (error) throw error;
 
-  // Draw the map
-  map_svg.append("g")
+    // Draw the map.
+    map_svg.append("g")
       .attr("class", "countries")
       .selectAll("path")
       .data(topo.features)
       .enter().append("path")
-          .attr("fill", function (d){
-              // Pull data for this country
-              d.total = map_data.get(d.id) || 0;
-              // Set the color
-              return colorScale(d.total);
-          })
-          .attr("d", map_path);
+      .attr("fill", function(d) {
+        
+        // Pull data for the given country.
+        d.total = map_data.get(d.id) || 0;
+    
+        // Set the color based on the country data.
+        return colorScale(d.total);
+      })
+      .on("mouseover",function(d) {
+
+        // Lighten color and change cursor to pointer upon mouseover of a country with data.
+        if (map_data.get(d.id)) {
+          d3.select(this).attr("fill", lighten(colorScale(map_data.get(d.id))))
+            .style("cursor", "pointer");
+        }
+      })
+      .on("mouseout",function(d) {
+        
+        // Reset color to original tone.
+        d3.select(this).attr("fill", colorScale(map_data.get(d.id) || 0))
+      })
+      .on("click", function(d) {
+        if (map_data.get(d.id)) {
+          
+          // TODO: Linking code to other visuals to go here - alert message is a placeholder.
+          alert(`Clicked on ${map_names.get(d.id)}!`);
+        }
+      })
+      .attr("d", map_path);
   }
 }
 
+// First update map upon initial page load.
 map_update();
 
-changeMapYear = () => {
+// Subsequently update map whenever year is changed.
+const changeMapYear = () => {
   map_year = document.getElementById('map_year').value;
   map_update();
 }
