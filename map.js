@@ -1,3 +1,7 @@
+/*
+  Chloropleth map component.
+*/
+
 // Map storing country name/country code pairs.
 let map_codes = new Map([
   ['Antigua and Barbuda', 'ATG'],
@@ -215,6 +219,27 @@ let map_codes = new Map([
   ['Taiwan', 'TWN']
 ]);
 
+// Helper function to lighten color tones upon mouseover.
+// TODO: Adjust this if color schemes are adjusted.
+const lighten = (color) => {
+  switch (color) {
+    case '#eff3ff':
+      return '#fcfdff'
+    case '#c6dbef':
+      return 'eff5fb'
+    case '#9ecae1':
+      return '#c4dfed'
+    case '#6baed6':
+      return '#93c5e1'
+    case '#4292c6':
+      return '#6aa9d2'
+    case '#2171b5':
+      return '#308ad9'
+    case '#084594':
+      return '#0a5cc7'
+  }
+}
+
 // Initialize the default year.
 let map_year = '2019';
 
@@ -255,6 +280,8 @@ let map_legend = d3.legendColor()
 map_svg.select(".legendThreshold")
   .call(map_legend);
 
+// Set the tooltip.
+let map_tooltip = d3.select(".map_tooltip");
 
 // Update the map based on the currently selected data.
 const map_update = () => {
@@ -262,7 +289,7 @@ const map_update = () => {
   // Load geojson and csv data.
   d3.queue()
     .defer(d3.json, "https://enjalot.github.io/wwsd/data/world/world-110m.geojson")
-    .defer(d3.csv, "./Preprocessing/finaldf.csv", function(d) { 
+    .defer(d3.csv, `./Preprocessing/finaldf.csv`, function(d) { 
       if (d.year === map_year) {
         map_data.set(map_codes.get(d.country), Number(d.score)); 
       }
@@ -278,13 +305,31 @@ const map_update = () => {
       .selectAll("path")
       .data(topo.features)
       .enter().append("path")
-      .attr("fill", function (d){
+      .attr("fill", function(d) {
         
         // Pull data for the given country.
         d.total = map_data.get(d.id) || 0;
     
-        // Set the color.
+        // Set the color based on the country data.
         return colorScale(d.total);
+      })
+      .on("mouseover",function(d) {
+
+        // Lighten color and change cursor to pointer upon mouseover of a country with data.
+        if (map_data.get(d.id)) {
+          d3.select(this).attr("fill", lighten(colorScale(map_data.get(d.id))))
+            .style("cursor", "pointer");
+        }
+      })
+      .on("mouseout",function(d) {
+        
+        // Reset color to original tone.
+        d3.select(this).attr("fill", colorScale(map_data.get(d.id) || 0))
+      })
+      .on("click", function(d) {
+
+        // TODO: Linking code to other visuals to go here - alert message is a placeholder.
+        alert(`Clicked on ${d.id}!`);
       })
       .attr("d", map_path);
   }
