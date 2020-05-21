@@ -10,7 +10,7 @@
   <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.js"></script>
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <title>Data Visualization</title>
 </head>
 <body>
@@ -18,7 +18,7 @@
     <div class="map_layout">
       <div>
       <p>Widget #1 (World Chloropleth): Summary visual of all country happiness scores worldwide across different years.</p>
-      <select id="map_year" name="map_year" onchange="changeMapYear(this)">
+      <select id="map_year" name="map_year" onchange="changeMapYear(this); changeRadarYear(this);">
         <option value="2015">2015</option>
         <option value="2016">2016</option>
         <option value="2017">2017</option>
@@ -46,8 +46,8 @@
             <option value="2018">2018</option>
             <option value="2019" selected>2019</option>
           </select>
-        <div id="scatter"></div>
-        <div>
+          <div id="scatter"></div>
+        </div>
       </div>
       <div class="bar_layout">
         <p>Widget #3 (Stacked Bar Chart): View the total happiness score of each country, as well as a breakdown of sub-metrics within.</p>
@@ -58,12 +58,14 @@
           <option value="2018">2018</option>
           <option value="2019" selected>2019</option>
         </select>
-        </div>
-        <svg class='ranking'></svg>
       </div>
+        <svg class='ranking'></svg>
     </div>
   </div>
-<script src='bar_chart.js'></script>
+  <div id='radar-plot'>
+    <button id='change-country' onclick="changeRadarCountry(this)">Change country</button>
+  </div>
+  <script src='bar_chart.js'></script>
   
   <script src="scatter.js"></script>
   <script src="map.js"></script>
