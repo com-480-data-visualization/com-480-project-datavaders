@@ -219,6 +219,12 @@ let map_codes = new Map([
   ['Taiwan', 'TWN']
 ]);
 
+// Map storing country code/country names pairs.
+let map_names = new Map();
+for (let [name, code] of map_codes.entries()) {
+  map_names.set(code, name);
+}
+
 // Helper function to lighten color tones upon mouseover.
 // TODO: Adjust this if color schemes are adjusted.
 const lighten = (color) => {
@@ -257,11 +263,11 @@ let map_path = d3.geoPath()
  
 // Set the color scale.
 let map_data = d3.map();
-let colorScheme = d3.schemeBlues[7];
-colorScheme.unshift("#eee")
+let map_colorScheme = d3.schemeBlues[7];
+map_colorScheme.unshift("#eee")
 let colorScale = d3.scaleThreshold()
   .domain([1, 2, 3, 4, 5, 6, 7])
-  .range(colorScheme);
+  .range(map_colorScheme);
  
 // Set the legend.
 let map_g = map_svg.append("g")
@@ -327,9 +333,11 @@ const map_update = () => {
         d3.select(this).attr("fill", colorScale(map_data.get(d.id) || 0))
       })
       .on("click", function(d) {
-
-        // TODO: Linking code to other visuals to go here - alert message is a placeholder.
-        alert(`Clicked on ${d.id}!`);
+        if (map_data.get(d.id)) {
+          
+          // TODO: Linking code to other visuals to go here - alert message is a placeholder.
+          alert(`Clicked on ${map_names.get(d.id)}!`);
+        }
       })
       .attr("d", map_path);
   }
