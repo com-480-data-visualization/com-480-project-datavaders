@@ -336,7 +336,10 @@ const map_update = () => {
         if (map_data.get(d.id)) {
           
           // TODO: Linking code to other visuals to go here - alert message is a placeholder.
-          alert(`Clicked on ${map_names.get(d.id)}!`);
+          //alert(`Clicked on ${map_names.get(d.id)}!`);
+          globalClickedCountry = map_names.get(d.id);
+          changeRadarCountry();
+          map_update();
         }
       })
       .attr("d", map_path);

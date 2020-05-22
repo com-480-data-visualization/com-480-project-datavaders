@@ -1,20 +1,29 @@
+let firstRun = true;
 let radarChosenYear = 2016;
 let radarData = [];
 /* const radarsvg = d3.select('body').append('svg')
     .attr('width', 600)
     .attr('height', 600); */
-
+globalClickedCountry = 'Serbia';
     const radarsvg = d3.select('#radar-plot').append('svg')
     .attr('width', 600)
     .attr('height', 600);
 
 let radialScale = d3.scaleLinear()
-    .domain([0,1.5])
-    .range([0,150]);
+    .domain([0,200])
+    .range([0, 200]);
 
-let radarTicks = [0.3, 0.6, 0.9, 1.2, 1.5];
+let radarTicks = [50, 100, 150, 200];
 
 let radarChosenName = 0;
+
+let radarAverageData = {
+    'gdp_per_capita': 100,
+    'healthy_life_expectancy': 100,
+    'freedom_to_life_choice': 100,
+    'generosity': 100,
+    'corruption_perceptions': 100
+};
 
 
 
@@ -24,8 +33,12 @@ function angleToCoordinate(angle, value) {
     return {'x': 300 + x, 'y': 300 - y};
 }
 
+let radarClickedCountry;
+
 const radarUpdate = () => { // Function that draw the radar chart
-    d3.csv('./Preprocessing/finaldf.csv', function(originalData) {
+    radarClickedCountry = globalClickedCountry;
+    console.log(globalClickedCountry);
+    d3.csv('./Preprocessing/finaldfCoordinates.csv', function(originalData) {
         radarTicks.forEach(t => 
             radarsvg.append('circle')
             .attr('cx', 300)
@@ -84,8 +97,8 @@ const radarUpdate = () => { // Function that draw the radar chart
         for(let i = 0; i < featureNames.length; i++) {
             let ft_name = featureNames[i];
             let angle = (Math.PI / 2) + (2 * Math.PI * i / featureNames.length) // starts at PI/2 and draws a line for each feature
-            let line_coordinate = angleToCoordinate(angle, 1.5);
-            let label_coordinate = angleToCoordinate(angle, 1.7);
+            let line_coordinate = angleToCoordinate(angle, 200);
+            let label_coordinate = angleToCoordinate(angle, 205);
             
             // draw axis line for each feature
     
@@ -97,22 +110,22 @@ const radarUpdate = () => { // Function that draw the radar chart
                 .attr('stroke', 'black');
     
             // write the names of the features
-            if(i==0) {
+            if(i==0) { // The coordinate will depend on each features so it is aligned correctly
                 radarsvg.append('text')
                     .attr('x', (label_coordinate.x-50))
-                    .attr('y', label_coordinate.y)
+                    .attr('y', label_coordinate.y - 20)
                     .text(ft_name);
             }
             else if(i==1) {
                 radarsvg.append('text')
-                    .attr('x', (label_coordinate.x-100))
+                    .attr('x', (label_coordinate.x-80))
                     .attr('y', label_coordinate.y)
                     .text(ft_name);
             }
             else if(i==2) {
                 radarsvg.append('text')
                     .attr('x', (label_coordinate.x-40))
-                    .attr('y', label_coordinate.y)
+                    .attr('y', label_coordinate.y + 20)
                     .text(ft_name);
             }
             else if(i==3) {
@@ -149,18 +162,29 @@ const radarUpdate = () => { // Function that draw the radar chart
     
             return coordinates;
         }
-    
-         for(let i = radarChosenName; i < radarChosenName+1; i++) {
-            let color = colors[i];
-            let d = radarData[i];
+        /* console.log(radarDataWithNames.map(d => {
+            let result;
+            for(let i=0; i < radarDataWithNames.length; i++) {
+                if(d.country === globalClickedCountry.toString())   result = d[i];
+            }
+            return result;
+        })); */
+
+        console.log('Clicked: ', globalClickedCountry.toString());
+        let result = radarDataWithNames.find( obj => obj.country === globalClickedCountry.toString())
+        console.log(result);
+
+        if(firstRun) {
+            let d = radarAverageData;
             let coordinates = getPathCoordinates(d);        
             // draw the path element
+            console.log(d);
             radarsvg.append('path')
                 .datum(coordinates)
                 .attr('d', line)
                 .attr('stroke-width', 3)
-                .attr('stroke', color)
-                .attr('fill', color)
+                .attr('stroke', 'blue')
+                .attr('fill', 'blue')
                 .attr('stroke-opacity', 1)
                 .attr('opacity', 0.5)
                 .on('mouseover', function (d) {
@@ -174,18 +198,57 @@ const radarUpdate = () => { // Function that draw the radar chart
                     d3.select(this).style('stroke', '');
                     d3.select(this).style('opacity', 0.5);
                 });
-            for(let j = 0; j < features.length; j++) // Add a circle at each point
-                    radarsvg.append('circle')
+                for(let j = 0; j < features.length; j++) // Add a circle at each point
+                radarsvg.append('circle')
                     .attr('cx', coordinates[j].x)
                     .attr('cy', coordinates[j].y)
                     .attr('r', 2)
-                    .attr('fill', color)
+                    .attr('fill', 'blue')
+                    .attr('stroke', 'black')
+                    .on('mouseover', function (d) {
+                        console.log('Average value: 100');
+                    });
+        } // end if firstRun
+        
+        else {
+    
+            let d = radarDataWithNames.find( obj => obj.country === globalClickedCountry.toString())
+            //let color = colors[i];
+            let coordinates = getPathCoordinates(d);        
+            // draw the path element
+            console.log(d);
+            radarsvg.append('path')
+                .datum(coordinates)
+                .attr('d', line)
+                .attr('stroke-width', 3)
+                .attr('stroke', 'blue')
+                .attr('fill', 'blue')
+                .attr('stroke-opacity', 1)
+                .attr('opacity', 0.5)
+                .on('mouseover', function (d) {
+                    //this.parentNode.parentNode.appendChild(this.parentNode);//the path group is on the top with in its parent group
+                    //this.parentNode.parentNode.parentNode.appendChild(this.parentNode.parentNode);//the parent group is on the top with in its parent group
+                    d3.select(this).style('stroke', 'blue');
+                    d3.select(this).style('opacity', 0.8);
+                    
+                })
+                .on('mouseout', function (d) {
+                    d3.select(this).style('stroke', '');
+                    d3.select(this).style('opacity', 0.5);
+                });
+            for(let j = 0; j < features.length; j++) // Add a circle at each point
+                radarsvg.append('circle')
+                    .attr('cx', coordinates[j].x)
+                    .attr('cy', coordinates[j].y)
+                    .attr('r', 2)
+                    .attr('fill', 'blue')
                     .attr('stroke', 'black')
                     .on('mouseover', function (d) {
                         console.log(radarDataWithNames[i].country, indexToMetricName(i, j));
                     });
          
-         }
+         
+        } // end else
          
          
     
@@ -197,17 +260,21 @@ radarUpdate();
 const changeRadarYear = () => {
     console.log("Hello world");
     radarChosenYear = document.querySelector('#map_year');
+    d3.selectAll('path').remove();
+    d3.selectAll('circle').remove();
+    d3.selectAll('text').remove();
+
     //radarChosenCountryIndex = 
     radarUpdate();
 }
 
 const changeRadarCountry = () => {
-    radarChosenName++;
+    radarChosenName = globalClickedCountry;
     d3.selectAll('path').remove();
     d3.selectAll('circle').remove();
     d3.selectAll('text').remove();
+    d3.selectAll('line').remove();
+    firstRun = false;
     radarUpdate();
-    
-
     
 }
