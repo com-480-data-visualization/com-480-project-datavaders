@@ -337,8 +337,7 @@ const map_update = () => {
           
           // TODO: Linking code to other visuals to go here - alert message is a placeholder.
           //alert(`Clicked on ${map_names.get(d.id)}!`);
-          globalClickedCountry = map_names.get(d.id);
-          changeRadarCountry();
+          changeRadarCountry(map_names.get(d.id));
           map_update();
         }
       })
