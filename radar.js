@@ -4,7 +4,7 @@
 
 // Variables tracking currently selected year and country and data to be displayed.
 let radar_selectedCountry = null;
-let radar_selectedYear = 2016;
+let radar_selectedYear = '2019';
 
 // Bind the svg to the html element.
 const radarsvg = d3.select('#radar-plot').append('svg')
@@ -119,8 +119,9 @@ const radarUpdate = () => {
 
     // Filter data based on currently selected year.
     let radar_data = originalData.filter(d => {
-      if(d.year === radar_selectedYear.toString())
+      if(d.year === radar_selectedYear) {
         return d;
+      }
     });
 
     // Plot the data.
@@ -198,6 +199,6 @@ const changeRadarYear = () => {
 const changeRadarCountry = (country) => {
     d3.select('#radar-plot').selectAll('path').remove();
     d3.selectAll('.radar_points').remove();
-    radar_selectedCountry = country;
+    radar_selectedCountry = typeof country === 'string' ? country : 'Serbia';
     radarUpdate();  
 }

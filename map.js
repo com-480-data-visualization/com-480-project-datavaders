@@ -247,7 +247,7 @@ const lighten = (color) => {
 }
 
 // Initialize the default year.
-let map_year = '2019';
+let map_selectedYear = '2019';
 
 // Bind the svg to the html element.
 let map_svg = d3.select("#map"),
@@ -296,7 +296,7 @@ const map_update = () => {
   d3.queue()
     .defer(d3.json, "https://enjalot.github.io/wwsd/data/world/world-110m.geojson")
     .defer(d3.csv, `./Preprocessing/finaldf.csv`, function(d) { 
-      if (d.year === map_year) {
+      if (d.year === map_selectedYear) {
         map_data.set(map_codes.get(d.country), Number(d.score)); 
       }
     })
@@ -335,8 +335,7 @@ const map_update = () => {
       .on("click", function(d) {
         if (map_data.get(d.id)) {
           
-          // TODO: Linking code to other visuals to go here - alert message is a placeholder.
-          //alert(`Clicked on ${map_names.get(d.id)}!`);
+          // TODO: Linking code to other visuals to go here.
           changeRadarCountry(map_names.get(d.id));
           map_update();
         }
@@ -350,7 +349,7 @@ map_update();
 
 // Subsequently update map whenever year is changed.
 const changeMapYear = () => {
-  map_year = document.getElementById('map_year').value;
+  map_selectedYear = document.getElementById('map_year').value;
   map_update();
 }
 
