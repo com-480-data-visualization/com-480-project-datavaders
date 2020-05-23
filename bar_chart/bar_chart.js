@@ -1,6 +1,6 @@
-let dataset;
-let keys;
+import * as utils from '../utils/utils.js';
 
+let keys;
 let bar_year = '2019';
 
 let svg = d3.select("#bar"),
@@ -25,15 +25,10 @@ const bar_update = () => {
     d3.select('#bar').selectAll('rect').remove();
     d3.select('#bar').selectAll('text').remove();
     d3.selectAll('#bar tick').remove();
-    let datacsv = null;
 
     d3.csv(`./Preprocessing/${bar_year}.csv`, function (d) {
-        datacsv = d;
-        let data = datacsv;
-        dataset = data;
-        //data = data.map((x,i) => data.idx0 = i);
+        let data = d;
 
-        //data = data.map((x,i) => data.idx1 = i);
         let color_seq = d3.scaleSequential()
             .domain([0, data.length])
             .interpolator(d3.interpolateCool);
@@ -56,7 +51,7 @@ const bar_update = () => {
         data.map((d,i) => d.idx0 = i);
         d3.shuffle(data);
         data.map((d,i) => d.idx1 = i);
-        console.log(Object.keys(data))
+        // console.log(Object.keys(data));
 
         scaleX.domain(data.map((d) => {
             return d.Country;
@@ -67,8 +62,8 @@ const bar_update = () => {
                 return d['Happiness Score'];
             })]).nice();
 
-        console.log(d3.stack().keys(keys)(data))
-        console.log(data);
+        //console.log(d3.stack().keys(keys)(data));
+        //console.log(data);
 
         z.domain(keys);
 
@@ -99,9 +94,11 @@ const bar_update = () => {
                 return color_seq(d.data.idx0);
             });
 
-        g.append("g")
-            .attr("class", "axis")
-            .attr("transform", "translate(0,0)")
+        // g.append("g")
+        //     .attr("class", "axis")
+        //     .attr("transform", "translate(0,0)");
+
+
             //.call(d3.axisLeft(scaleY));
 
         // g.append("g")
@@ -118,6 +115,8 @@ const bar_update = () => {
         //     .text("Happiness Score")
         //     .attr("transform", "translate(-10," + (-width) + ")");
 
+        // legend no more needed
+        //
         // let legend = g.append("g")
         //     .attr("font-family", "sans-serif")
         //     .attr("font-size", 10)
@@ -151,15 +150,9 @@ const bar_update = () => {
 };
 
 
-function getRegionDict() {
-  return d3.csv(`./Preprocessing/2015.csv`, function (d) {
-
-  })
-}
-
 bar_update();
 
-changeBarYear = () => {
+const changeBarYear = () => {
     bar_year = document.getElementById('bar_year').value;
     bar_update();
 };
