@@ -13,11 +13,11 @@ const radarsvg = d3.select('#radar-plot').append('svg')
 
 // Initialized data values for each feature.
 let radarAverageData = {
-    'gdp_per_capita': 100,
-    'healthy_life_expectancy': 100,
-    'freedom_to_life_choice': 100,
-    'generosity': 100,
-    'corruption_perceptions': 100
+    'gdp_per_capita': 0,
+    'healthy_life_expectancy': 0,
+    'freedom_to_life_choice': 0,
+    'generosity': 0,
+    'corruption_perceptions': 0
 };
 
 // Helper function to convert a given angle and value to 
@@ -39,10 +39,10 @@ radar_FeatureNames = [
 
 // Set the scale circles.
 let radialScale = d3.scaleLinear()
-  .domain([0,200])
+  .domain([-5, 5])
   .range([0, 200]);
 
-let radarTicks = [50, 100, 150, 200];
+let radarTicks = [-5, -2.5, 0, 2.5, 5];
 
 radarTicks.forEach(t => 
   radarsvg.append('circle')
@@ -64,8 +64,8 @@ radarTicks.forEach(t =>
 for (let i = 0; i < 5; i++) {
   let radar_featureName = radar_FeatureNames[i];
   let radar_angle = (Math.PI / 2) + (2 * Math.PI * i / 5) // starts at PI/2 and draws a line for each feature
-  let radar_lineCoordinate = radar_angleToCoordinate(radar_angle, 200);
-  let radar_labelCoordinate = radar_angleToCoordinate(radar_angle, 205);
+  let radar_lineCoordinate = radar_angleToCoordinate(radar_angle, 5);
+  let radar_labelCoordinate = radar_angleToCoordinate(radar_angle, 6);
   
   // Draw axis line for each feature.
   radarsvg.append('line')
@@ -80,7 +80,7 @@ for (let i = 0; i < 5; i++) {
     case 0:
       radarsvg.append('text')
         .attr('x', (radar_labelCoordinate.x-50))
-        .attr('y', radar_labelCoordinate.y - 20)
+        .attr('y', radar_labelCoordinate.y)
         .text(radar_featureName);
         break;
     case 1:
@@ -103,7 +103,7 @@ for (let i = 0; i < 5; i++) {
         break;
     case 4:
       radarsvg.append('text')
-        .attr('x', (radar_labelCoordinate.x-50))
+        .attr('x', (radar_labelCoordinate.x-70))
         .attr('y', radar_labelCoordinate.y)
         .text(radar_featureName);
         break;
@@ -112,7 +112,7 @@ for (let i = 0; i < 5; i++) {
 
 // Update the radar graph based on the currently selected data.
 const radarUpdate = () => {
-  d3.csv('./Preprocessing/finaldfCoordinates.csv', function(originalData) {
+  d3.csv('./Preprocessing/finaldfNormalized.csv', function(originalData) {
        
     // Slice only the columns that correspond to features.
     let features = originalData.columns.slice(5, 10);
