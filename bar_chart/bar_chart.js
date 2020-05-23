@@ -4,15 +4,15 @@ let keys;
 let bar_year = '2019';
 
 let svg = d3.select("#bar"),
-    margin = {top: 0, right: 20, bottom: 30, left: 20},
+    margin = {top: 20, right: 20, bottom: 30, left: 20},
     width = +svg.attr("width") - margin.left - margin.right,
     height = +svg.attr("height") - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 let scaleX = d3.scaleBand()
     .rangeRound([0, width])
-    .paddingInner(0.01)
-    .paddingOuter(0.01)
+    //.paddingInner(0.01)
+    //.paddingOuter(0.01)
     .align(0.1);
 
 let scaleY = d3.scaleLinear()
@@ -20,9 +20,6 @@ let scaleY = d3.scaleLinear()
 
 let z = d3.scaleOrdinal()
     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-
-let color_seq = d3.scaleSequential();
-
 
 const bar_update = () => {
     d3.select('#bar').selectAll('rect').remove();
@@ -37,9 +34,9 @@ const bar_update = () => {
         //data = data.map((x,i) => data.idx0 = i);
 
         //data = data.map((x,i) => data.idx1 = i);
-        color_seq
+        let color_seq = d3.scaleSequential()
             .domain([0, data.length])
-            .interpolator(d3.interpolatePlasma);
+            .interpolator(d3.interpolateCool);
 
         if (bar_year === '2015') {
             keys = d.columns.slice(5, 12);
@@ -51,56 +48,28 @@ const bar_update = () => {
             keys = d.columns.slice(3);
         }
 
-
         // Sort row on basis of Happiness Score
-        if (bar_year === '2015' || bar_year === '2016') {
-            data.sort(function (a, b) {
-                return b['Happiness Score'] - a['Happiness Score'];
-            });
-        } else if (bar_year === '2017') {
-            data.sort(function (a, b) {
-                return b['Happiness.Score'] - a['Happiness.Score'];
-            });
-        } else if (bar_year === '2018' || bar_year === '2019') {
-            data.sort(function (a, b) {
-                return b.Score - a.Score;
-            });
-        }
+        data.sort(function (a, b) {
+            return b['Happiness Score'] - a['Happiness Score'];
+        });
 
-        if (bar_year === '2015' || bar_year === '2016') {
-            scaleX.domain(data.map(function (d) {
-                return d.Country;
-            }));
-        } else if (bar_year === '2017') {
-            scaleX.domain(data.map(function (d) {
-                return d.Country;
-            }));
-        } else if (bar_year === '2018' || bar_year === '2019') {
-            scaleX.domain(data.map(function (d) {
-                return d['Country or region'];
-            }));
-        }
-        if (bar_year === '2015' || bar_year === '2016') {
-            scaleY.domain([0, d3.max(data, function (d) {
+        data.map((d,i) => d.idx0 = i);
+        d3.shuffle(data);
+        data.map((d,i) => d.idx1 = i);
+        console.log(Object.keys(data))
+
+        scaleX.domain(data.map((d) => {
+            return d.Country;
+        }));
+
+
+        scaleY.domain([0, d3.max(data, function (d) {
                 return d['Happiness Score'];
             })]).nice();
-        } else if (bar_year === '2017') {
-            scaleY.domain([0, d3.max(data, function (d) {
-                return d['Happiness.Score'];
-            })]).nice();
-        } else if (bar_year === '2018' || bar_year === '2019') {
-            scaleY.domain([0, d3.max(data, function (d) {
-                return d.Score;
-            })]).nice();
-        }
 
-        data.map((d,i) => d.idx0 = i)
-        d3.shuffle(data);
-        data.map((d,i) => d.idx1 = i)
-
+        console.log(d3.stack().keys(keys)(data))
         console.log(data);
-        // console.log(keys)
-        // console.log(d3.stack().keys(keys)(data))
+
         z.domain(keys);
 
         g.append("g")
@@ -117,8 +86,7 @@ const bar_update = () => {
             })
             .enter().append("rect")
             .attr("x", function (d) {
-                return scaleX(d.data[
-                    bar_year === '2015' || bar_year === '2016' || bar_year === '2017' ? 'Country' : 'Country or region']);
+                return scaleX(d.data.Country);
             })
             .attr("y", function (d) {
                 return scaleY(d[0]);
@@ -126,62 +94,68 @@ const bar_update = () => {
             .attr("height", function (d) {
                 return scaleY(d[1]) - scaleY(d[0]);
             })
-            .attr("width", 0.8*scaleX.bandwidth())
+            .attr("width", 0.60*scaleX.bandwidth())
             .attr("fill", (d,i) => {
-                console.log(color_seq(i))
-                color_seq(i);
+                return color_seq(d.data.idx0);
             });
 
         g.append("g")
             .attr("class", "axis")
             .attr("transform", "translate(0,0)")
-            .call(d3.axisLeft(scaleY));
+            //.call(d3.axisLeft(scaleY));
 
-        g.append("g")
-            .attr("class", "axis")
-            .attr("transform", "translate(" + width + ",0)")
-            .call(d3.axisBottom(scaleX).ticks(null, "s"))
-            .append("text")
-            .attr("x", 2)
-            .attr("y", scaleY(scaleY.ticks().pop()) + 0.5)
-            .attr("dx", "0.32em")
-            .attr("fill", "#dddddd")
-            .attr("font-weight", "bold")
-            .attr("text-anchor", "start")
-            .text("Happiness Score")
-            .attr("transform", "translate(-10," + (-width) + ")");
+        // g.append("g")
+        //     .attr("class", "axis")
+        //     .attr("transform", "translate(" + width + ",0)")
+        //     .call(d3.axisBottom(scaleX).ticks(null, "s"))
+        //     .append("text")
+        //     .attr("x", 2)
+        //     .attr("y", scaleY(scaleY.ticks().pop()) + 0.5)
+        //     .attr("dx", "0.32em")
+        //     .attr("fill", "#dddddd")
+        //     .attr("font-weight", "bold")
+        //     .attr("text-anchor", "start")
+        //     .text("Happiness Score")
+        //     .attr("transform", "translate(-10," + (-width) + ")");
 
-        let legend = g.append("g")
-            .attr("font-family", "sans-serif")
-            .attr("font-size", 10)
-            .attr("font-weight", "bold")
-            .attr("text-anchor", "end")
-            .selectAll("g")
-            .data(keys.slice().reverse())
-            .enter().append("g")
-            .attr("transform", function (d, i) {
-                return "translate(" + (35 + i * 20) + ",-400)";
-            });
+        // let legend = g.append("g")
+        //     .attr("font-family", "sans-serif")
+        //     .attr("font-size", 10)
+        //     .attr("font-weight", "bold")
+        //     .attr("text-anchor", "end")
+        //     .selectAll("g")
+        //     .data(keys.slice().reverse())
+        //     .enter().append("g")
+        //     .attr("transform", function (d, i) {
+        //         return "translate(" + (35 + i * 20) + ",-400)";
+        //     });
 
         // .attr("transform", function(d, i) { return "translate(500," + (500 + i * 20) + ")"; });
 
-        legend.append("rect")
-            .attr("x", width - 19)
-            .attr("width", 19)
-            .attr("height", 19)
-            .attr("fill", z);
-
-        legend.append("text")
-            .attr("x", width - 24)
-            .attr("y", 9.5)
-            .attr("fill", "#dddddd")
-            .attr("dx", "0.32em")
-            .text(function (d) {
-                return d;
-            });
+        // legend.append("rect")
+        //     .attr("x", width - 19)
+        //     .attr("width", 19)
+        //     .attr("height", 19)
+        //     .attr("fill", z);
+        //
+        // legend.append("text")
+        //     .attr("x", width - 20)
+        //     .attr("y", 9.5)
+        //     .attr("fill", "#dddddd")
+        //     .attr("dx", "0.32em")
+        //     .text(function (d) {
+        //         return d;
+        //     });
     });
 
 };
+
+
+function getRegionDict() {
+  return d3.csv(`./Preprocessing/2015.csv`, function (d) {
+
+  })
+}
 
 bar_update();
 
