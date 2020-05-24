@@ -19,7 +19,8 @@ let scaleY = d3.scaleLinear()
     .rangeRound([0, height]);
 
 let z = d3.scaleOrdinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+    .range(["RGB(243,202,34)", "RGB(237,233,37)", "RGB(52,161,153)", "RGB(70,180,12)"
+    , "RGB(153,148,194)", "RGB(211,102,153)", "RGB(194,63,118)"]);
 
 let color_seq = d3.scaleSequential()
     .interpolator(d3.interpolateCool);
@@ -35,8 +36,8 @@ const bar_update = () => {
     d3.csv(`./Preprocessing/${bar_year}.csv`, function (d) {
         let data = d;
 
-        color_seq.domain([0, data.length])
-        color_seq2.domain([-150, data.length])
+        color_seq.domain([0, data.length]);
+        color_seq2.domain([-150, data.length]);
 
         if (bar_year === '2015') {
             keys = d.columns.slice(5, 12);
@@ -48,14 +49,16 @@ const bar_update = () => {
             keys = d.columns.slice(3);
         }
 
+        let key_data = d3.stack().keys(keys)(data);
+
         // Sort row on basis of Happiness Score
         data.sort(function (a, b) {
             return b['Happiness Score'] - a['Happiness Score'];
         });
 
-        data.map((d,i) => d.idx0 = i);
+        data.map((d, i) => d.idx0 = i);
         d3.shuffle(data);
-        data.map((d,i) => d.idx1 = i);
+        data.map((d, i) => d.idx1 = i);
         // console.log(Object.keys(data));
 
         scaleX.domain(data.map((d) => {
@@ -64,8 +67,8 @@ const bar_update = () => {
 
 
         scaleY.domain([0, d3.max(data, function (d) {
-                return d['Happiness Score'];
-            })]).nice();
+            return d['Happiness Score'];
+        })]).nice();
 
         //console.log(d3.stack().keys(keys)(data));
         //console.log(data);
@@ -73,7 +76,7 @@ const bar_update = () => {
         z.domain(keys);
 
         g.selectAll("g")
-            .data(data.map((d,i) => d))
+            .data(data.map((d, i) => d))
             .enter().append("g")
             .append('rect')
             .attr('class', 'gbarrect')
@@ -92,15 +95,15 @@ const bar_update = () => {
             .attr("height", function (d) {
                 return scaleY(d['Happiness Score']);
             })
-            .attr("width", 0.60*scaleX.bandwidth())
-            .attr("fill", (d,i) => {
+            .attr("width", 0.60 * scaleX.bandwidth())
+            .attr("fill", (d, i) => {
                 return color_seq(d.idx0);
-            })
+            });
 
 
         g.selectAll('.gbarrect')
-            .on("mouseover", onMouseOver) //Add listener for the mouseover event
-            .on("mouseout", onMouseOut);   //Add listener for the mouseout event
+            .on("mouseover", onMapOver) //Add listener for the mouseover event
+            .on("mouseout", onMapOut);   //Add listener for the mouseout event
 
 
         // g.append("g")
@@ -108,7 +111,7 @@ const bar_update = () => {
         //     .attr("transform", "translate(0,0)");
 
 
-            //.call(d3.axisLeft(scaleY));
+        //.call(d3.axisLeft(scaleY));
 
         // g.append("g")
         //     .attr("class", "axis")
@@ -154,59 +157,86 @@ const bar_update = () => {
         //     .text(function (d) {
         //         return d;
         //     });
-    });
 
+        function onMouseOver(d, i) {
+            d3.select(this).attr('class', 'highlight');
+            d3.select(this)
+                .transition()     // adds animation
+                .duration(400)
+                .attr('width', scaleX.bandwidth() * 1)
+                .attr("x", function (d) {
+                    return scaleX(d.Country) - scaleX.bandwidth() * 0.2;
+                })
+                .attr('fill', '#D4AF37');//#D4AF37
+        }
+
+        function onMouseOut(d, i) {
+            d3.select(this).attr('class', 'bar');
+            d3.select(this)
+                .transition()     // adds animation
+                .duration(400)
+                .delay(400)
+                .attr('width', scaleX.bandwidth() * 0.6)
+                .attr("x", function (d) {
+                    return scaleX(d.Country);
+                })
+                .attr('fill', color_seq2(d.idx1))
+                .transition()     // adds animation
+                .duration(400)
+                .delay(600)
+                .attr('fill', color_seq(d.idx0));
+        }
+
+        function onMapOver(d, i) {
+            g.append('rect')
+                .attr('class', 'motherfucker')
+                .attr("x", function () {
+                    return scaleX(d.Country) - scaleX.bandwidth() * 5;
+                })
+                .attr("y", function () {
+                    return scaleY(0);
+                })
+                .transition()
+                .ease(d3.easeSin)
+                .duration(400)
+                .attr("height", function () {
+                    return scaleY(10);
+                })
+                .attr("width", 11 * scaleX.bandwidth())
+                .attr("fill", "rgb(241,241,241)");
+
+            let elem_idx = d.idx0;
+
+            key_data.forEach((item, key_idx) => {
+                g.append('rect')
+                    .attr("class", "brushed")
+                    .attr("x", function () {
+                        return scaleX(d.Country) - scaleX.bandwidth() * 4;
+                    })
+                    .attr("y", () => scaleY(item[elem_idx][0]))
+                    .attr("height", function () {
+                        return scaleY(item[elem_idx][1] - item[elem_idx][0] + 0.1);
+                    })
+                    .attr("width", 9 * scaleX.bandwidth())
+                    .attr('fill', z(key_idx))
+            })
+        }
+
+        function onMapOut(d, i) {
+            d3.transition()
+                .delay(600)
+                .duration(300)
+                .select('#bar').selectAll('.brushed').remove();
+            d3.transition()
+                .delay(900)
+                .duration(400)
+                .select('#bar').selectAll('.motherfucker')
+                .attr("height", 0)
+                .remove()
+        }
+    });
 };
 
-function onMouseOver(d, i) {
-    d3.select(this).attr('class', 'highlight');
-    d3.select(this)
-      .transition()     // adds animation
-      .duration(400)
-      .attr('width', scaleX.bandwidth()*1)
-      .attr("x", function (d) {
-          return scaleX(d.Country)-scaleX.bandwidth()*0.2;
-      })
-      .attr('fill', '#D4AF37');//#D4AF37
-}
-
-function onMouseOut(d, i) {
-    d3.select(this).attr('class', 'bar');
-    d3.select(this)
-      .transition()     // adds animation
-      .duration(400)
-      .delay(400)
-      .attr('width', scaleX.bandwidth()*0.6)
-      .attr("x", function (d) {
-          return scaleX(d.Country)})
-      .attr('fill', color_seq2(d.idx1))
-      .transition()     // adds animation
-      .duration(400)
-      .delay(600)
-      .attr('fill', color_seq(d.idx0))
-}
-
-function onMapOver(d, i) {
-    console.log(d)
-    g.append('rect')
-    .attr('class', 'motherfucker')
-    .attr("x", function () {
-        return scaleX(d.Country)-scaleX.bandwidth()*5;
-    })
-    .attr("y", function () {
-        return scaleY(0);
-    })
-    .transition()
-    .ease(d3.easeSin)
-    .duration(400)
-    .attr("height", function () {
-        return scaleY(10);
-    })
-    .attr("width", 11*scaleX.bandwidth())
-    .attr("fill", "rgb(241,241,241)")
-
-
-}
 
 bar_update();
 
