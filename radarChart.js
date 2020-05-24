@@ -10,6 +10,80 @@ const sin = Math.sin;
 const cos = Math.cos;
 const HALF_PI = Math.PI / 2;
 
+var margin = { top: 50, right: 80, bottom: 50, left: 80 },
+				width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
+				height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
+
+			//////////////////////////////////////////////////////////////
+			////////////////////////// Data //////////////////////////////
+			//////////////////////////////////////////////////////////////
+      
+var data = [];
+let radar_currentYear = 2019;
+
+const radarUpdate = () => {
+
+	d3.csv('./Preprocessing/finaldfCoordinates.csv', function(originalData) {
+		console.log(originalData)
+	let radar_data = originalData.filter(d => d.year === radar_currentYear.toString() & (d.country === country));
+	//console.log(radar_data);
+	radar_data.forEach(d => {
+		let object = { name: d.country,
+			axes: [
+				{axis: 'gdp', value: +d.gdp_per_capita},
+				{axis: 'corruption_perceptions', value: +d.corruption_perceptions},
+				{axis: 'generosity', value: +d.generosity},
+				{axis: 'freedom_to_life_choice', value: +d.freedom_to_life_choice},
+				{axis: 'healthy_life_expectancy', value: +d.healthy_life_expectancy}
+			], 
+			color: '#26AF32'
+		}
+		data.push(object);
+	});
+	//console.log(data);
+
+
+
+	var radarChartOptions = {
+			w: 290,
+			h: 350,
+			margin: margin,
+			levels: 5,
+			roundStrokes: true,
+				color: d3.scaleOrdinal().range(["#26AF32", "#762712", "#2a2fd4"]),
+				format: '.0f'
+			};
+
+			// Draw the chart, get a reference the created svg element :
+			let svg_radar1 = RadarChart(".radarChart", data, radarChartOptions);
+
+			//////////////////////////////////////////////////////////////
+			///// Second example /////////////////////////////////////////
+			///// Chart legend, custom color, custom unit, etc. //////////
+			//////////////////////////////////////////////////////////////
+			var radarChartOptions2 = {
+			w: 290,
+			h: 350,
+			margin: margin,
+			maxValue: 60,
+			levels: 6,
+			roundStrokes: false,
+			color: d3.scaleOrdinal().range(["#AFC52F", "#ff6600", "#2a2fd4"]),
+				format: '.0f',
+				legend: { title: 'Organization XYZ', translateX: 100, translateY: 40 },
+				unit: '$'
+			};
+
+			// Draw the chart, get a reference the created svg element :
+			let svg_radar2 = RadarChart(".radarChart2", data, radarChartOptions2);
+
+	});
+} // end radarUpdate
+			
+
+
+
+
 const RadarChart = function RadarChart(parent_selector, data, options) {
     console.log(data)
 	//Wraps SVG text - Taken from http://bl.ocks.org/mbostock/7555321
@@ -331,4 +405,11 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 
 
 	return svg;
+}
+
+const radarChart_changeRadarCountry = (country) => {
+    d3.select('#radar-plot').selectAll('path').remove();
+    d3.selectAll('.radar_points').remove();
+    radar_selectedCountry = typeof country === 'string' ? country : 'Serbia';
+    radarUpdate();  
 }

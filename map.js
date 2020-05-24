@@ -336,7 +336,7 @@ const map_update = () => {
         if (map_data.get(d.id)) {
           
           // TODO: Linking code to other visuals to go here.
-          changeRadarCountry(map_names.get(d.id));
+          radarChart_changeRadarCountry(map_names.get(d.id));
           map_update();
         }
       })
