@@ -110,8 +110,15 @@ for (let i = 0; i < 5; i++) {
   }
 }
 
+var sequentialScale = d3.scaleSequential()
+    .domain([0, 3])
+    .interpolator(d3.interpolateCool);
+
 // Update the radar graph based on the currently selected data.
 const radarUpdate = () => {
+
+    
+
   d3.csv('./Preprocessing/finaldfNormalized.csv', function(originalData) {
        
     // Slice only the columns that correspond to features.
@@ -124,6 +131,19 @@ const radarUpdate = () => {
       }
     });
 
+    let radar_CountryNames = radar_data.map(d => d.country).sort();
+    //console.log(radar_CountryNames);
+
+/*     var select = document.getElementById("mselect"); 
+    for(var i = 0; i < radar_CountryNames.length; i++) {
+      // console.log("<option value='" + radar_CountryNames[i] + "'>" + radar_CountryNames[i] + "</option>")
+      var opt = radar_CountryNames[i];
+      var el = document.createElement("option");
+      //el.text = opt;
+      el.value = opt;
+      select.add(el);
+  } */
+
     // Plot the data.
     let line = d3.line()
       .x(d => d.x)
@@ -134,14 +154,16 @@ const radarUpdate = () => {
     let radar_dataToPlot = radar_selectedCountry !== null 
     ? radar_data.find( obj => obj.country === radar_selectedCountry.toString()) 
     : radarAverageData;
-    console.log(radar_dataToPlot);
+    //console.log(radar_dataToPlot);
       
     // Find the coordinates of the pentagon given the data.
     const getPathCoordinates = (dataPoint) => {
+      console.log('In getPathCoord')
       let coordinates = [];
       for(let i = 0; i < features.length; i++) {
         let featureName = features[i];
         let angle = (Math.PI / 2) + (2 * Math.PI * i / features.length);
+        
         coordinates.push(radar_angleToCoordinate(angle, dataPoint[featureName]))
       }
       let angle = (Math.PI / 2);
@@ -150,36 +172,98 @@ const radarUpdate = () => {
       return coordinates;
     }
 
-    let coordinates = getPathCoordinates(radar_dataToPlot);        
+    //let coordinates = getPathCoordinates(radar_dataToPlot);   
+    var radar_dropDownSelected = [];
+    for (var option of document.getElementById('mselect').options) {
+      if (option.selected) {
+        radar_dropDownSelected.push(option.value);
+      }
+      else {
+        radar_dropDownSelected = radar_dropDownSelected.filter(d => d.country !== option.value);
+      }
+    }
+    
+    console.log(radar_dropDownSelected);
+    
+    // Get the data of the drop-down selected countries
+    let radar_dropDownData = [];
+    for(let i=0; i < radar_dropDownSelected.length; i++) {
+        //console.log(radar_data);
+        radar_data.forEach(d => {
+          if(d.country === radar_dropDownSelected[i]) {
+            radar_dropDownData.push(d);
+            console.log(d);
+          }
+        })
+    }
+    console.log(radar_dropDownData);
+
+    radar_dropDownData.forEach(d => {
+      d.gdp_per_capita = +d.gdp_per_capita;
+      d.healthy_life_expectancy = +d.healthy_life_expectancy;
+      d.freedom_to_life_choice = +d.freedom_to_life_choice;
+      d.generosity = +d.generosity;
+      d.corruption_perceptions = +d.corruption_perceptions;
+    })
+
+    radar_dataToPlot.gdp_per_capita = +radar_dataToPlot.gdp_per_capita;
+    radar_dataToPlot.healthy_life_expectancy = +radar_dataToPlot.healthy_life_expectancy;
+    radar_dataToPlot.freedom_to_life_choice = +radar_dataToPlot.freedom_to_life_choice;
+    radar_dataToPlot.generosity = +radar_dataToPlot.generosity;
+    radar_dataToPlot.generosity = +radar_dataToPlot.generosity;
+    radar_dataToPlot.corruption_perceptions = +radar_dataToPlot.corruption_perceptions;
     
     // Draw the pentagon based on the given data.
-    radarsvg.append('path')
-      .datum(coordinates)
-      .attr('d', line)
-      .attr('stroke-width', 3)
-      .attr('stroke', 'blue')
-      .attr('fill', 'blue')
-      .attr('stroke-opacity', 1)
-      .attr('opacity', 0.5)
-      .on('mouseover', function (d) {
-        d3.select(this).style('stroke', 'color');
-        d3.select(this).style('opacity', 0.8);  
-      })
-      .on('mouseout', function (d) {
-        d3.select(this).style('stroke', '');
-        d3.select(this).style('opacity', 0.5);
-      });
+    let coordinates = [];
+    coordinates.push(getPathCoordinates(radar_dataToPlot));
+    console.log(coordinates);
+    for(let i=0; i < radar_dropDownData.length; i++) {
+      coordinates.push(getPathCoordinates(radar_dropDownData[i]))
+    }
 
-    // Add a circle at each point of the pentagon.
-    for(let j = 0; j < features.length; j++) {
-      radarsvg.append('circle')
-        .attr('cx', coordinates[j].x)
-        .attr('cy', coordinates[j].y)
-        .attr('r', 2)
-        .attr('fill', 'blue')
-        .attr('stroke', 'black')
-        .attr('class', 'radar_points')
-    } 
+    console.log(coordinates);
+    for(let i=0; i < coordinates.length; i++) {
+      //coordinates.push(getPathCoordinates(radar_dropDownData[i]));
+      //console.log(radar_dropDownData);
+      //coordinates.push(getPathCoordinates(radar_dropDownData[i]));
+      //console.log(coordinates);
+      //console.log('Map', radar_dataToPlot.forEach);
+      //console.log(radar_dataToPlot)
+      //if(radar_dataToPlot !== undefined)
+        //coordinates.push(getPathCoordinates(radar_dataToPlot));
+      //coordinates.push(getPathCoordinates(radar_dataToPlot));
+      radarsvg.append('path')
+        .datum(coordinates[i])
+        .attr('d', line)
+        .attr('stroke-width', 3)
+        .attr('stroke', sequentialScale(i))
+        .attr('fill', sequentialScale(i))
+        .attr('stroke-opacity', 1)
+        .attr('opacity', 0.2)
+        .on('mouseover', function (d) {
+          d3.select(this).style('stroke', 'color');
+          d3.select(this).style('opacity', 0.8);  
+        })
+        .on('mouseout', function (d) {
+          d3.select(this).style('stroke', '');
+          d3.select(this).style('opacity', 0.2);
+        });
+
+      // Add a circle at each point of the pentagon.
+      for(let j = 0; j < features.length; j++) {
+        radarsvg.append('circle')
+          .attr('cx', coordinates[i][j].x)
+          .attr('cy', coordinates[i][j].y)
+          .attr('r', 2)
+          .attr('fill', 'blue')
+          .attr('stroke', 'black')
+          .attr('class', 'radar_points')
+      }
+  }
+
+
+    
+    
   });  
 }
 
@@ -202,3 +286,5 @@ const changeRadarCountry = (country) => {
     radar_selectedCountry = typeof country === 'string' ? country : 'Serbia';
     radarUpdate();  
 }
+
+// const addCountryToRada
