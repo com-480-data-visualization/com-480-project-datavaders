@@ -24,12 +24,12 @@
 
   <style>
     body {
-        font-family: 'Open Sans', sans-serif;
+        font-family: sans-serif;
         font-size: 11px;
-        font-weight: 300;
+        font-weight: 300;  
         fill: #242424;
         text-align: center;
-        text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+        /* text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff; */
         cursor: default;
     }
 
@@ -89,7 +89,7 @@
         <svg class='ranking'></svg>
     </div>
   </div>
-  <div id='radar-plot'>
+  <div id='radar-plot' style="display: flex;">
     <form>
       <select id='mselect' multiple="" style="width: 300px" onchange="radarUpdate();">
         <option value='Afghanistan'>Afghanistan</option>
@@ -245,27 +245,8 @@
         <option value='Zimbabwe'>Zimbabwe</option>
       </select>
     </form>
-    <div class="radarChart2" style="display: inline-flex;"></div>
-    <script src="radarChart.js" charset="utf-8"></script>
-
-	    <!-- <script src="radarChart.js">
-			//////////////////////////////////////////////////////////////
-			//////////////////////// Set-Up //////////////////////////////
-			//////////////////////////////////////////////////////////////
-
-			
-            
-            //console.log(data);
-            //console.log(data[0].color);
-
-                    //////////////////////////////////////////////////////////////
-                    ////// First example /////////////////////////////////////////
-            ///// (not so much options) //////////////////////////////////
-                    //////////////////////////////////////////////////////////////
-                    
-                </script>
- -->
-    
+    <div class="radarChart2" style="display: flex;"></div>
+    <script src="radarChart.js" charset="utf-8"></script> 
   </div>
   <script src='bar_chart.js'></script>
 

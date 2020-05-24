@@ -17,7 +17,7 @@ var margin = { top: 50, right: 80, bottom: 50, left: 80 },
 			//////////////////////////////////////////////////////////////
 			////////////////////////// Data //////////////////////////////
 			//////////////////////////////////////////////////////////////
-      
+var radar_data = [];
 var data = [];
 let radar_currentYear = 2019;
 let radar_chosenCountry = null;
@@ -26,10 +26,44 @@ var sequentialScale = d3.scaleSequential()
   .domain([0, 5])
   .interpolator(d3.interpolateRainbow);
 
+
 let radarUpdate = (country) => {
-	d3.csv('./Preprocessing/finaldfCoordinates.csv', function(originalData) {
-	let radar_data = originalData.filter(d => d.year === radar_currentYear.toString() & d.country === country);
-	//console.log(radar_data);
+	d3.csv('./Preprocessing/finaldfCoordinatesStdev.csv', function(originalData) {
+	var radar_dropDownSelected = [];
+    for (var option of document.getElementById('mselect').options) {
+      if (option.selected) {
+        radar_dropDownSelected.push(option.value);
+	  }
+	}
+	
+	data = [];
+	radar_data = [];
+	
+
+	radar_data.push(...originalData.filter(d => d.country === country & +d.year === radar_currentYear))
+	for(let i=0; i < radar_dropDownSelected.length; i++) {
+		let dropDownData = originalData.filter(d => d.country === radar_dropDownSelected[i] & +d.year === radar_currentYear)
+		console.log(dropDownData);
+		if(data.every(function(d) {return d.name != radar_dropDownSelected[i]}))
+			radar_data.push(...dropDownData);
+		console.log('in for loop', radar_data);
+	}
+	
+	
+
+	/* radar_dropDownSelected.forEach(ctr => {
+		dropDownData = originalData.find(d => d.country === ctr & d.year === radar_currentYear.toString());
+		console.log('Dropdown data', dropDownData);
+		console.log('Country', ctr);
+		console.log('Radar data in forEach', radar_data)
+		if(radar_data.some(d => d.country === ctr)) {
+			radar_data.push(dropDownData);
+		}
+		
+
+	}) */
+	//console.log('data', radar_data);
+
 	radar_data.forEach(d => {
 		let object = { name: d.country,
 			axes: [
@@ -39,14 +73,29 @@ let radarUpdate = (country) => {
 				{axis: 'freedom_to_life_choice', value: +d.freedom_to_life_choice},
 				{axis: 'healthy_life_expectancy', value: +d.healthy_life_expectancy}
 			], 
-			//color: sequentialScale(d.index)
+			color: sequentialScale(d.index)
 		}
 		
 		data.push(object);
 	});
-	//console.log(data);
-
-
+	
+	console.log('Final data:', data);
+	if(data.length > 0)
+		data.sort( (a, b) => (a.axes[0].value < b.axes[0].value) ? 1 : -1);
+	console.log('After sort:', data)
+	if(data.length == 0) 	{
+		data = [ 
+		{ name: '',
+		axes: [
+			{axis: 'gdp', value: 0},
+			{axis: 'corruption_perceptions', value: 0},
+			{axis: 'generosity', value: 0},
+			{axis: 'freedom_to_life_choice', value: 0},
+			{axis: 'healthy_life_expectancy', value: 0}
+		], 
+		//color: sequentialScale(d.index)
+	}];
+	}
 
 	var radarChartOptions = {
 			w: 290,
@@ -54,8 +103,8 @@ let radarUpdate = (country) => {
 			margin: margin,
 			levels: 5,
 			roundStrokes: true,
-				color: sequentialScale(3),
-				format: '.0f'
+			color: sequentialScale(3),
+			format: '.0f'
 			};
 
 			// Draw the chart, get a reference the created svg element :
@@ -69,13 +118,13 @@ let radarUpdate = (country) => {
 			w: 290,
 			h: 350,
 			margin: margin,
-			maxValue: 60,
+			maxValue: 6,
 			levels: 6,
-			roundStrokes: false,
+			roundStrokes: true,
 			color: d3.scaleOrdinal().range(["#AFC52F", "#ff6600", "#2a2fd4"]),
 				format: '.0f',
-				legend: { title: 'Organization XYZ', translateX: 100, translateY: 40 },
-				unit: '$'
+				legend: { title: 'Radar chart', translateX: -300, translateY: 40 },
+				unit: ''
 			};
 
 			// Draw the chart, get a reference the created svg element :
@@ -89,7 +138,6 @@ let radarUpdate = (country) => {
 
 
 const RadarChart = function RadarChart(parent_selector, data, options) {
-    console.log(data)
 	//Wraps SVG text - Taken from http://bl.ocks.org/mbostock/7555321
 	const wrap = (text, width) => {
 	  text.each(function() {
@@ -121,8 +169,8 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	 w: 600,				//Width of the circle
 	 h: 600,				//Height of the circle
 	 margin: {top: 20, right: 20, bottom: 20, left: 20}, //The margins of the SVG
-	 levels: 3,				//How many levels or inner circles should there be drawn
-	 maxValue: 0, 			//What is the value that the biggest circle will represent
+	 levels: 0,				//How many levels or inner circles should there be drawn
+	 maxValue: 6, 			//What is the value that the biggest circle will represent
 	 labelFactor: 1.25, 	//How much farther than the radius of the outer circle should the labels be placed
 	 wrapWidth: 60, 		//The number of pixels after which a label needs to be given a new line
 	 opacityArea: 0.35, 	//The opacity of the area of the blob
@@ -154,7 +202,9 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 			}
 		}
 	}
-	maxValue = max(cfg.maxValue, maxValue);
+	maxValue = max(cfg.maxValue, maxValue);	
+	maxValue = 5;
+
 
 	const allAxis = data[0].axes.map((i, j) => i.axis),	//Names of each axis
 		total = allAxis.length,					//The number of different axes
@@ -371,7 +421,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		if (cfg.legend.title) {
 			let title = legendZone.append("text")
 				.attr("class", "title")
-				.attr('transform', `translate(${cfg.legend.translateX},${cfg.legend.translateY})`)
+				.attr('transform', `translate(${cfg.legend.translateX+200},${cfg.legend.translateY})`)
 				.attr("x", cfg.w - 70)
 				.attr("y", 10)
 				.attr("font-size", "12px")
@@ -388,7 +438,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		  .data(names)
 		  .enter()
 		  .append("rect")
-		  .attr("x", cfg.w - 65)
+		  .attr("x", cfg.w + 137)
 		  .attr("y", (d,i) => i * 20)
 		  .attr("width", 10)
 		  .attr("height", 10)
@@ -398,7 +448,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		  .data(names)
 		  .enter()
 		  .append("text")
-		  .attr("x", cfg.w - 52)
+		  .attr("x", cfg.w + 150)
 		  .attr("y", (d,i) => i * 20 + 9)
 		  .attr("font-size", "11px")
 		  .attr("fill", "#737373")
