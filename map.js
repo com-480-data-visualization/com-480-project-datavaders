@@ -325,18 +325,21 @@ const map_update = () => {
         if (map_data.get(d.id)) {
           d3.select(this).attr("fill", lighten(colorScale(map_data.get(d.id))))
             .style("cursor", "pointer");
+          radarChart_changeRadarCountry(map_names.get(d.id));
+
         }
       })
       .on("mouseout",function(d) {
-        
+        console.log('mouseout')
         // Reset color to original tone.
         d3.select(this).attr("fill", colorScale(map_data.get(d.id) || 0))
       })
       .on("click", function(d) {
         if (map_data.get(d.id)) {
-          
+          console.log('Clicked')
           // TODO: Linking code to other visuals to go here.
-          radarChart_changeRadarCountry(map_names.get(d.id));
+          radarChart_addRadarCountry(map_names.get(d.id));
+          console.log(map_names.get(d.id));
           map_update();
         }
       })

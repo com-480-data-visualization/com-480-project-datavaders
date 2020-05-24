@@ -21,26 +21,34 @@ var radar_data = [];
 var data = [];
 let radar_currentYear = 2019;
 let radar_chosenCountry = null;
+var hoveredCountry;
+var clickedCountries = [];
+
+var color = 0;
 
 var sequentialScale = d3.scaleSequential()
   .domain([0, 5])
   .interpolator(d3.interpolateRainbow);
 
 
-let radarUpdate = (country) => {
+let radarUpdate = () => {
 	d3.csv('./Preprocessing/finaldfCoordinatesStdev.csv', function(originalData) {
 	var radar_dropDownSelected = [];
     for (var option of document.getElementById('mselect').options) {
       if (option.selected) {
         radar_dropDownSelected.push(option.value);
 	  }
+	  //radar_dropDownSelected.push(clickedCountry);
+	  //clickedCountry = null;
 	}
 	
 	data = [];
+	//radar_data = [];
 	radar_data = [];
-	
-
-	radar_data.push(...originalData.filter(d => d.country === country & +d.year === radar_currentYear))
+	//console.log(hoveredCountry)
+	radar_data.push(...originalData.filter(d => d.country === hoveredCountry & +d.year === radar_currentYear))
+	hoveredCountry = null;
+	//radar_data.push(...originalData.filter(d => d.country === clickedCountry & +d.year === radar_currentYear))
 	for(let i=0; i < radar_dropDownSelected.length; i++) {
 		let dropDownData = originalData.filter(d => d.country === radar_dropDownSelected[i] & +d.year === radar_currentYear)
 		console.log(dropDownData);
@@ -48,21 +56,16 @@ let radarUpdate = (country) => {
 			radar_data.push(...dropDownData);
 		console.log('in for loop', radar_data);
 	}
-	
-	
 
-	/* radar_dropDownSelected.forEach(ctr => {
-		dropDownData = originalData.find(d => d.country === ctr & d.year === radar_currentYear.toString());
-		console.log('Dropdown data', dropDownData);
-		console.log('Country', ctr);
-		console.log('Radar data in forEach', radar_data)
-		if(radar_data.some(d => d.country === ctr)) {
-			radar_data.push(dropDownData);
-		}
-		
+	for(let i=0; i < clickedCountries.length; i++) {
+		let clickedData = originalData.filter(d => d.country === clickedCountries[i] & +d.year === radar_currentYear)
+		//console.log(dropDownData);
+		if(data.every(function(d) {return d.name != clickedCountries[i]}))
+			radar_data.push(...clickedData);
+		console.log('in for loop', radar_data);
+	}
 
-	}) */
-	//console.log('data', radar_data);
+	
 
 	radar_data.forEach(d => {
 		let object = { name: d.country,
@@ -73,7 +76,7 @@ let radarUpdate = (country) => {
 				{axis: 'freedom_to_life_choice', value: +d.freedom_to_life_choice},
 				{axis: 'healthy_life_expectancy', value: +d.healthy_life_expectancy}
 			], 
-			color: sequentialScale(d.index)
+			color: 'blue' //sequentialScale(color++)
 		}
 		
 		data.push(object);
@@ -169,7 +172,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	 w: 600,				//Width of the circle
 	 h: 600,				//Height of the circle
 	 margin: {top: 20, right: 20, bottom: 20, left: 20}, //The margins of the SVG
-	 levels: 0,				//How many levels or inner circles should there be drawn
+	 levels: 6,				//How many levels or inner circles should there be drawn
 	 maxValue: 6, 			//What is the value that the biggest circle will represent
 	 labelFactor: 1.25, 	//How much farther than the radius of the outer circle should the labels be placed
 	 wrapWidth: 60, 		//The number of pixels after which a label needs to be given a new line
@@ -203,7 +206,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		}
 	}
 	maxValue = max(cfg.maxValue, maxValue);	
-	maxValue = 5;
+	maxValue = 6;
 
 
 	const allAxis = data[0].axes.map((i, j) => i.axis),	//Names of each axis
@@ -461,8 +464,16 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	return svg;
 }
 
-const radarChart_changeRadarCountry = (clickedCountry) => {
-	let country = clickedCountry;
-	radarUpdate(country);
-
+const radarChart_changeRadarCountry = (map_hoveredCountry) => {
+	hoveredCountry = map_hoveredCountry
+	radarUpdate();
 }
+
+const radarChart_addRadarCountry = (map_clickedCountry) => {
+	clickedCountries.push(map_clickedCountry);
+	console.log(clickedCountries)
+	radarUpdate();
+}
+
+
+radarUpdate();
