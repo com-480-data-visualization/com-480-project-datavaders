@@ -30,6 +30,8 @@
 		</style>
 	</head>
 	<body>
+    
+
 		<div class="radarChart2" style="display: inline-flex;"></div>
 		<script>
 			//////////////////////////////////////////////////////////////
@@ -43,50 +45,28 @@
 			//////////////////////////////////////////////////////////////
 			////////////////////////// Data //////////////////////////////
 			//////////////////////////////////////////////////////////////
-
-			var data = [
-				{ name: 'Allocated budget',
-					axes: [
-						{axis: 'Sales', value: 42},
-						{axis: 'Marketing', value: 20},
-						{axis: 'Development', value: 60},
-						{axis: 'Customer Support', value: 26},
-						{axis: 'Information Technology', value: 35},
-						{axis: 'Administration', value: 20}
-					],
-         color: '#26AF32'
-				},
-				{ name: 'Actual Spending',
-					axes: [
-						{axis: 'Sales', value: 50},
-						{axis: 'Marketing', value: 45},
-						{axis: 'Development', value: 20},
-						{axis: 'Customer Support', value: 20},
-						{axis: 'Information Technology', value: 25},
-						{axis: 'Administration', value: 23}
-					],
-         color: '#762712'
-				},
-        { name: 'Further Test',
-					axes: [
-						{axis: 'Sales', value: 32},
-						{axis: 'Marketing', value: 62},
-						{axis: 'Development', value: 35},
-						{axis: 'Customer Support', value: 10},
-						{axis: 'Information Technology', value: 20},
-						{axis: 'Administration', value: 28}
-					],
-         color: '#2a2fd4'
-				}
-			];
       
-      console.log(data[0].color);
+      var data = [];
+      let radar_currentYear = 2019;
+      d3.csv('./Preprocessing/finaldfCoordinates.csv').then(function(originalData) {
+      let radar_data = originalData.filter(d => d.year === radar_currentYear.toString() & (d.country === 'Egypt' | d.country === 'Canada'));
+      //console.log(radar_data);
+      radar_data.forEach(d => {
+          let object = { name: d.country,
+              axes: [
+                  {axis: 'gdp', value: +d.gdp_per_capita},
+                  {axis: 'healthy_life_expectancy', value: +d.healthy_life_expectancy},
+                  {axis: 'freedom_to_life_choice', value: +d.freedom_to_life_choice},
+                  {axis: 'generosity', value: +d.generosity},
+                  {axis: 'corruption_perceptions', value: +d.corruption_perceptions}
+              ], 
+              color: '#26AF32'
+          }
+          data.push(object);
+      });
+      //console.log(data);
 
-			//////////////////////////////////////////////////////////////
-			////// First example /////////////////////////////////////////
-      ///// (not so much options) //////////////////////////////////
-			//////////////////////////////////////////////////////////////
-			var radarChartOptions = {
+      var radarChartOptions = {
 			  w: 290,
 			  h: 350,
 			  margin: margin,
@@ -118,6 +98,17 @@
 
 			// Draw the chart, get a reference the created svg element :
 			let svg_radar2 = RadarChart(".radarChart2", data, radarChartOptions2);
+
+    });
+    
+      //console.log(data);
+      //console.log(data[0].color);
+
+			//////////////////////////////////////////////////////////////
+			////// First example /////////////////////////////////////////
+      ///// (not so much options) //////////////////////////////////
+			//////////////////////////////////////////////////////////////
+			
 		</script>
 	</body>
 </html>

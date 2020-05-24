@@ -10,12 +10,8 @@ const sin = Math.sin;
 const cos = Math.cos;
 const HALF_PI = Math.PI / 2;
 
-d3.csv('./Preprocessing/finaldfNormalized.csv', function(data) {
-    console.log(data);
-
-});
-
 const RadarChart = function RadarChart(parent_selector, data, options) {
+    console.log(data)
 	//Wraps SVG text - Taken from http://bl.ocks.org/mbostock/7555321
 	const wrap = (text, width) => {
 	  text.each(function() {
