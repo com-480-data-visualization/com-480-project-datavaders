@@ -5,10 +5,10 @@
 // (VisualCinnamon.com) and modified for d3 v4 //////////
 /////////////////////////////////////////////////////////
 
-max = Math.max;
-sin = Math.sin;
-cos = Math.cos;
-HALF_PI = Math.PI / 2;
+const max = Math.max;
+const sin = Math.sin;
+const cos = Math.cos;
+const HALF_PI = Math.PI / 2;
 
 var margin = { top: 50, right: 80, bottom: 50, left: 80 },
 				width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
@@ -20,12 +20,15 @@ var margin = { top: 50, right: 80, bottom: 50, left: 80 },
       
 var data = [];
 let radar_currentYear = 2019;
+let radar_chosenCountry = null;
 
-const radarUpdate = () => {
+var sequentialScale = d3.scaleSequential()
+  .domain([0, 5])
+  .interpolator(d3.interpolateRainbow);
 
+let radarUpdate = (country) => {
 	d3.csv('./Preprocessing/finaldfCoordinates.csv', function(originalData) {
-	console.log(originalData)
-	let radar_data = originalData.filter(d => d.year === radar_currentYear.toString() & (d.country === country));
+	let radar_data = originalData.filter(d => d.year === radar_currentYear.toString() & d.country === country);
 	//console.log(radar_data);
 	radar_data.forEach(d => {
 		let object = { name: d.country,
@@ -36,8 +39,9 @@ const radarUpdate = () => {
 				{axis: 'freedom_to_life_choice', value: +d.freedom_to_life_choice},
 				{axis: 'healthy_life_expectancy', value: +d.healthy_life_expectancy}
 			], 
-			color: '#26AF32'
+			//color: sequentialScale(d.index)
 		}
+		
 		data.push(object);
 	});
 	//console.log(data);
@@ -50,7 +54,7 @@ const radarUpdate = () => {
 			margin: margin,
 			levels: 5,
 			roundStrokes: true,
-				color: d3.scaleOrdinal().range(["#26AF32", "#762712", "#2a2fd4"]),
+				color: sequentialScale(3),
 				format: '.0f'
 			};
 
@@ -78,7 +82,7 @@ const radarUpdate = () => {
 			let svg_radar2 = RadarChart(".radarChart2", data, radarChartOptions2);
 
 	});
-} // end radarUpdate
+}
 			
 
 
@@ -407,9 +411,8 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	return svg;
 }
 
-const radarChart_changeRadarCountry = (country) => {
-    d3.select('#radar-plot').selectAll('path').remove();
-    d3.selectAll('.radar_points').remove();
-    radar_selectedCountry = typeof country === 'string' ? country : 'Serbia';
-    radarUpdate();  
+const radarChart_changeRadarCountry = (clickedCountry) => {
+	let country = clickedCountry;
+	radarUpdate(country);
+
 }
