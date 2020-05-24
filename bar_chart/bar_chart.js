@@ -19,8 +19,8 @@ let scaleY = d3.scaleLinear()
     .rangeRound([0, height]);
 
 let z = d3.scaleOrdinal()
-    .range(["RGB(243,202,34)", "RGB(237,233,37)", "RGB(52,161,153)", "RGB(70,180,12)"
-    , "RGB(153,148,194)", "RGB(211,102,153)", "RGB(194,63,118)"]);
+    .range(["RGB(243,202,34)", "RGB(237,233,37)", "RGB(52,161,153)", "RGB(70,180,12)",
+    "RGB(153,148,194)", "RGB(211,102,153)", "RGB(194,63,118)"]);
 
 let color_seq = d3.scaleSequential()
     .interpolator(d3.interpolateCool);
@@ -33,27 +33,20 @@ const bar_update = () => {
     d3.select('#bar').selectAll('text').remove();
     d3.selectAll('#bar tick').remove();
 
-    d3.csv(`./Preprocessing/${bar_year}.csv`, function (d) {
-        let data = d;
+    d3.csv(`./Preprocessing/finaldf1.csv`, function (d) {
+        //bar_year
+        let data = d.filter(obj => obj.year===bar_year);
 
         color_seq.domain([0, data.length]);
         color_seq2.domain([-150, data.length]);
 
-        if (bar_year === '2015') {
-            keys = d.columns.slice(5, 12);
-        } else if (bar_year === '2016') {
-            keys = d.columns.slice(6);
-        } else if (bar_year === '2017') {
-            keys = d.columns.slice(5);
-        } else if (bar_year === '2018' || bar_year === '2019') {
-            keys = d.columns.slice(3);
-        }
-
+        keys = d.columns.slice(5, 11);
+        console.log(keys)
         let key_data = d3.stack().keys(keys)(data);
 
         // Sort row on basis of Happiness Score
         data.sort(function (a, b) {
-            return b['Happiness Score'] - a['Happiness Score'];
+            return b.score - a.score;
         });
 
         data.map((d, i) => d.idx0 = i);
@@ -62,12 +55,12 @@ const bar_update = () => {
         // console.log(Object.keys(data));
 
         scaleX.domain(data.map((d) => {
-            return d.Country;
+            return d.country;
         }));
 
 
         scaleY.domain([0, d3.max(data, function (d) {
-            return d['Happiness Score'];
+            return d.score;
         })]).nice();
 
         //console.log(d3.stack().keys(keys)(data));
@@ -81,7 +74,7 @@ const bar_update = () => {
             .append('rect')
             .attr('class', 'gbarrect')
             .attr("x", function (d) {
-                return scaleX(d.Country);
+                return scaleX(d.country);
             })
             .attr("y", function (d) {
                 return scaleY(0);
@@ -93,7 +86,7 @@ const bar_update = () => {
                 return i * 5;
             })
             .attr("height", function (d) {
-                return scaleY(d['Happiness Score']);
+                return scaleY(d.score);
             })
             .attr("width", 0.60 * scaleX.bandwidth())
             .attr("fill", (d, i) => {
@@ -165,7 +158,7 @@ const bar_update = () => {
                 .duration(400)
                 .attr('width', scaleX.bandwidth() * 1)
                 .attr("x", function (d) {
-                    return scaleX(d.Country) - scaleX.bandwidth() * 0.2;
+                    return scaleX(d.country) - scaleX.bandwidth() * 0.2;
                 })
                 .attr('fill', '#D4AF37');//#D4AF37
         }
@@ -178,7 +171,7 @@ const bar_update = () => {
                 .delay(400)
                 .attr('width', scaleX.bandwidth() * 0.6)
                 .attr("x", function (d) {
-                    return scaleX(d.Country);
+                    return scaleX(d.country);
                 })
                 .attr('fill', color_seq2(d.idx1))
                 .transition()     // adds animation
@@ -191,7 +184,7 @@ const bar_update = () => {
             g.append('rect')
                 .attr('class', 'motherfucker')
                 .attr("x", function () {
-                    return scaleX(d.Country) - scaleX.bandwidth() * 5;
+                    return scaleX(d.country) - scaleX.bandwidth() * 3;
                 })
                 .attr("y", function () {
                     return scaleY(0);
@@ -202,7 +195,7 @@ const bar_update = () => {
                 .attr("height", function () {
                     return scaleY(10);
                 })
-                .attr("width", 11 * scaleX.bandwidth())
+                .attr("width", 7 * scaleX.bandwidth())
                 .attr("fill", "rgb(241,241,241)");
 
             let elem_idx = d.idx0;
@@ -211,20 +204,20 @@ const bar_update = () => {
                 g.append('rect')
                     .attr("class", "brushed")
                     .attr("x", function () {
-                        return scaleX(d.Country) - scaleX.bandwidth() * 4;
+                        return scaleX(d.country) - scaleX.bandwidth() * 2;
                     })
                     .attr("y", () => scaleY(item[elem_idx][0]))
                     .attr("height", function () {
                         return scaleY(item[elem_idx][1] - item[elem_idx][0] + 0.1);
                     })
-                    .attr("width", 9 * scaleX.bandwidth())
+                    .attr("width", 5 * scaleX.bandwidth())
                     .attr('fill', z(key_idx))
             })
         }
 
         function onMapOut(d, i) {
             d3.transition()
-                .delay(600)
+                .delay()
                 .duration(300)
                 .select('#bar').selectAll('.brushed').remove();
             d3.transition()
