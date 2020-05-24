@@ -5,10 +5,10 @@
 // (VisualCinnamon.com) and modified for d3 v4 //////////
 /////////////////////////////////////////////////////////
 
-const max = Math.max;
-const sin = Math.sin;
-const cos = Math.cos;
-const HALF_PI = Math.PI / 2;
+max = Math.max;
+sin = Math.sin;
+cos = Math.cos;
+HALF_PI = Math.PI / 2;
 
 var margin = { top: 50, right: 80, bottom: 50, left: 80 },
 				width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
@@ -24,7 +24,7 @@ let radar_currentYear = 2019;
 const radarUpdate = () => {
 
 	d3.csv('./Preprocessing/finaldfCoordinates.csv', function(originalData) {
-		console.log(originalData)
+	console.log(originalData)
 	let radar_data = originalData.filter(d => d.year === radar_currentYear.toString() & (d.country === country));
 	//console.log(radar_data);
 	radar_data.forEach(d => {
