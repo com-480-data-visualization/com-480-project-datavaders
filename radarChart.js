@@ -47,7 +47,6 @@ let radarUpdate = () => {
 		el.value = opt;
 		select.appendChild(el);
 	}
-	
 
 	var radar_dropDownSelected = [];
     for (var option of document.getElementById('mselect').options) {
@@ -497,6 +496,8 @@ const radarChart_changeRadarCountry = (map_hoveredCountry) => {
 }
 
 const radarChart_addRadarCountry = (map_clickedCountry) => {
+	document.querySelector(`#mselect option[value=${map_clickedCountry}]`).selected = true;
+	$("#mselect").trigger("chosen:updated");
 	clickedCountries.push(map_clickedCountry);
 	radarUpdate();
 }
