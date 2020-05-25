@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <!-- Load minified d3.js library -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <title>Data Visualization</title>
+</head>
+
+<body class="w3-light-grey">
+
+
+<div class="w3-top w3-bar w3-blue w3-card">
+    <span class="w3-bar-item w3-left">Happyness visualization</span>
+    <a href="#site" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">video</a>
+    <a href="#proc" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">process book</a>
+    <a href="#video" class="w3-bar-item w3-button w3-padding-large w3-hide-small w3-right">tutorial</a>
+</div>
+
+
+<div class="w3-content" style="max-width:1500px; margin-top:50px;">
+    <div class="w3-row-padding w3-margin-bottom">
+        <div class="w3-twothird">
+            <div class="map_layout">
+                <div class="w3-right">
+                    <select id="map_year" name="map_year" onchange="changeMapYear(this); changeRadarYear(this);">
+                        <option value="2015">2015</option>
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019" selected>2019</option>
+                    </select>
+                </div>
+                <svg id="map" width="1000" height="500"></svg>
+            </div>
+
+        </div>
+        <div class="w3-third">
+            <div class="w3-container w3-khaki w3-padding-16  w3-card-2" style="height:175px">
+                <div class="w3-right"><i class="far fa-sad-tear w3-xxlarge w3-text-white"></i></div>
+                <h4>scatter</h4>
+            </div>
+            <div class="w3-container w3-margin-top w3-khaki w3-padding-16  w3-card-2" style="height:175px">
+                <div class="w3-right"><i class="far fa-sad-tear w3-xxlarge w3-text-white"></i></div>
+                <h4>radial</h4>
+            </div>
+        </div>
+        <div class="w3-row">
+            <div class="w3-twothird">
+                <svg id="bar" width="1000" height="300"></svg>
+            </div>
+            <div class="w3-third"></div>
+        </div>
+    </div>
+
+
+    <script type="module" src='bar_chart/bar_chart.js'></script>
+    <script src="map.js"></script>
+</body>
+
+</html>
