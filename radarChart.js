@@ -18,6 +18,7 @@ var margin = { top: 50, right: 80, bottom: 50, left: 80 },
 			////////////////////////// Data //////////////////////////////
 			//////////////////////////////////////////////////////////////
 var radar_data = [];
+var radar_dropDownSelected = [];
 var data = [];
 let radar_currentYear = 2019;
 let radar_chosenCountry = null;
@@ -48,7 +49,7 @@ let radarUpdate = () => {
 		select.appendChild(el);
 	}
 
-	var radar_dropDownSelected = [];
+	 radar_dropDownSelected = [];
     for (var option of document.getElementById('mselect').options) {
       if (option.selected) {
         radar_dropDownSelected.push(option.value);
@@ -118,11 +119,11 @@ let radarUpdate = () => {
 		data = [ 
 		{ name: '',
 		axes: [
-			{axis: 'gdp', value: 0},
-			{axis: 'corruption_perceptions', value: 0},
-			{axis: 'generosity', value: 0},
-			{axis: 'freedom_to_life_choice', value: 0},
-			{axis: 'healthy_life_expectancy', value: 0}
+			{axis: 'gdp'},
+			{axis: 'corruption_perceptions'},
+			{axis: 'generosity'},
+			{axis: 'freedom_to_life_choice'},
+			{axis: 'healthy_life_expectancy'}
 		], 
 		//color: sequentialScale(d.index)
 	}];
@@ -351,6 +352,10 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 
 	if(cfg.roundStrokes) {
 		radarLine.curve(d3.curveCardinalClosed)
+	}
+
+	if (data[0].name === '') {
+		return svg;
 	}
 
 	//Create a wrapper for the blobs
