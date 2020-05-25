@@ -11,8 +11,7 @@ let svg = d3.select("#bar"),
 
 let scaleX = d3.scaleBand()
     .rangeRound([0, width])
-    //.paddingInner(0.01)
-    //.paddingOuter(0.01)
+    .paddingOuter(0.01)
     .align(0.1);
 
 let scaleY = d3.scaleLinear()
@@ -33,24 +32,23 @@ const bar_update = () => {
     d3.select('#bar').selectAll('text').remove();
     d3.selectAll('#bar tick').remove();
 
-    d3.csv(`./Preprocessing/finaldf1.csv`, function (d) {
+    d3.csv(`./Preprocessing/df2.csv`, function (d) {
         //bar_year
         let data = d.filter(obj => obj.year===bar_year);
-
+        data.map((d, i) => d.idx0 = i);
         color_seq.domain([0, data.length]);
         color_seq2.domain([-150, data.length]);
 
-        keys = d.columns.slice(5, 11);
-        console.log(keys)
+        keys = d.columns.slice(4, 11);
+
         let key_data = d3.stack().keys(keys)(data);
 
         // Sort row on basis of Happiness Score
         data.sort(function (a, b) {
-            return b.score - a.score;
+            return b.posx - a.posx;
         });
 
-        data.map((d, i) => d.idx0 = i);
-        d3.shuffle(data);
+        //d3.shuffle(data);
         data.map((d, i) => d.idx1 = i);
         // console.log(Object.keys(data));
 
@@ -184,7 +182,7 @@ const bar_update = () => {
             g.append('rect')
                 .attr('class', 'motherfucker')
                 .attr("x", function () {
-                    return scaleX(d.country) - scaleX.bandwidth() * 3;
+                    return scaleX(d.country) - scaleX.bandwidth() * 4;
                 })
                 .attr("y", function () {
                     return scaleY(0);
@@ -195,7 +193,7 @@ const bar_update = () => {
                 .attr("height", function () {
                     return scaleY(10);
                 })
-                .attr("width", 7 * scaleX.bandwidth())
+                .attr("width", 9 * scaleX.bandwidth())
                 .attr("fill", "rgb(241,241,241)");
 
             let elem_idx = d.idx0;
@@ -204,13 +202,13 @@ const bar_update = () => {
                 g.append('rect')
                     .attr("class", "brushed")
                     .attr("x", function () {
-                        return scaleX(d.country) - scaleX.bandwidth() * 2;
+                        return scaleX(d.country) - scaleX.bandwidth() * 3;
                     })
                     .attr("y", () => scaleY(item[elem_idx][0]))
                     .attr("height", function () {
                         return scaleY(item[elem_idx][1] - item[elem_idx][0] + 0.1);
                     })
-                    .attr("width", 5 * scaleX.bandwidth())
+                    .attr("width", 7 * scaleX.bandwidth())
                     .attr('fill', z(key_idx))
             })
         }
@@ -219,6 +217,7 @@ const bar_update = () => {
             d3.transition()
                 .delay(700)
                 .duration(400)
+                .ease(d3.easeSin)
                 .select('#bar').selectAll('.motherfucker')
                 .attr("height", 0)
                 .remove();
@@ -226,6 +225,7 @@ const bar_update = () => {
             d3.transition()
                 .delay(800)
                 .duration(100)
+                .ease(d3.easeSin)
                 .attr("height", 0)
                 .select('#bar').selectAll('.brushed').remove()
         }
