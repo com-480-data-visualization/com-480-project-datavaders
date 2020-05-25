@@ -1,7 +1,9 @@
 // Create data
 
+
 let scatter_year = '2019';
 let scatter_metric = 'gdp_per_capita';
+let scatter_zoomable = false;
 
 var margin = { top: 20, right: 20, bottom: 30, left: 30 };
   width = 900 - margin.left - margin.right,
@@ -17,10 +19,33 @@ const scatter_update = () => {
   d3.csv('./Preprocessing/finaldf.csv', function(d) {
     var data = d.filter((entry) => entry.year === scatter_year);
 
-
-  var tooltip = d3.select("body").append("div")
+    var Tooltip = d3.select("#scatter")
+      .append("div")
       .attr("class", "tooltip")
-      .style("opacity", 0);
+      .style("background-color", "red")
+      .style("border", "solid")
+      .style("border-width", "2px")
+      .style("border-radius", "5px")
+      .style("padding", "5px")
+      .style("position", "absolute");
+      
+
+      // Three function that change the tooltip when user hover / move / leave a cell
+      var mouseover = function(d) {
+        console.log('Mouseover fired!');
+        Tooltip
+          .style("display", null)
+      }
+      var mousemove = function(d) {
+        Tooltip
+          .html(`${d.country}<br>Happiness Score: ${d.score}<br>${scatter_metric}: ${d[scatter_metric]}`)
+          .style("left", (d3.mouse(this)[0]) + 700 + "px")
+          .style("top", (d3.mouse(this)[1]) + "px")
+      }
+      var mouseleave = function(d) {
+        Tooltip
+          .style("display", "none")
+      }
 
   var x = d3.scaleLinear()          
         .range([0, width])
@@ -62,7 +87,10 @@ const scatter_update = () => {
       .attr("cx", function (d) { return x(+d[scatter_metric]); })
       .attr("cy", function (d) { return y(+d.score); })
       .attr("opacity", 0.5)
-      .style("fill", "#4292c6");
+      .style("fill", "#4292c6")
+      .on('mouseover', mouseover)
+      .on('mousemove', mousemove)
+      .on('mouseleave', mouseleave);
 
   // x axis
   svg.append("g")
@@ -92,9 +120,20 @@ const scatter_update = () => {
       .attr('id', "y-label-text")
       .text("Happiness Score");
 
-  scatter.append("g")
-      .attr("class", "brush")
-      .call(brush);
+  document.addEventListener('keydown', event => {
+    if (event.shiftKey) {
+      if (scatter_zoomable) {
+        d3.selectAll('.brush').remove();
+      } else {
+        scatter.append("g")
+        .attr("class", "brush")
+        .call(brush);
+      }
+      scatter_zoomable = !scatter_zoomable;
+    }
+  });
+
+  
 
   function brushended() {
 
