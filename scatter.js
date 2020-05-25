@@ -1,146 +1,155 @@
-let scatter_submetric = 'gdp_per_capita';
+// Create data
+
 let scatter_year = '2019';
-let scatter_data = null;
+let scatter_metric = 'gdp_per_capita';
 
-const getSubMetricName = (columnName) => {
-  return columnName.replace(/_/gi, ' ');
-};
+var margin = { top: 20, right: 20, bottom: 30, left: 30 };
+  width = 900 - margin.left - margin.right,
+  height = 480 - margin.top - margin.bottom;
 
-// Helper function to scale the y-axis.
-const getMaxValueRoundedUp = () => {
-  return Math.ceil(Math.max(...scatter_data.filter(d => d.year === scatter_year)
-  .map(d => Number(d[scatter_submetric]))));
+var svg = d3.select("#scatter").append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+const scatter_update = () => {
+  d3.csv('./Preprocessing/finaldf.csv', function(d) {
+    var data = d.filter((entry) => entry.year === scatter_year);
+
+
+  var tooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+
+  var x = d3.scaleLinear()          
+        .range([0, width])
+        .nice();
+
+  var y = d3.scaleLinear()
+      .range([height, 0]);
+
+  var xAxis = d3.axisBottom(x).ticks(12),
+      yAxis = d3.axisLeft(y).ticks(12 * height / width);
+
+  var brush = d3.brush().extent([[0, 0], [width, height]]).on("end", brushended),
+      idleTimeout,
+      idleDelay = 350;
+
+  
+  var clip = svg.append("defs").append("svg:clipPath")
+      .attr("id", "clip")
+      .append("svg:rect")
+      .attr("width", width )
+      .attr("height", height )
+      .attr("x", 0) 
+      .attr("y", 0); 
+
+  var xExtent = d3.extent(data, function (d) { return +d[scatter_metric]; });
+  var yExtent = d3.extent(data, function (d) { return +d.score; });
+  x.domain(d3.extent(data, function (d) { return +d[scatter_metric]; })).nice();
+  y.domain(d3.extent(data, function (d) { return +d.score; })).nice();
+
+  var scatter = svg.append("g")
+        .attr("id", "scatterplot")
+        .attr("clip-path", "url(#clip)");
+      
+  scatter.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 4)
+      .attr("cx", function (d) { return x(+d[scatter_metric]); })
+      .attr("cy", function (d) { return y(+d.score); })
+      .attr("opacity", 0.5)
+      .style("fill", "#4292c6");
+
+  // x axis
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr('id', "axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("text")
+    .style("text-anchor", "end")
+      .attr("x", width)
+      .attr("y", height - 8)
+      .attr('id', "x-label-text")
+    .text(scatter_metric);
+
+  // y axis
+  svg.append("g")
+      .attr("class", "y axis")
+      .attr('id', "axis--y")
+      .call(yAxis);
+
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", "1em")
+      .style("text-anchor", "end")
+      .attr('id', "y-label-text")
+      .text("Happiness Score");
+
+  scatter.append("g")
+      .attr("class", "brush")
+      .call(brush);
+
+  function brushended() {
+
+      var s = d3.event.selection;
+      if (!s) {
+          if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
+          x.domain(d3.extent(data, function (d) { return +d[scatter_metric]; })).nice();
+          y.domain(d3.extent(data, function (d) { return +d.score; })).nice();
+      } else {
+          
+          x.domain([s[0][0], s[1][0]].map(x.invert, x));
+          y.domain([s[1][1], s[0][1]].map(y.invert, y));
+          scatter.select(".brush").call(brush.move, null);
+      }
+      zoom();
+  }
+
+  function idled() {
+      idleTimeout = null;
+  }
+
+  function zoom() {
+
+      var t = scatter.transition().duration(750);
+      svg.select("#axis--x").transition(t).call(xAxis);
+      svg.select("#axis--y").transition(t).call(yAxis);
+      scatter.selectAll("circle").transition(t)
+      .attr("cx", function (d) { return x(+d[scatter_metric]); })
+      .attr("cy", function (d) { return y(+d.score); });
+  }
+
+  })
 }
 
-// Set the dimensions and margins of the scatter plot.
-let scatter_margin = {top: 10, right: 30, bottom: 40, left: 50},
-    scatter_width = 600 - scatter_margin.left - scatter_margin.right,
-    scatter_height = 260 - scatter_margin.top - scatter_margin.bottom;
+scatter_update();
 
-// Append the svg object to the body of the page.
-let scatter_svg = d3.select("#scatter")
-.append("svg")
-.attr("width", scatter_width + scatter_margin.left + scatter_margin.right)
-.attr("height", scatter_height + scatter_margin.top + scatter_margin.bottom)
-.append("g")
-.attr("transform", "translate(" + scatter_margin.left + "," + scatter_margin.top + ")");
-
-// Add scatter plot styling.
-scatter_svg.append("rect")
-.attr("x",0)
-.attr("y",0)
-.attr("height", scatter_height)
-.attr("width", scatter_width)
-.style("fill", "EBEBEB");
-
-// Update graph data on any user input change.
-const update = () => {
-  // Clear any stale state.
-  scatter_svg.selectAll('text').remove();
-  scatter_svg.selectAll('circle').remove();
-
-  // Create x-axis.
-  let scatter_x = d3.scaleLinear()
-  .domain([0, getMaxValueRoundedUp()])
-  .range([0, scatter_width ])
-  
-  scatter_svg.append("g")
-  .attr("transform", "translate(0," + scatter_height + ")")
-  .call(d3.axisBottom(scatter_x).tickSize(-scatter_height*1.3).ticks(10))
-  .select(".domain").remove()
-
-  // Create y-axis
-  let scatter_y = d3.scaleLinear()
-  .domain([2, 8])
-  .range([scatter_height, 0])
-  .nice()
-  
-  scatter_svg.append("g")
-  .call(d3.axisLeft(scatter_y).tickSize(-scatter_width*1.3).ticks(7))
-  .select(".domain").remove()
-
-  // Customization
-  scatter_svg.selectAll(".tick line").attr("stroke", "white")
-
-  // Label x-axis.
-  scatter_svg.append("text")
-  .attr("text-anchor", "end")
-  .attr("x", scatter_width/2 + scatter_margin.left)
-  .attr("y", scatter_height + scatter_margin.top + 20)
-  .text(getSubMetricName(scatter_submetric));
-
-  // Label y-axis.
-  scatter_svg.append("text")
-  .attr("text-anchor", "end")
-  .attr("transform", "rotate(-90)")
-  .attr("y", -scatter_margin.left + 20)
-  .attr("x", -scatter_margin.top - scatter_height/2 + 20)
-  .text("happiness score")
-
-  // Assign point colour by region.
-  let scatter_color = d3.scaleOrdinal()
-  .domain([
-    "Australia and New Zealand", 
-    "Western Europe", 
-    "Central and Eastern Europe", 
-    "Eastern Asia",
-    "Latin America and Caribbean",
-    "Middle East and Northern Africa",
-    "North America", 
-    "Southeastern Asia", 
-    "Southern Asia", 
-    "Sub-Saharan Africa", 
-  ]).range([ 
-    "red", 
-    "orange", 
-    "yellow", 
-    "green", 
-    "blue", 
-    "indigo", 
-    "violet", 
-    "black", 
-    "gold", 
-    "silver"]);
-
-  // Add specified points to the scatter plot.
-  scatter_svg.append('g')
-  .selectAll("dot")
-  .data(scatter_data.filter(d => d.year === scatter_year))
-  .enter()
-  .append("circle")
-  .attr("cx", function (d) { return scatter_x(Number(d[scatter_submetric])); })
-  .attr("cy", function (d) { return scatter_y(d.score); })
-  .attr("r", 5)
-  .style("fill", function (d) { return scatter_color(d.region) } )
-}
-
-// Load preprocessed data from Preprocessing/finaldf.csv.
-d3.csv("./Preprocessing/finaldf.csv", function(d) {
-  scatter_data = d;
-  update();
-});
-
+      
 // Fires when user toggles year dropdown.
 const changeYear = () => {
+  d3.select('#scatter').selectAll('circle').remove();
+  d3.selectAll('#axis--x').remove();
+  d3.selectAll('#x-label-text').remove();
+  d3.selectAll('#y-label-text').remove();
+  d3.selectAll('#axis--y').remove();
   scatter_year = document.getElementById('year').value;
-  update();
+  scatter_update();
 }
 
 // Fires when user toggles submetric dropdown.
 const changeSubmetric = () => {
-  scatter_submetric = document.getElementById('submetric').value;
-  update();
+  d3.select('#scatter').selectAll('circle').remove();
+  d3.selectAll('#axis--x').remove();
+  d3.selectAll('#x-label-text').remove();
+  d3.selectAll('#y-label-text').remove();
+  d3.selectAll('#axis--y').remove();
+  scatter_metric = document.getElementById('submetric').value;
+  scatter_update();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-  
