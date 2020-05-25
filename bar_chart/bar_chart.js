@@ -41,7 +41,6 @@ const bar_update = () => {
         color_seq2.domain([-150, data.length]);
 
         keys = d.columns.slice(5, 11);
-        console.log(keys)
         let key_data = d3.stack().keys(keys)(data);
 
         // Sort row on basis of Happiness Score
@@ -95,8 +94,8 @@ const bar_update = () => {
 
 
         g.selectAll('.gbarrect')
-            .on("mouseover", onMapOver) //Add listener for the mouseover event
-            .on("mouseout", onMapOut);   //Add listener for the mouseout event
+            .on("mouseover", onMouseOver) //Add listener for the mouseover event
+            .on("mouseout", onMouseOut);   //Add listener for the mouseout event
 
 
         // g.append("g")

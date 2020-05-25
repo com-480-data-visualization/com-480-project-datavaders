@@ -270,7 +270,7 @@ let colorScale = d3.scaleThreshold()
   .range(map_colorScheme);
  
 // Set the legend.
-let map_g = map_svg.append("g")
+/* let map_g = map_svg.append("g")
   .attr("class", "legendThreshold")
   .attr("transform", "translate(20,50)");
 map_g.append("text")
@@ -284,7 +284,7 @@ let map_legend = d3.legendColor()
   .shapePadding(4)
   .scale(colorScale);
 map_svg.select(".legendThreshold")
-  .call(map_legend);
+  .call(map_legend); */
 
 // Set the tooltip.
 let map_tooltip = d3.select(".map_tooltip");
@@ -330,13 +330,12 @@ const map_update = () => {
         }
       })
       .on("mouseout",function(d) {
-        console.log('mouseout')
         // Reset color to original tone.
         d3.select(this).attr("fill", colorScale(map_data.get(d.id) || 0))
+        radarChart_removerRadarCountry(map_names.get(d.id));
       })
       .on("click", function(d) {
         if (map_data.get(d.id)) {
-          console.log('Clicked')
           // TODO: Linking code to other visuals to go here.
           radarChart_addRadarCountry(map_names.get(d.id));
           console.log(map_names.get(d.id));
