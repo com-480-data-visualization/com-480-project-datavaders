@@ -355,5 +355,3 @@ const changeMapYear = () => {
   map_selectedYear = document.getElementById('map_year').value;
   map_update();
 }
-
-

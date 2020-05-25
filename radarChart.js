@@ -23,6 +23,7 @@ let radar_currentYear = 2019;
 let radar_chosenCountry = null;
 var hoveredCountry;
 var clickedCountries = [];
+let clear = false;
 
 var color = 0;
 
@@ -474,6 +475,12 @@ const radarChart_addRadarCountry = (map_clickedCountry) => {
 	console.log(clickedCountries)
 	radarUpdate();
 }
+
+
+const clearAll = () => {
+	clear = true;
+  }
+  
 
 
 radarUpdate();
