@@ -100,46 +100,46 @@ let map_codes = new Map([
   ['Kuwait', 'KWT'],
   ['Kazakhstan', 'KAZ'],
   ['Laos', 'LAO'],
-  ['Lebanon', 'LBN'], 
-  ['Latvia', 'LVA'], 
-  ['Belarus', 'BLR'], 
-  ['Lithuania', 'LTU'], 
-  ['Liberia', 'LBR'], 
-  ['Slovakia', 'SVK'], 
-  ['Liechtenstein', 'LIE'], 
-  ['Libya', 'LBY'], 
-  ['Madagascar', 'MDG'], 
-  ['Martinique', 'MTQ'], 
-  ['Mongolia', 'MNG'], 
-  ['Montserrat', 'MSR'], 
-  ['Macedonia', 'MKD'], 
-  ['Mali', 'MLI'], 
-  ['Morocco', 'MAR'], 
-  ['Mauritius', 'MUS'], 
-  ['Mauritania', 'MRT'], 
-  ['Malta', 'MLT'], 
-  ['Oman', 'OMN'], 
-  ['Maldives', 'MDV'], 
-  ['Mexico', 'MEX'], 
-  ['Malaysia', 'MYS'], 
-  ['Mozambique', 'MOZ'], 
-  ['Malawi', 'MWI'], 
+  ['Lebanon', 'LBN'],
+  ['Latvia', 'LVA'],
+  ['Belarus', 'BLR'],
+  ['Lithuania', 'LTU'],
+  ['Liberia', 'LBR'],
+  ['Slovakia', 'SVK'],
+  ['Liechtenstein', 'LIE'],
+  ['Libya', 'LBY'],
+  ['Madagascar', 'MDG'],
+  ['Martinique', 'MTQ'],
+  ['Mongolia', 'MNG'],
+  ['Montserrat', 'MSR'],
+  ['Macedonia', 'MKD'],
+  ['Mali', 'MLI'],
+  ['Morocco', 'MAR'],
+  ['Mauritius', 'MUS'],
+  ['Mauritania', 'MRT'],
+  ['Malta', 'MLT'],
+  ['Oman', 'OMN'],
+  ['Maldives', 'MDV'],
+  ['Mexico', 'MEX'],
+  ['Malaysia', 'MYS'],
+  ['Mozambique', 'MOZ'],
+  ['Malawi', 'MWI'],
   ['New Caledonia', 'NCL'],
-  ['Niue', 'NIU'], 
-  ['Niger', 'NER'], 
-  ['Aruba', 'ABW'], 
-  ['Anguilla', 'AIA'], 
-  ['Belgium', 'BEL'], 
-  ['Hong Kong', 'HKG'], 
-  ['Faroe Islands', 'FRO'], 
-  ['Andorra', 'AND'], 
+  ['Niue', 'NIU'],
+  ['Niger', 'NER'],
+  ['Aruba', 'ABW'],
+  ['Anguilla', 'AIA'],
+  ['Belgium', 'BEL'],
+  ['Hong Kong', 'HKG'],
+  ['Faroe Islands', 'FRO'],
+  ['Andorra', 'AND'],
   ['Gibraltar', 'GIB'],
-  ['Isle of Man', 'IMN'], 
-  ['Luxembourg', 'LUX'], 
-  ['Macau', 'MAC'], 
-  ['Monaco', 'MCO'], 
+  ['Isle of Man', 'IMN'],
+  ['Luxembourg', 'LUX'],
+  ['Macau', 'MAC'],
+  ['Monaco', 'MCO'],
   ['Palestinian Territories','PSE'],
-  ['Montenegro' ,'MNE'], 
+  ['Montenegro' ,'MNE'],
   ['Vanuatu','VUT'],
   ['Nigeria','NGA'],
   ['Netherlands','NLD'],
@@ -210,9 +210,9 @@ let map_codes = new Map([
   ['Samoa', 'WSM'] ,
   ['Swaziland', 'SWZ'],
   ['Yemen', 'YEM'],
-  ['Zambia', 'ZMB'], 
-  ['Zimbabwe', 'ZWE'], 
-  ['Indonesia', 'IDN'], 
+  ['Zambia', 'ZMB'],
+  ['Zimbabwe', 'ZWE'],
+  ['Indonesia', 'IDN'],
   ['United Arab Emirates', 'ARE'],
   ['San Marino', 'SMR'],
   ['Serbia', 'SRB'],
@@ -253,22 +253,27 @@ let map_selectedYear = '2019';
 let map_svg = d3.select("#map"),
 map_width = +map_svg.attr("width"),
 map_height = +map_svg.attr("height");
- 
+
 // Set the map dimensions.
 let map_projection = d3.geoNaturalEarth()
   .scale(map_width / 2 / Math.PI)
   .translate([map_width / 2, map_height / 2])
 let map_path = d3.geoPath()
   .projection(map_projection);
- 
+
 // Set the color scale.
 let map_data = d3.map();
 let map_colorScheme = d3.schemeBlues[7];
 map_colorScheme.unshift("#eee")
-let colorScale = d3.scaleThreshold()
-  .domain([1, 2, 3, 4, 5, 6, 7])
-  .range(map_colorScheme);
- 
+
+// let colorScale = d3.scaleThreshold()
+//   .domain([1, 2, 3, 4, 5, 6, 7])
+//   .range(map_colorScheme);
+
+let colorScale = d3.scaleSequential()
+    .interpolator(d3.interpolateCool)
+    .domain([7.8,2]).clamp(true);
+
 // Set the legend.
 let map_g = map_svg.append("g")
   .attr("class", "legendThreshold")
@@ -295,9 +300,9 @@ const map_update = () => {
   // Load geojson and csv data.
   d3.queue()
     .defer(d3.json, "https://enjalot.github.io/wwsd/data/world/world-110m.geojson")
-    .defer(d3.csv, `./Preprocessing/finaldf.csv`, function(d) { 
+    .defer(d3.csv, `./Preprocessing/finaldf.csv`, function(d) {
       if (d.year === map_selectedYear) {
-        map_data.set(map_codes.get(d.country), Number(d.score)); 
+        map_data.set(map_codes.get(d.country), Number(d.score));
       }
     })
     .await(ready);
@@ -312,10 +317,10 @@ const map_update = () => {
       .data(topo.features)
       .enter().append("path")
       .attr("fill", function(d) {
-        
+
         // Pull data for the given country.
         d.total = map_data.get(d.id) || 0;
-    
+
         // Set the color based on the country data.
         return colorScale(d.total);
       })

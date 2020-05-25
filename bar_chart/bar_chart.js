@@ -217,15 +217,17 @@ const bar_update = () => {
 
         function onMapOut(d, i) {
             d3.transition()
-                .delay()
-                .duration(300)
-                .select('#bar').selectAll('.brushed').remove();
-            d3.transition()
-                .delay(900)
+                .delay(700)
                 .duration(400)
                 .select('#bar').selectAll('.motherfucker')
                 .attr("height", 0)
-                .remove()
+                .remove();
+
+            d3.transition()
+                .delay(800)
+                .duration(100)
+                .attr("height", 0)
+                .select('#bar').selectAll('.brushed').remove()
         }
     });
 };
