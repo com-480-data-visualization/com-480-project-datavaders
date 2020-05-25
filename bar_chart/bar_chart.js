@@ -93,8 +93,8 @@ const bar_update = () => {
 
 
         g.selectAll('.gbarrect')
-            .on("mouseover", onMapOver) //Add listener for the mouseover event
-            .on("mouseout", onMapOut);   //Add listener for the mouseout event
+            .on("mouseover", onMouseOver) //Add listener for the mouseover event
+            .on("mouseout", onMouseOut);   //Add listener for the mouseout event
 
 
         // g.append("g")
