@@ -22,7 +22,7 @@ var data = [];
 let radar_currentYear = 2019;
 let radar_chosenCountry = null;
 var hoveredCountry;
-var clickedCountries = [];
+// var clickedCountries = [];
 let clear = false;
 
 var color = 0;
@@ -56,6 +56,8 @@ let radarUpdate = () => {
 	  //radar_dropDownSelected.push(clickedCountry);
 	  //clickedCountry = null;
 	}
+
+	console.log(radar_dropDownSelected);
 	
 	
 
@@ -76,12 +78,12 @@ let radarUpdate = () => {
 	}
 
 	// Iterate through selected countries on the map, add them if not already in dropdown.
-	for(let i = 0; i < clickedCountries.length; i++) {
-		let clickedData = originalData.filter(d => d.country === clickedCountries[i] && +d.year === radar_currentYear)
-		if(data.every(el => el.country !== clickedCountries[i])) {
-			data.push(...clickedData);
-		}		
-	}
+	// for(let i = 0; i < clickedCountries.length; i++) {
+	// 	let clickedData = originalData.filter(d => d.country === clickedCountries[i] && +d.year === radar_currentYear)
+	// 	if(data.every(el => el.country !== clickedCountries[i])) {
+	// 		data.push(...clickedData);
+	// 	}		
+	// }
 
 	hoveredCountryData = hoveredCountryData === undefined || hoveredCountryData === null ? null : { 
 		name: hoveredCountryData.country,
@@ -496,9 +498,10 @@ const radarChart_changeRadarCountry = (map_hoveredCountry) => {
 }
 
 const radarChart_addRadarCountry = (map_clickedCountry) => {
-	document.querySelector(`#mselect option[value=${map_clickedCountry}]`).selected = true;
+	document.querySelector(`#mselect option[value='${map_clickedCountry}']`).selected = true;
 	$("#mselect").trigger("chosen:updated");
-	clickedCountries.push(map_clickedCountry);
+	radar_dropDownSelected.push(map_clickedCountry);
+	// clickedCountries.push(map_clickedCountry);
 	radarUpdate();
 }
 
