@@ -1,9 +1,9 @@
-.container {
+.row {
   display: flex;
   flex-direction: row;
 }
 
-.right_column {
+.radar-container {
   display: flex;
   flex-direction: column;
 }
