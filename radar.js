@@ -2,9 +2,6 @@
   Radar graph component.
 */
 
-// Currently selected year.
-let radar_currentYear = 2019;
-
 // Name and corresponding data of all currently selected countries.
 let radar_selected = [];
 let radar_selectedData = [];
@@ -12,6 +9,17 @@ let radar_selectedData = [];
 // Name and corresponding data of country currently being hovered upon.
 let radar_hovered = null;
 let radar_hoveredData = [];
+
+// Flag to indicate a clearing of all selected countries.
+let radar_reset = false;
+
+// Initialize default year.
+let radar_currentYear = 2019;
+
+// Set the color scale.
+let radar_colorScale = d3.scaleSequential()
+    .interpolator(d3.interpolateCool)
+    .domain([7.8,2]).clamp(true);
 
 // Populate the select element with options, based on the currently selected year.
 const radar_buildOptions = () => {
@@ -38,13 +46,23 @@ const radar_update = () => {
 	d3.csv('./Preprocessing/finaldfCoordinatesStdev.csv', function(originalData) {
 
 		// Reset the selected countries list, then populate it via the select element.
-	 	radar_selected = [];
-    for (let radar_option of document.getElementById('mselect').options) {
-      if (radar_option.selected) { 
-				radar_selected.push(radar_option.value);
-			}
-		}	
+		radar_selected = [];
 
+		// If reset flag is up, do no repopulate, and unselect all elements.
+		if (radar_reset) {
+			radar_reset = false;
+			for (let radar_option of document.getElementById('mselect').options) {
+				radar_option.selected = false;
+			}
+			$("#mselect").trigger("chosen:updated");
+		} else {
+			for (let radar_option of document.getElementById('mselect').options) {
+				if (radar_option.selected) { 
+					radar_selected.push(radar_option.value);
+				}
+			}	
+		}
+		
 	// Retrieve the relevant hovered data based on the hovered country name.
 	radar_hoveredData = originalData.find(d => d.country === radar_hovered && +d.year === radar_currentYear);
 	
@@ -67,7 +85,7 @@ const radar_update = () => {
 			{axis: 'Freedom', value: +radar_hoveredData.freedom_to_life_choice},
 			{axis: 'Healthy Life Expectancy', value: +radar_hoveredData.healthy_life_expectancy}
 		], 
-		color: 'blue',
+		color: radar_colorScale(+radar_hoveredData.score),
 	};
 	
 	// Modify the selected data into the correct format to plot the radar.
@@ -81,7 +99,7 @@ const radar_update = () => {
 				{axis: 'Freedom', value: +d.freedom_to_life_choice},
 				{axis: 'Healthy Life Expectancy', value: +d.healthy_life_expectancy}
 			], 
-			color: 'blue',
+			color: radar_colorScale(+d.score),
 		};
 	});
 	
@@ -120,6 +138,10 @@ const radar_update = () => {
 
 	// Draw the radar.
 	radar_draw(".radar", radar_selectedData.concat(radar_hoveredData === null 
+		|| radar_selectedData.filter(el => {
+			if (radar_hoveredData === null) { return false; }
+			else { return el.name === radar_hoveredData.name; }
+		}).length !== 0
 		? [] : radar_hoveredData), radar_options);
 	});
 }
@@ -428,7 +450,7 @@ const radar_draw = (parent_selector, data, options) => {
 			.attr('transform', `translate(${cfg.legend.translateX},${cfg.legend.translateY + 20})`);
 		// Create rectangles markers
 		legend.selectAll('rect')
-		  .data(names)
+		  .data(data)
 		  .enter()
 		  .append("rect")
 		  .attr("x", cfg.w + 137)
@@ -467,6 +489,12 @@ const radar_onMapClick = (map_country) => {
 // Remove currently hovered country.
 const radar_onMapMouseout = (map_country) => {
 	radar_hovered = null;
+	radar_update();
+}
+
+// Remove all selected countries.
+const radar_clear = () => {
+	radar_reset = true;
 	radar_update();
 }
 	
