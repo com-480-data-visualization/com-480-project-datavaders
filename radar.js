@@ -24,9 +24,14 @@ let radar_colorScale = d3.scaleSequential()
 // Populate the select element with options, based on the currently selected year.
 const radar_buildOptions = () => {
 	d3.csv('./Preprocessing/finaldfCoordinatesStdev.csv', function(originalData) {
+		let radar_dropdown = document.getElementById("mselect"); 
 		
+		// Delete all old children of dropdown.
+		while(radar_dropdown.firstChild) {
+			radar_dropdown.removeChild(radar_dropdown.firstChild);
+		}
+
 		// Filter incoming data by year.
-		let radar_select = document.getElementById("mselect"); 
 		let radar_options = originalData.filter(el => el.year === String(radar_currentYear))
 		.map(el => el.country)
 		.sort();
@@ -36,8 +41,10 @@ const radar_buildOptions = () => {
 			let element = document.createElement("option");
 			element.textContent = radar_option;
 			element.value = radar_option;
-			radar_select.appendChild(element);
+			element.selected = radar_selected.includes(radar_option) ? true : false;
+			radar_dropdown.appendChild(element);
 		}
+		$("#mselect").trigger("chosen:updated");
 	});
 }
 
@@ -80,7 +87,7 @@ const radar_update = () => {
 		name: radar_hoveredData.country,
 		axes: [
 			{axis: 'GDP', value: +radar_hoveredData.gdp_per_capita},
-			{axis: 'Perceived Corruption', value: +radar_hoveredData.corruption_perceptions},
+			{axis: 'Societal Trust', value: +radar_hoveredData.corruption_perceptions},
 			{axis: 'Generosity', value: +radar_hoveredData.generosity},
 			{axis: 'Freedom', value: +radar_hoveredData.freedom_to_life_choice},
 			{axis: 'Healthy Life Expectancy', value: +radar_hoveredData.healthy_life_expectancy}
@@ -94,7 +101,7 @@ const radar_update = () => {
 			name: d.country,
 			axes: [
 				{axis: 'GDP', value: +d.gdp_per_capita},
-				{axis: 'Perceived Corruption', value: +d.corruption_perceptions},
+				{axis: 'Societal Trust', value: +d.corruption_perceptions},
 				{axis: 'Generosity', value: +d.generosity},
 				{axis: 'Freedom', value: +d.freedom_to_life_choice},
 				{axis: 'Healthy Life Expectancy', value: +d.healthy_life_expectancy}
@@ -114,7 +121,7 @@ const radar_update = () => {
 			name: '',
 			axes: [
 				{axis: 'GDP'},
-				{axis: 'Perceived Corruption'},
+				{axis: 'Societal Trust'},
 				{axis: 'Generosity'},
 				{axis: 'Freedom'},
 				{axis: 'Healthy Life Expectancy'},
@@ -495,6 +502,13 @@ const radar_onMapMouseout = (map_country) => {
 // Remove all selected countries.
 const radar_clear = () => {
 	radar_reset = true;
+	radar_update();
+}
+
+// Update year.
+const radar_changeYear = (year) => {
+	radar_currentYear = Number(year);
+	radar_buildOptions();
 	radar_update();
 }
 	

@@ -20,8 +20,6 @@
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <title>Data Visualization</title>
 
-
-
   <style>
     body {
         font-family: sans-serif;
@@ -42,7 +40,14 @@
 </head>
 <body>
   <div class="row">
-    <svg id="map" width="1000" height="578" style="margin-left:-100px"></svg>
+      <select id="year" onchange="map_changeYear()">
+        <option value="2015">2015</option>
+        <option value="2016">2016</option>
+        <option value="2017">2017</option>
+        <option value="2018">2018</option>
+        <option selected value="2019">2019</option>
+      </select>
+    <svg id="map" width="1000" height="578" ></svg>
     <div class='radar-container'>
       <form>
         <select id='mselect' multiple="" style="width: 300px" onchange="radar_update();">
@@ -54,6 +59,14 @@
   </div>
 
   <svg id="bar" width="1000" height="275"></svg>
+  <div id="scatter"></div>
+  <select id="submetric" onchange="scatter_changeSubmetric()">
+    <option selected value="gdp_per_capita">GDP</option>
+    <option value="corruption_perceptions">Societal Trust</option>
+    <option value="generosity">Generosity</option>
+    <option value="freedom_to_life_choice">Freedom</option>
+    <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
+  </select>
   <script src='bar_chart/bar_chart.js'></script>
   <script> type="text/javascript">
       $(document).ready(function(){

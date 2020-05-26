@@ -227,7 +227,6 @@ for (let [name, code] of map_codes.entries()) {
 
 // Helper function to lighten color tones upon mouseover.
 const map_lighten = (color, factor) => {
-  console.log(`rgba${color.slice(3, -1)}, ${factor})`);
   return `rgba${color.slice(3, -1)}, ${factor})`;
 }
 
@@ -339,6 +338,8 @@ map_update();
 
 // Subsequently update map whenever year is changed.
 const map_changeYear = () => {
-  map_selectedYear = document.getElementById('map_year').value;
+  map_selectedYear = document.getElementById('year').value;
   map_update();
+  scatter_changeYear();
+  radar_changeYear(map_selectedYear);
 }
