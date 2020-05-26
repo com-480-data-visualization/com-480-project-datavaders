@@ -3,6 +3,19 @@
   flex-direction: row;
 }
 
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.spaced {
+  justify-content: space-between;
+}
+
+.container {
+  width: 1000px;
+}
+
 .radar-container {
   display: flex;
   flex-direction: column;
@@ -21,14 +34,19 @@
 
 #map-tooltip {
   margin: auto;
-  width: 400px;
-  height: 100px;
+  width: 200px;
+  height: 50px;
   border-style: solid;
   position: absolute;
   border-radius: 20px;
-  font-size: 25px;
+  font-size: 15px;
   border-width: 3px;
   text-align: center;
   vertical-align: middle;
+  top: 400px;
+}
+
+.hide {
+  display: none;
 }
 

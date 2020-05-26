@@ -40,17 +40,26 @@
 </head>
 <body>
   <div class="row">
-      <select id="year" onchange="map_changeYear()">
-        <option value="2015">2015</option>
-        <option value="2016">2016</option>
-        <option value="2017">2017</option>
-        <option value="2018">2018</option>
-        <option selected value="2019">2019</option>
-      </select>
-      <div id='map-div'>
-      <svg id="map" width="1000" height="578" ></svg>
-      <div id='map-tooltip'></div>
+    <div class="column">
+      <div class="row spaced">
+        <select id="year" onchange="map_changeYear()">
+          <option value="2015">2015</option>
+          <option value="2016">2016</option>
+          <option value="2017">2017</option>
+          <option value="2018">2018</option>
+          <option selected value="2019">2019</option>
+        </select>
+        <div>
+          <button onClick="map_show()">Map</button>
+          <button onClick="scatter_show()">Scatter</button>
+        </div>
       </div>
+      <div class="container">
+        <div id="scatter" class="hide"></div>  
+        <svg id="map" width="1000" height="578" ></svg>
+        <div id='map-tooltip'></div>
+      </div>
+    </div>
     <div class='radar-container'>
       <form>
         <select id='mselect' multiple="" style="width: 300px" onchange="radar_update();">
@@ -62,7 +71,7 @@
   </div>
 
   <svg id="bar" width="1000" height="275"></svg>
-  <div id="scatter"></div>
+  
   <select id="submetric" onchange="scatter_changeSubmetric()">
     <option selected value="gdp_per_capita">GDP</option>
     <option value="corruption_perceptions">Societal Trust</option>

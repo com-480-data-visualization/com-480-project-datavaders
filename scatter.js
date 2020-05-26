@@ -19,28 +19,35 @@ let scatter_metricNames = new Map([
   ['healthy_life_expectancy', 'Healthy Life Expectancy'],
 ]);
 
+// Helper function to lighten color tones upon mouseover.
+const scatter_lighten = (color, factor) => {
+  return `rgba${color.slice(3, -1)}, ${factor})`;
+}
+
 // Global declaration of the keydown event listener function.
 let keydownEventResponse;
 
 var scatter_margin = { top: 20, right: 20, bottom: 30, left: 30 };
-  width = 1000 - scatter_margin.left - scatter_margin.right,
+  width = 900 - scatter_margin.left - scatter_margin.right,
   height = 578 - scatter_margin.top - scatter_margin.bottom;
 
+// Set the color scale.
 let scatter_colorScale = d3.scaleSequential()
 .interpolator(d3.interpolateCool)
 .domain([7.8,2]).clamp(true);
 
+// Update the plot based on the currently selected data.
 const scatter_update = () => {
   d3.csv('./Preprocessing/finaldf.csv', function(d) {
-    var scatter_svg = d3.select("#scatter").append("svg")
-              .attr("width", width + margin.left + margin.right)
-              .attr("height", height + margin.top + margin.bottom)
-              .append("g")
-              .attr("transform", "translate(" + (margin.left + 10) + "," + margin.top + ")");
+    let scatter_svg = d3.select("#scatter").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + (margin.left + 10) + "," + margin.top + ")");
 
-    var data = d.filter((entry) => entry.year === scatter_year);
+    let data = d.filter((entry) => entry.year === scatter_year);
 
-    var Tooltip = d3.select("#scatter")
+    let tooltip = d3.select("#scatter")
       .append("div")
       .attr("class", "tooltip")
       .style("background-color", "red")
@@ -48,24 +55,37 @@ const scatter_update = () => {
       .style("border-width", "2px")
       .style("border-radius", "5px")
       .style("padding", "5px")
-      .style("position", "absolute");
+      .style("position", "absolute")
+      .style("display", "none");
       
 
       // Three function that change the tooltip when user hover / move / leave a cell
       var mouseover = function(d) {
-        console.log('Mouseover fired!');
-        Tooltip
+        d3.select(this).attr("fill", scatter_lighten(map_colorScale(d.score), 0.8))
+        .style("cursor", "pointer");
+        tooltip
           .style("display", null)
+      
+      radar_onMapMouseover(d.country);
+
+        
+          
       }
       var mousemove = function(d) {
-        Tooltip
+        tooltip
           .html(`${d.country}<br>Happiness Score: ${d.score}<br>${scatter_metric}: ${d[scatter_metric]}`)
-          .style("left", (d3.mouse(this)[0]) + 700 + "px")
-          .style("top", (d3.mouse(this)[1]) + "px")
+          .style("left", (d3.mouse(this)[0]) + "px")
+          .style("top", (d3.mouse(this)[1]) - 30 + "px")
       }
       var mouseleave = function(d) {
-        Tooltip
+        tooltip
           .style("display", "none")
+        radar_onMapMouseout(d.country);
+        d3.select(this).attr("fill", function (d) {return scatter_colorScale(+d.score); })
+      }
+
+      var click = function(d) {
+        radar_onMapClick(d.country);
       }
 
   var x = d3.scaleLinear()          
@@ -108,10 +128,11 @@ const scatter_update = () => {
       .attr("cx", function (d) { return x(+d[scatter_metric]); })
       .attr("cy", function (d) { return y(+d.score); })
       .attr("opacity", 1)
-      .style("fill", function (d) {return scatter_colorScale(+d.score); })
+      .attr("fill", function (d) {return scatter_colorScale(+d.score); })
       .on('mouseover', mouseover)
       .on('mousemove', mousemove)
-      .on('mouseleave', mouseleave);
+      .on('mouseleave', mouseleave)
+      .on('click', click);
 
   // x axis
   scatter_svg.append("g")
@@ -219,4 +240,11 @@ const scatter_changeSubmetric = () => {
   // d3.selectAll('#x-label-text').remove();
   scatter_metric = document.getElementById('submetric').value;
   scatter_update();
+}
+
+// Hide the map and show the scatter.
+const scatter_show = () => {
+  document.getElementById('map').classList.add('hide');
+  document.getElementById('map-tooltip').classList.add('hide');
+  document.getElementById('scatter').classList.remove('hide');
 }

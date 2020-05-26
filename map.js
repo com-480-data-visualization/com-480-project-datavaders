@@ -290,6 +290,7 @@ const map_update = () => {
     // Draw the map.
     map_svg.append("g")
       .attr("class", "countries")
+      .attr('transform', `translate(-88,0)`)
       .selectAll("path")
       .data(topo.features)
       .enter().append("path")
@@ -348,4 +349,11 @@ const map_changeYear = () => {
   map_update();
   scatter_changeYear();
   radar_changeYear(map_selectedYear);
+}
+
+// Hide the scatter and show the map.
+const map_show = () => {
+  document.getElementById('scatter').classList.add('hide');
+  document.getElementById('map').classList.remove('hide');
+  document.getElementById('map-tooltip').classList.remove('hide');
 }
