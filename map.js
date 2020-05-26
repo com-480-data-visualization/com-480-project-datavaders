@@ -338,5 +338,6 @@ map_update();
 const map_changeYear = () => {
   map_selectedYear = document.getElementById('year').value;
   map_update();
+  scatter_changeYear();
   radar_changeYear(map_selectedYear);
 }

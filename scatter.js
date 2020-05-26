@@ -1,22 +1,43 @@
-// Create data
+/*
+  Scatter plot component.
+*/
 
-
-let scatter_year = '2019';
+// Initialize default metric and year.
 let scatter_metric = 'gdp_per_capita';
+let scatter_year = '2019';
+
+// Global variables to manage scatter plot state.
 let scatter_zoomable = false;
+let scatter_initialRender = true;
 
-var margin = { top: 20, right: 20, bottom: 30, left: 30 };
-  width = 900 - margin.left - margin.right,
-  height = 480 - margin.top - margin.bottom;
+// Map storing field name/label pairs. 
+let scatter_metricNames = new Map([
+  ['gdp_per_capita', 'GDP'],
+  ['corruption_perceptions', 'Societal Trust'],
+  ['generosity', 'Generosity'],
+  ['freedom_to_life_choice', 'Freedom'],
+  ['healthy_life_expectancy', 'Healthy Life Expectancy'],
+]);
 
-var svg = d3.select("#scatter").append("svg")
-              .attr("width", width + margin.left + margin.right)
-              .attr("height", height + margin.top + margin.bottom)
-              .append("g")
-              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+// Global declaration of the keydown event listener function.
+let keydownEventResponse;
+
+var scatter_margin = { top: 20, right: 20, bottom: 30, left: 30 };
+  width = 1000 - scatter_margin.left - scatter_margin.right,
+  height = 578 - scatter_margin.top - scatter_margin.bottom;
+
+let scatter_colorScale = d3.scaleSequential()
+.interpolator(d3.interpolateCool)
+.domain([7.8,2]).clamp(true);
 
 const scatter_update = () => {
   d3.csv('./Preprocessing/finaldf.csv', function(d) {
+    var scatter_svg = d3.select("#scatter").append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform", "translate(" + (margin.left + 10) + "," + margin.top + ")");
+
     var data = d.filter((entry) => entry.year === scatter_year);
 
     var Tooltip = d3.select("#scatter")
@@ -62,7 +83,7 @@ const scatter_update = () => {
       idleDelay = 350;
 
   
-  var clip = svg.append("defs").append("svg:clipPath")
+  var clip = scatter_svg.append("defs").append("svg:clipPath")
       .attr("id", "clip")
       .append("svg:rect")
       .attr("width", width )
@@ -75,7 +96,7 @@ const scatter_update = () => {
   x.domain(d3.extent(data, function (d) { return +d[scatter_metric]; })).nice();
   y.domain(d3.extent(data, function (d) { return +d.score; })).nice();
 
-  var scatter = svg.append("g")
+  var scatter = scatter_svg.append("g")
         .attr("id", "scatterplot")
         .attr("clip-path", "url(#clip)");
       
@@ -83,45 +104,50 @@ const scatter_update = () => {
       .data(data)
     .enter().append("circle")
       .attr("class", "dot")
-      .attr("r", 4)
+      .attr("r", 5)
       .attr("cx", function (d) { return x(+d[scatter_metric]); })
       .attr("cy", function (d) { return y(+d.score); })
-      .attr("opacity", 0.5)
-      .style("fill", "#4292c6")
+      .attr("opacity", 1)
+      .style("fill", function (d) {return scatter_colorScale(+d.score); })
       .on('mouseover', mouseover)
       .on('mousemove', mousemove)
       .on('mouseleave', mouseleave);
 
   // x axis
-  svg.append("g")
+  scatter_svg.append("g")
       .attr("class", "x axis")
       .attr('id', "axis--x")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
 
-  svg.append("text")
+  scatter_svg.append("text")
     .style("text-anchor", "end")
       .attr("x", width)
       .attr("y", height - 8)
       .attr('id', "x-label-text")
-    .text(scatter_metric);
+    .text(scatter_metricNames.get(scatter_metric));
 
   // y axis
-  svg.append("g")
+  if (scatter_initialRender) {
+  scatter_svg.append("g")
       .attr("class", "y axis")
       .attr('id', "axis--y")
       .call(yAxis);
 
-  svg.append("text")
+  
+    scatter_svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", "1em")
       .style("text-anchor", "end")
       .attr('id', "y-label-text")
       .text("Happiness Score");
-
-  document.addEventListener('keydown', event => {
+  }
+      
+  keydownEventResponse = (event) => {
     if (event.shiftKey) {
+      event.shiftKey = false;
+      console.log('keydown detected');
       if (scatter_zoomable) {
         d3.selectAll('.brush').remove();
       } else {
@@ -131,7 +157,10 @@ const scatter_update = () => {
       }
       scatter_zoomable = !scatter_zoomable;
     }
-  });
+  }
+
+    document.addEventListener('keydown', keydownEventResponse);
+  
 
   
 
@@ -158,10 +187,12 @@ const scatter_update = () => {
   function zoom() {
 
       var t = scatter.transition().duration(750);
-      svg.select("#axis--x").transition(t).call(xAxis);
-      svg.select("#axis--y").transition(t).call(yAxis);
+      scatter_svg.select("#axis--x").transition(t).call(xAxis);
+      scatter_svg.select("#axis--y").transition(t).call(yAxis);
       scatter.selectAll("circle").transition(t)
-      .attr("cx", function (d) { return x(+d[scatter_metric]); })
+      .attr("cx", function (d) {
+        console.log(x(+d[scatter_metric]))
+         return x(+d[scatter_metric]); })
       .attr("cy", function (d) { return y(+d.score); });
   }
 
@@ -172,23 +203,20 @@ scatter_update();
 
       
 // Fires when user toggles year dropdown.
-const changeYear = () => {
-  d3.select('#scatter').selectAll('circle').remove();
-  d3.selectAll('#axis--x').remove();
-  d3.selectAll('#x-label-text').remove();
-  d3.selectAll('#y-label-text').remove();
-  d3.selectAll('#axis--y').remove();
+const scatter_changeYear = () => {
+  d3.select('#scatter').selectAll('*').remove();
+  document.removeEventListener('keydown', keydownEventResponse);
   scatter_year = document.getElementById('year').value;
   scatter_update();
 }
 
 // Fires when user toggles submetric dropdown.
-const changeSubmetric = () => {
-  d3.select('#scatter').selectAll('circle').remove();
-  d3.selectAll('#axis--x').remove();
-  d3.selectAll('#x-label-text').remove();
-  d3.selectAll('#y-label-text').remove();
-  d3.selectAll('#axis--y').remove();
+const scatter_changeSubmetric = () => {
+  d3.select('#scatter').selectAll('*').remove();
+  document.removeEventListener('keydown', keydownEventResponse);
+  // d3.select('#scatter').selectAll('circle').remove();
+  // d3.selectAll('#axis--x').remove();
+  // d3.selectAll('#x-label-text').remove();
   scatter_metric = document.getElementById('submetric').value;
   scatter_update();
 }

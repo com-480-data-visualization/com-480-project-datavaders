@@ -87,7 +87,7 @@ const radar_update = () => {
 		name: radar_hoveredData.country,
 		axes: [
 			{axis: 'GDP', value: +radar_hoveredData.gdp_per_capita},
-			{axis: 'Perceived Corruption', value: +radar_hoveredData.corruption_perceptions},
+			{axis: 'Societal Trust', value: +radar_hoveredData.corruption_perceptions},
 			{axis: 'Generosity', value: +radar_hoveredData.generosity},
 			{axis: 'Freedom', value: +radar_hoveredData.freedom_to_life_choice},
 			{axis: 'Healthy Life Expectancy', value: +radar_hoveredData.healthy_life_expectancy}
@@ -101,7 +101,7 @@ const radar_update = () => {
 			name: d.country,
 			axes: [
 				{axis: 'GDP', value: +d.gdp_per_capita},
-				{axis: 'Perceived Corruption', value: +d.corruption_perceptions},
+				{axis: 'Societal Trust', value: +d.corruption_perceptions},
 				{axis: 'Generosity', value: +d.generosity},
 				{axis: 'Freedom', value: +d.freedom_to_life_choice},
 				{axis: 'Healthy Life Expectancy', value: +d.healthy_life_expectancy}
@@ -121,7 +121,7 @@ const radar_update = () => {
 			name: '',
 			axes: [
 				{axis: 'GDP'},
-				{axis: 'Perceived Corruption'},
+				{axis: 'Societal Trust'},
 				{axis: 'Generosity'},
 				{axis: 'Freedom'},
 				{axis: 'Healthy Life Expectancy'},
