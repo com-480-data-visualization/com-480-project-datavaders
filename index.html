@@ -60,13 +60,16 @@
         <div id='map-tooltip'></div>
       </div>
     </div>
-    <div class='radar-container'>
-      <form>
-        <select id='mselect' multiple="" style="width: 300px" onchange="radar_update();">
-        </select>
-      </form>
-      <div class="radar"></div>
-      <button id='clear-all' onclick="radar_clear()">Clear</button>
+    <div class="column">
+      <div id='country-info'></div>
+      <div class='radar-container'>
+        <form>
+          <select id='mselect' multiple="" style="width: 300px" onchange="radar_update();">
+          </select>
+        </form>
+        <div class="radar"></div>
+        <button id='clear-all' onclick="radar_clear()">Clear</button>
+      </div>
     </div>
   </div>
 
@@ -87,6 +90,7 @@
   </script>
   <script src="radar.js" charset="utf-8"></script>
   <script src="scatter.js"></script>
+  <script src="display.js"></script>
   <script src="map.js"></script>
 
 </body>
