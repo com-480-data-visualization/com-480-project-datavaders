@@ -308,22 +308,24 @@ const map_update = () => {
         if (map_data.get(d.id)) {
           d3.select(this).attr("fill", map_lighten(map_colorScale(map_data.get(d.id)), 0.8))
             .style("cursor", "pointer");
-         
+
           // Update radar graph with country.
           radar_onMapMouseover(map_names.get(d.id));
-
+          bar_update("mapHover", map_names.get(d.id));
         }
       })
       .on("mouseout",function(d) {
         // Reset color to original tone.
         d3.select(this).attr("fill", map_colorScale(map_data.get(d.id) || 0))
-        
+
         // Update radar graph by removing country.
         radar_onMapMouseout(map_names.get(d.id));
+        bar_update("mapOut", map_names.get(d.id));
+
       })
       .on("click", function(d) {
         if (map_data.get(d.id)) {
-
+            bar_update('mapClick',map_names.get(d.id))
           // Update radar graph with country.
           radar_onMapClick(map_names.get(d.id));
         }
