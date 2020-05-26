@@ -1,175 +1,132 @@
-/////////////////////////////////////////////////////////
-/////////////// The Radar Chart Function ////////////////
-/// mthh - 2017 /////////////////////////////////////////
-// Inspired by the code of alangrafu and Nadieh Bremer //
-// (VisualCinnamon.com) and modified for d3 v4 //////////
-/////////////////////////////////////////////////////////
+/*
+  Radar graph component.
+*/
 
-const max = Math.max;
-const sin = Math.sin;
-const cos = Math.cos;
-const HALF_PI = Math.PI / 2;
-
-var margin = { top: 50, right: 80, bottom: 50, left: 80 },
-				width = Math.min(700, window.innerWidth / 4) - margin.left - margin.right,
-				height = Math.min(width, window.innerHeight - margin.top - margin.bottom);
-
-			//////////////////////////////////////////////////////////////
-			////////////////////////// Data //////////////////////////////
-			//////////////////////////////////////////////////////////////
-var radar_data = [];
-var radar_dropDownSelected = [];
-var data = [];
+// Currently selected year.
 let radar_currentYear = 2019;
-let radar_chosenCountry = null;
-var hoveredCountry;
-// var clickedCountries = [];
-let clear = false;
 
-var color = 0;
+// Name and corresponding data of all currently selected countries.
+let radar_selected = [];
+let radar_selectedData = [];
 
-var sequentialScale = d3.scaleSequential()
-  .domain([0, 5])
-  .interpolator(d3.interpolateRainbow);
+// Name and corresponding data of country currently being hovered upon.
+let radar_hovered = null;
+let radar_hoveredData = [];
 
+// Populate the select element with options, based on the currently selected year.
+const radar_buildOptions = () => {
+	d3.csv('./Preprocessing/finaldfCoordinatesStdev.csv', function(originalData) {
+		
+		// Filter incoming data by year.
+		let radar_select = document.getElementById("mselect"); 
+		let radar_options = originalData.filter(el => el.year === String(radar_currentYear))
+		.map(el => el.country)
+		.sort();
 
-let radarUpdate = () => {
+		// Dynamically build option elements based on countries with available data.
+		for (let radar_option of radar_options) {
+			let element = document.createElement("option");
+			element.textContent = radar_option;
+			element.value = radar_option;
+			radar_select.appendChild(element);
+		}
+	});
+}
+
+// Update the radar based on the currently selected data.
+const radar_update = () => {
 	d3.csv('./Preprocessing/finaldfCoordinatesStdev.csv', function(originalData) {
 
-	var select = document.getElementById("mselect"); 
-	var options = originalData.filter(el => el.year === String(radar_currentYear))
-	.map(el => el.country)
-	.sort(); 
+		// Reset the selected countries list, then populate it via the select element.
+	 	radar_selected = [];
+    for (let radar_option of document.getElementById('mselect').options) {
+      if (radar_option.selected) { 
+				radar_selected.push(radar_option.value);
+			}
+		}	
 
-	for(var i = 0; i < options.length; i++) {
-		var opt = options[i];
-		var el = document.createElement("option");
-		el.textContent = opt;
-		el.value = opt;
-		select.appendChild(el);
-	}
-
-	 radar_dropDownSelected = [];
-    for (var option of document.getElementById('mselect').options) {
-      if (option.selected) {
-        radar_dropDownSelected.push(option.value);
-	  }
-	  //radar_dropDownSelected.push(clickedCountry);
-	  //clickedCountry = null;
-	}
-
-	console.log(radar_dropDownSelected);
+	// Retrieve the relevant hovered data based on the hovered country name.
+	radar_hoveredData = originalData.find(d => d.country === radar_hovered && +d.year === radar_currentYear);
 	
-	
-
-	// Data to be displayed on radar graph.
-	data = [];
-	//radar_data = [];
-	radar_data = [];
-	//console.log(hoveredCountry)
-	// radar_data.push(...originalData.filter(d => d.country === hoveredCountry && +d.year === radar_currentYear))
-	// hoveredCountry = null;
-	hoveredCountryData = originalData.find(d => d.country === hoveredCountry && +d.year === radar_currentYear);
-	//radar_data.push(...originalData.filter(d => d.country === clickedCountry & +d.year === radar_currentYear))
-		
-	// Iterate through selected countries in the dropdown, and add them to the data.
-	for(let i = 0; i < radar_dropDownSelected.length; i++) {
-		let dropDownData = originalData.filter(d => d.country === radar_dropDownSelected[i] && +d.year === radar_currentYear)
-		data.push(...dropDownData);
+	// Retrieve the relevant selected data based on the selected country names.
+	radar_selectedData = [];
+	for (let selected of radar_selected) {
+		let data = originalData.filter(d => {
+			return d.country === selected && +d.year === radar_currentYear;
+		});
+		radar_selectedData.push(...data);
 	}
 
-	// Iterate through selected countries on the map, add them if not already in dropdown.
-	// for(let i = 0; i < clickedCountries.length; i++) {
-	// 	let clickedData = originalData.filter(d => d.country === clickedCountries[i] && +d.year === radar_currentYear)
-	// 	if(data.every(el => el.country !== clickedCountries[i])) {
-	// 		data.push(...clickedData);
-	// 	}		
-	// }
-
-	hoveredCountryData = hoveredCountryData === undefined || hoveredCountryData === null ? null : { 
-		name: hoveredCountryData.country,
+	// Modify the hovered data into the correct format to plot the radar.
+	radar_hoveredData = radar_hoveredData === undefined || radar_hoveredData === null ? null : { 
+		name: radar_hoveredData.country,
 		axes: [
-			{axis: 'gdp', value: +hoveredCountryData.gdp_per_capita},
-			{axis: 'corruption_perceptions', value: +hoveredCountryData.corruption_perceptions},
-			{axis: 'generosity', value: +hoveredCountryData.generosity},
-			{axis: 'freedom_to_life_choice', value: +hoveredCountryData.freedom_to_life_choice},
-			{axis: 'healthy_life_expectancy', value: +hoveredCountryData.healthy_life_expectancy}
+			{axis: 'GDP', value: +radar_hoveredData.gdp_per_capita},
+			{axis: 'Perceived Corruption', value: +radar_hoveredData.corruption_perceptions},
+			{axis: 'Generosity', value: +radar_hoveredData.generosity},
+			{axis: 'Freedom', value: +radar_hoveredData.freedom_to_life_choice},
+			{axis: 'Healthy Life Expectancy', value: +radar_hoveredData.healthy_life_expectancy}
 		], 
-		color: 'blue' //sequentialScale(color++)
+		color: 'blue',
 	};
 	
-
-	data = data.map(d => { 
+	// Modify the selected data into the correct format to plot the radar.
+	radar_selectedData = radar_selectedData.map(d => { 
 		return {
 			name: d.country,
 			axes: [
-				{axis: 'gdp', value: +d.gdp_per_capita},
-				{axis: 'corruption_perceptions', value: +d.corruption_perceptions},
-				{axis: 'generosity', value: +d.generosity},
-				{axis: 'freedom_to_life_choice', value: +d.freedom_to_life_choice},
-				{axis: 'healthy_life_expectancy', value: +d.healthy_life_expectancy}
+				{axis: 'GDP', value: +d.gdp_per_capita},
+				{axis: 'Perceived Corruption', value: +d.corruption_perceptions},
+				{axis: 'Generosity', value: +d.generosity},
+				{axis: 'Freedom', value: +d.freedom_to_life_choice},
+				{axis: 'Healthy Life Expectancy', value: +d.healthy_life_expectancy}
 			], 
-			color: 'blue' //sequentialScale(color++)
-	};
-});
+			color: 'blue',
+		};
+	});
 	
-	if(data.length > 0)
-		data.sort( (a, b) => (a.axes[0].value < b.axes[0].value) ? 1 : -1);
-	if(data.length == 0) 	{
-		data = [ 
-		{ name: '',
-		axes: [
-			{axis: 'gdp'},
-			{axis: 'corruption_perceptions'},
-			{axis: 'generosity'},
-			{axis: 'freedom_to_life_choice'},
-			{axis: 'healthy_life_expectancy'}
-		], 
-		//color: sequentialScale(d.index)
-	}];
+	// Sort the data based on GDP.
+	if(radar_selectedData.length > 0)
+		radar_selectedData.sort( (a, b) => (a.axes[0].value < b.axes[0].value) ? 1 : -1);
+	
+	// If there is no current data (selected or hovered), then create a placeholder
+	// so that the graph will still be rendered.
+	if(radar_selectedData.length === 0 && radar_hoveredData === null)	{
+		radar_selectedData = [{
+			name: '',
+			axes: [
+				{axis: 'GDP'},
+				{axis: 'Perceived Corruption'},
+				{axis: 'Generosity'},
+				{axis: 'Freedom'},
+				{axis: 'Healthy Life Expectancy'},
+			], 
+		}];
 	}
 
-	var radarChartOptions = {
-			w: 290,
-			h: 350,
-			margin: margin,
-			levels: 5,
-			roundStrokes: true,
-			color: sequentialScale(3),
-			format: '.0f'
-			};
+	// Set the styling options.
+	let radar_options = {
+		w: 366,
+		h: 388,
+		margin: margin,
+		maxValue: 6,
+		levels: 6,
+		roundStrokes: true,
+		color: d3.scaleOrdinal().range(["#AFC52F", "#ff6600", "#2a2fd4"]),
+		format: '.0f',
+		legend: { title: 'Radar chart', translateX: -420, translateY: 40 },
+		unit: ''
+	};
 
-			// Draw the chart, get a reference the created svg element :
-			let svg_radar1 = RadarChart(".radarChart", data, radarChartOptions);
-
-			//////////////////////////////////////////////////////////////
-			///// Second example /////////////////////////////////////////
-			///// Chart legend, custom color, custom unit, etc. //////////
-			//////////////////////////////////////////////////////////////
-			var radarChartOptions2 = {
-			w: 366,
-			h: 388,
-			margin: margin,
-			maxValue: 6,
-			levels: 6,
-			roundStrokes: true,
-			color: d3.scaleOrdinal().range(["#AFC52F", "#ff6600", "#2a2fd4"]),
-				format: '.0f',
-				legend: { title: 'Radar chart', translateX: -420, translateY: 40 },
-				unit: ''
-			};
-
-			// Draw the chart, get a reference the created svg element :
-			let svg_radar2 = RadarChart(".radarChart2", data, radarChartOptions2);
-
+	// Draw the radar.
+	radar_draw(".radar", radar_selectedData.concat(radar_hoveredData === null 
+		? [] : radar_hoveredData), radar_options);
 	});
 }
 			
+// Draw the radar given an element, data, and options.
+const radar_draw = (parent_selector, data, options) => {
 
-
-
-
-const RadarChart = function RadarChart(parent_selector, data, options) {
 	//Wraps SVG text - Taken from http://bl.ocks.org/mbostock/7555321
 	const wrap = (text, width) => {
 	  text.each(function() {
@@ -234,7 +191,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 			}
 		}
 	}
-	maxValue = max(cfg.maxValue, maxValue);	
+	maxValue = Math.max(cfg.maxValue, maxValue);	
 	maxValue = 6;
 
 
@@ -323,8 +280,8 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 	axis.append("line")
 		.attr("x1", 0)
 		.attr("y1", 0)
-		.attr("x2", (d, i) => rScale(maxValue *1.1) * cos(angleSlice * i - HALF_PI))
-		.attr("y2", (d, i) => rScale(maxValue* 1.1) * sin(angleSlice * i - HALF_PI))
+		.attr("x2", (d, i) => rScale(maxValue *1.1) * Math.cos(angleSlice * i - Math.PI / 2))
+		.attr("y2", (d, i) => rScale(maxValue* 1.1) * Math.sin(angleSlice * i - Math.PI / 2))
 		.attr("class", "line")
 		.style("stroke", "white")
 		.style("stroke-width", "2px");
@@ -335,8 +292,8 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		.style("font-size", "11px")
 		.attr("text-anchor", "middle")
 		.attr("dy", "0.35em")
-		.attr("x", (d,i) => rScale(maxValue * cfg.labelFactor) * cos(angleSlice * i - HALF_PI))
-		.attr("y", (d,i) => rScale(maxValue * cfg.labelFactor) * sin(angleSlice * i - HALF_PI))
+		.attr("x", (d,i) => rScale(maxValue * cfg.labelFactor) * Math.cos(angleSlice * i - Math.PI / 2))
+		.attr("y", (d,i) => rScale(maxValue * cfg.labelFactor) * Math.sin(angleSlice * i - Math.PI / 2))
 		.text(d => d)
 		.call(wrap, cfg.wrapWidth);
 
@@ -360,7 +317,7 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 
 	//Create a wrapper for the blobs
 	const blobWrapper = g.selectAll(".radarWrapper")
-		.data(data.concat(hoveredCountryData === null ? [] : hoveredCountryData))
+		.data(data)
 		.enter().append("g")
 		.attr("class", "radarWrapper");
 
@@ -404,8 +361,8 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		.append("circle")
 		.attr("class", "radarCircle")
 		.attr("r", cfg.dotRadius)
-		.attr("cx", (d,i) => rScale(d.value) * cos(angleSlice * i - HALF_PI))
-		.attr("cy", (d,i) => rScale(d.value) * sin(angleSlice * i - HALF_PI))
+		.attr("cx", (d,i) => rScale(d.value) * Math.cos(angleSlice * i - Math.PI / 2))
+		.attr("cy", (d,i) => rScale(d.value) * Math.sin(angleSlice * i - Math.PI / 2))
 		.style("fill", (d) => d.color)
 		.style("fill-opacity", 0.8);
 
@@ -425,8 +382,8 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		.enter().append("circle")
 		.attr("class", "radarInvisibleCircle")
 		.attr("r", cfg.dotRadius * 1.5)
-		.attr("cx", (d,i) => rScale(d.value) * cos(angleSlice*i - HALF_PI))
-		.attr("cy", (d,i) => rScale(d.value) * sin(angleSlice*i - HALF_PI))
+		.attr("cx", (d,i) => rScale(d.value) * Math.cos(angleSlice*i - Math.PI / 2))
+		.attr("cy", (d,i) => rScale(d.value) * Math.sin(angleSlice*i - Math.PI / 2))
 		.style("fill", "none")
 		.style("pointer-events", "all")
 		.on("mouseover", function(d,i) {
@@ -490,36 +447,30 @@ const RadarChart = function RadarChart(parent_selector, data, options) {
 		  .attr("fill", "#737373")
 		  .text(d => d);
     }
-    
-
-
-
 	return svg;
 }
 
-const radarChart_changeRadarCountry = (map_hoveredCountry) => {
-	hoveredCountry = map_hoveredCountry
-	radarUpdate();
+// Set currently hovered country.
+const radar_onMapMouseover = (map_country) => {
+	radar_hovered = map_country
+	radar_update();
 }
 
-const radarChart_addRadarCountry = (map_clickedCountry) => {
-	document.querySelector(`#mselect option[value='${map_clickedCountry}']`).selected = true;
+// Add clicked country to radar graph.
+const radar_onMapClick = (map_country) => {
+	document.querySelector(`#mselect option[value='${map_country}']`).selected = true;
 	$("#mselect").trigger("chosen:updated");
-	radar_dropDownSelected.push(map_clickedCountry);
-	// clickedCountries.push(map_clickedCountry);
-	radarUpdate();
+	radar_selected.push(map_country);
+	radar_update();
 }
 
-const radarChart_removerRadarCountry = (map_leftCountry) => {
-	hoveredCountry = null;
-	radarUpdate();
+// Remove currently hovered country.
+const radar_onMapMouseout = (map_country) => {
+	radar_hovered = null;
+	radar_update();
 }
+	
+// First update radar upon initial page load.
+radar_buildOptions();
+radar_update();
 
-
-const clearAll = () => {
-	clear = true;
-  }
-  
-
-
-radarUpdate();

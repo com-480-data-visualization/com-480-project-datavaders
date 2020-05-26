@@ -226,24 +226,9 @@ for (let [name, code] of map_codes.entries()) {
 }
 
 // Helper function to lighten color tones upon mouseover.
-// TODO: Adjust this if color schemes are adjusted.
-const lighten = (color) => {
-  switch (color) {
-    case '#eff3ff':
-      return '#fcfdff'
-    case '#c6dbef':
-      return 'eff5fb'
-    case '#9ecae1':
-      return '#c4dfed'
-    case '#6baed6':
-      return '#93c5e1'
-    case '#4292c6':
-      return '#6aa9d2'
-    case '#2171b5':
-      return '#308ad9'
-    case '#084594':
-      return '#0a5cc7'
-  }
+const map_lighten = (color, factor) => {
+  console.log(`rgba${color.slice(3, -1)}, ${factor})`);
+  return `rgba${color.slice(3, -1)}, ${factor})`;
 }
 
 // Initialize the default year.
@@ -263,18 +248,11 @@ let map_path = d3.geoPath()
 
 // Set the color scale.
 let map_data = d3.map();
-let map_colorScheme = d3.schemeBlues[7];
-map_colorScheme.unshift("#eee")
-
-// let colorScale = d3.scaleThreshold()
-//   .domain([1, 2, 3, 4, 5, 6, 7])
-//   .range(map_colorScheme);
-
-let colorScale = d3.scaleSequential()
+let map_colorScale = d3.scaleSequential()
     .interpolator(d3.interpolateCool)
     .domain([7.8,2]).clamp(true);
 
-// Set the legend.
+// Set the legend (currently removed);
 /* let map_g = map_svg.append("g")
   .attr("class", "legendThreshold")
   .attr("transform", "translate(20,50)");
@@ -322,29 +300,32 @@ const map_update = () => {
         d.total = map_data.get(d.id) || 0;
 
         // Set the color based on the country data.
-        return colorScale(d.total);
+        return map_colorScale(d.total);
       })
       .on("mouseover",function(d) {
 
         // Lighten color and change cursor to pointer upon mouseover of a country with data.
         if (map_data.get(d.id)) {
-          d3.select(this).attr("fill", lighten(colorScale(map_data.get(d.id))))
+          d3.select(this).attr("fill", map_lighten(map_colorScale(map_data.get(d.id)), 0.8))
             .style("cursor", "pointer");
-          radarChart_changeRadarCountry(map_names.get(d.id));
+         
+          // Update radar graph with country.
+          radar_onMapMouseover(map_names.get(d.id));
 
         }
       })
       .on("mouseout",function(d) {
         // Reset color to original tone.
-        d3.select(this).attr("fill", colorScale(map_data.get(d.id) || 0))
-        radarChart_removerRadarCountry(map_names.get(d.id));
+        d3.select(this).attr("fill", map_colorScale(map_data.get(d.id) || 0))
+        
+        // Update radar graph by removing country.
+        radar_onMapMouseout(map_names.get(d.id));
       })
       .on("click", function(d) {
         if (map_data.get(d.id)) {
-          // TODO: Linking code to other visuals to go here.
-          radarChart_addRadarCountry(map_names.get(d.id));
-          console.log(map_names.get(d.id));
-          map_update();
+
+          // Update radar graph with country.
+          radar_onMapClick(map_names.get(d.id));
         }
       })
       .attr("d", map_path);
@@ -355,7 +336,7 @@ const map_update = () => {
 map_update();
 
 // Subsequently update map whenever year is changed.
-const changeMapYear = () => {
+const map_changeYear = () => {
   map_selectedYear = document.getElementById('map_year').value;
   map_update();
 }
