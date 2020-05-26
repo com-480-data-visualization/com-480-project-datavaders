@@ -310,19 +310,22 @@ const map_update = () => {
          
           // Update radar graph with country.
           radar_onMapMouseover(map_names.get(d.id));
+          document.querySelector('#map-tooltip').innerHTML = map_names.get(d.id) + '<br>' + 'Happiness score: ' + map_data.get(d.id);
+
+  
 
         }
       })
       .on("mouseout",function(d) {
         // Reset color to original tone.
         d3.select(this).attr("fill", map_colorScale(map_data.get(d.id) || 0))
-        
+        document.querySelector('#map-tooltip').innerHTML = '';
         // Update radar graph by removing country.
         radar_onMapMouseout(map_names.get(d.id));
       })
       .on("click", function(d) {
         if (map_data.get(d.id)) {
-
+            
           // Update radar graph with country.
           radar_onMapClick(map_names.get(d.id));
         }
