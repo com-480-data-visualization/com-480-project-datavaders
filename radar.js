@@ -125,7 +125,7 @@ const radar_update = () => {
 	// Set the styling options.
 	let radar_options = {
 		w: 366,
-		h: 388,
+		h: 366,
 		margin: margin,
 		maxValue: 6,
 		levels: 6,
@@ -179,7 +179,7 @@ const radar_draw = (parent_selector, data, options) => {
 	const cfg = {
 	 w: 600,				//Width of the circle
 	 h: 600,				//Height of the circle
-	 margin: {top: 20, right: 20, bottom: 20, left: 20}, //The margins of the SVG
+	 margin: {top: 40, right: 40, bottom: 40, left: 40}, //The margins of the SVG
 	 levels: 6,				//How many levels or inner circles should there be drawn
 	 maxValue: 6, 			//What is the value that the biggest circle will represent
 	 labelFactor: 1.25, 	//How much farther than the radius of the outer circle should the labels be placed
@@ -238,13 +238,13 @@ const radar_draw = (parent_selector, data, options) => {
 
 	//Initiate the radar chart SVG
 	let svg = parent.append("svg")
-			.attr("width",  cfg.w + cfg.margin.left + cfg.margin.right)
-			.attr("height", cfg.h + cfg.margin.top + cfg.margin.bottom)
+			.attr("width",  cfg.w + cfg.margin.left + cfg.margin.right + 100)
+			.attr("height", cfg.h + cfg.margin.top + cfg.margin.bottom + 100)
 			.attr("class", "radar");
 
 	//Append a g element
 	let g = svg.append("g")
-			.attr("transform", "translate(" + (cfg.w/2 + cfg.margin.left) + "," + (cfg.h/2 + cfg.margin.top) + ")");
+			.attr("transform", "translate(" + (cfg.w/2 + cfg.margin.left + 50) + "," + (cfg.h/2 + cfg.margin.top + 50) + ")");
 
 	/////////////////////////////////////////////////////////
 	////////// Glow filter for some extra pizzazz ///////////
