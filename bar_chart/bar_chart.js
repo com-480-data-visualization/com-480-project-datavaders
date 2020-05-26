@@ -1,7 +1,7 @@
 let keys;
 let data_year = '2019';
-let data_region = "Western Europe";
-let vizScale = "region";
+let data_region = "";
+let vizScale = "world";
 
 let svg = d3.select("#bar"),
     margin = {top: 20, right: 20, bottom: 30, left: 20},
@@ -16,7 +16,8 @@ let scaleX = d3.scaleBand()
     .align(0.1);
 
 let scaleY = d3.scaleLinear()
-    .rangeRound([0, height]);
+    .rangeRound([0, height*0.80])
+    .domain([0, 10]);
 
 let z = d3.scaleOrdinal()
     .range(["RGB(243,202,34)", "RGB(237,233,37)", "RGB(52,161,153)", "RGB(70,180,12)",
@@ -30,8 +31,8 @@ let color_seq2 = d3.scaleSequential()
 
 
 const bar_draw = () => {
-    d3.select('#bar').selectAll('rect').remove();
-    d3.select('#bar').selectAll('text').remove();
+    g.selectAll().remove()
+    console.log(vizScale, data_region);
 
     d3.csv(`./Preprocessing/df2.csv`, function (data) {
         keys = data.columns.slice(4, 11);
@@ -52,7 +53,7 @@ const bar_draw = () => {
 
         // Drawing
         g.selectAll("g")
-            .data(data.map((d, i) => d))
+            .data(data)
             .enter().append("g")
             .append('rect')
             .attr('class', 'gbarrect')
@@ -79,26 +80,8 @@ const bar_draw = () => {
 
         g.selectAll('.gbarrect')
             .on("mouseover", onMouseOver) //Add listener for the mouseover event
-            .on("mouseout", onMouseOut);   //Add listener for the mouseout event
-
-        if (vizScale === "region") {
-            g.selectAll("g")
-                .data(data.map((d, i) => d))
-                .enter()
-                .append("text")
-                 .attr('class', 'label')
-                 .attr("x", function (d) {
-                     return scaleX(d.country);
-                 })
-                 .attr("y", function (d) {
-                     return scaleY(4);
-                 })
-                 .attr("color", "red")
-                 .text((d) => {
-                     return 'pippo';
-                 });
-
-        };
+            .on("mouseout", onMouseOut)   //Add listener for the mouseout event
+            .on("click", onClick);
 
         // g.append("g")
         //     .attr("class", "axis")
@@ -151,6 +134,17 @@ const bar_draw = () => {
         //     .text(function (d) {
         //         return d;
         //     });
+        function onClick(d,i) {
+            if (vizScale === "region"){
+                data_region = "";
+                vizScale ="world";
+            }
+            else if (vizScale === "world"){
+                data_region = d.region;
+                vizScale ="region";
+            }
+            bar_draw();
+        }
 
         function onMouseOver(d, i) {
             d3.select(this).attr('class', 'highlight');
@@ -193,6 +187,7 @@ const bar_test = ()=>{
 const bar_update = (updateType, countryName) => {
 
     d3.csv(`./Preprocessing/df2.csv`, function (data) {
+
         keys = data.columns.slice(4, 11);
         let key_data = d3.stack().keys(keys)(data);
         z.domain(keys);
@@ -204,6 +199,7 @@ const bar_update = (updateType, countryName) => {
             return a.posx - b.posx;
         });
         data.map((d, i) => d.idx1 = i);
+
         // Change the x axis
         scaleX.domain(data.map((d) => {
             return d.country;
@@ -249,11 +245,32 @@ const bar_update = (updateType, countryName) => {
                     })
                     .attr("y", () => scaleY(item[elem_idx][0]))
                     .attr("height", function () {
-                        return scaleY(item[elem_idx][1] - item[elem_idx][0] + 0.1);
+                        return scaleY(item[elem_idx][1] - item[elem_idx][0] + 0.01);
                     })
                     .attr("width", 0.60 * scaleX.bandwidth())
                     .attr('fill', z(key_idx))
             })
+
+            if (vizScale === "region") {
+                let offset =  35
+                let dtest = d3.max(data.map(d => d.score));
+                g.append("text")
+                     .attr('class', 'label')
+                     .attr("color", "red")
+                     .attr("x", scaleX(d.country)+ scaleX.bandwidth()/2)
+                     .attr("y", scaleY(dtest) + offset) //+ i%2 * 5
+                     .transition()     // adds animation
+                     .duration(10)
+                     .text(() => {
+                         return d.country;
+                     })
+                     //.attr("transform", "translate("+ scaleX(d.country)+"," + scaleY(dtest) +  + ")")
+            }
+
+            d3.selectAll(".label")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+                .style("text-anchor", "middle")
         }
 
         function onMapOut() {
@@ -271,16 +288,15 @@ const bar_update = (updateType, countryName) => {
                 .ease(d3.easeSin)
                 .attr("height", 0)
                 .select('#barG').selectAll('.brushed').remove()
+
+            d3.selectAll(".label").transition()     // adds animation
+                .duration(10).remove()
         }
     });
 };
 
 
 function prepareData(data){
-    scaleY.domain([0, d3.max(data, function (d) {
-        return d.score;
-    })]).nice();
-
     data = data.filter(obj => obj.year === data_year);
     if (vizScale == 'region'){
         data = data.filter(obj => obj.region === data_region);
