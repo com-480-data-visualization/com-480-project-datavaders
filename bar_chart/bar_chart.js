@@ -29,7 +29,7 @@ let color_seq = d3.scaleSequential()
 let color_seq2 = d3.scaleSequential()
     .interpolator(d3.interpolatePlasma);
 
-
+console.log(map_codes)
 const bar_draw = () => {
     g.selectAll().remove()
     console.log(vizScale, data_region);
