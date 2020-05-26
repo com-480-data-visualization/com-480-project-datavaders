@@ -277,7 +277,7 @@ const map_update = () => {
 
   // Load geojson and csv data.
   d3.queue()
-    .defer(d3.json, "https://enjalot.github.io/wwsd/data/world/world-110m.geojson")
+    .defer(d3.json, "world.geojson")
     .defer(d3.csv, `./Preprocessing/finaldf.csv`, function(d) {
       if (d.year === map_selectedYear) {
         map_data.set(map_codes.get(d.country), Number(d.score));
