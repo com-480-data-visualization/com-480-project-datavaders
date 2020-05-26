@@ -313,7 +313,7 @@ const map_update = () => {
           radar_onMapMouseover(map_names.get(d.id));
           document.querySelector('#map-tooltip').innerHTML = map_names.get(d.id) + '<br>' + 'Happiness score: ' + map_data.get(d.id);
 
-  
+
 
           bar_update("mapHover", map_names.get(d.id));
         }
@@ -330,7 +330,7 @@ const map_update = () => {
       })
       .on("click", function(d) {
         if (map_data.get(d.id)) {
-            
+
             bar_update('mapClick',map_names.get(d.id))
           // Update radar graph with country.
           radar_onMapClick(map_names.get(d.id));
@@ -348,6 +348,7 @@ const map_changeYear = () => {
   map_selectedYear = document.getElementById('year').value;
   map_update();
   scatter_changeYear();
+  bar_changeYear(map_selectedYear);
   radar_changeYear(map_selectedYear);
 }
 

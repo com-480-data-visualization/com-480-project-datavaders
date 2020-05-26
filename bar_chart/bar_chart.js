@@ -1,6 +1,6 @@
 let keys;
 let data_year = '2019';
-let data_region = "";
+let data_region = "region";
 let vizScale = "world";
 
 let svg = d3.select("#bar"),
@@ -17,7 +17,7 @@ let scaleX = d3.scaleBand()
 
 let scaleY = d3.scaleLinear()
     .rangeRound([0, height*0.80])
-    .domain([0, 10]);
+    .domain([0, 8]);
 
 let z = d3.scaleOrdinal()
     .range(["RGB(243,202,34)", "RGB(237,233,37)", "RGB(52,161,153)", "RGB(70,180,12)",
@@ -29,12 +29,16 @@ let color_seq = d3.scaleSequential()
 let color_seq2 = d3.scaleSequential()
     .interpolator(d3.interpolatePlasma);
 
-
+console.log(map_codes)
 const bar_draw = () => {
     g.selectAll().remove()
     console.log(vizScale, data_region);
 
     d3.csv(`./Preprocessing/df2.csv`, function (data) {
+        let dataBig = data.filter(obj => obj.year === data_year);
+        data.map((d, i) => d.idx2 = i);
+        dataBig.map((d, i) => d.idx0 = i);
+
         keys = data.columns.slice(4, 11);
         let key_data = d3.stack().keys(keys)(data);
         z.domain(keys);
@@ -77,94 +81,46 @@ const bar_draw = () => {
                 return color_seq(d.idx0);
             });
 
-
         g.selectAll('.gbarrect')
-            .on("mouseover", onMouseOver) //Add listener for the mouseover event
-            .on("mouseout", onMouseOut)   //Add listener for the mouseout event
+            .on("mouseover", onMouseOver) // Add listener for the mouseover event
+            .on("mouseout", onMouseOut)   // Add listener for the mouseout event
             .on("click", onClick);
 
-        // g.append("g")
-        //     .attr("class", "axis")
-        //     .attr("transform", "translate(0,0)");
-
-
-        //.call(d3.axisLeft(scaleY));
-
-        // g.append("g")
-        //     .attr("class", "axis")
-        //     .attr("transform", "translate(" + width + ",0)")
-        //     .call(d3.axisBottom(scaleX).ticks(null, "s"))
-        //     .append("text")
-        //     .attr("x", 2)
-        //     .attr("y", scaleY(scaleY.ticks().pop()) + 0.5)
-        //     .attr("dx", "0.32em")
-        //     .attr("fill", "#dddddd")
-        //     .attr("font-weight", "bold")
-        //     .attr("text-anchor", "start")
-        //     .text("Happiness Score")
-        //     .attr("transform", "translate(-10," + (-width) + ")");
-
-        // legend no more needed
-        //
-        // let legend = g.append("g")
-        //     .attr("font-family", "sans-serif")
-        //     .attr("font-size", 10)
-        //     .attr("font-weight", "bold")
-        //     .attr("text-anchor", "end")
-        //     .selectAll("g")
-        //     .data(keys.slice().reverse())
-        //     .enter().append("g")
-        //     .attr("transform", function (d, i) {
-        //         return "translate(" + (35 + i * 20) + ",-400)";
-        //     });
-
-        // .attr("transform", function(d, i) { return "translate(500," + (500 + i * 20) + ")"; });
-
-        // legend.append("rect")
-        //     .attr("x", width - 19)
-        //     .attr("width", 19)
-        //     .attr("height", 19)
-        //     .attr("fill", z);
-        //
-        // legend.append("text")
-        //     .attr("x", width - 20)
-        //     .attr("y", 9.5)
-        //     .attr("fill", "#dddddd")
-        //     .attr("dx", "0.32em")
-        //     .text(function (d) {
-        //         return d;
-        //     });
-        function onClick(d,i) {
-            if (vizScale === "region"){
-                data_region = "";
-                vizScale ="world";
-            }
-            else if (vizScale === "world"){
-                data_region = d.region;
-                vizScale ="region";
-            }
-            bar_draw();
-        }
-
         function onMouseOver(d, i) {
-            d3.select(this).attr('class', 'highlight');
-            d3.select(this)
-                .transition()     // adds animation
-                .duration(400)
-                .attr('width', scaleX.bandwidth() * 1)
-                .attr("x", function (d) {
-                    return scaleX(d.country) - scaleX.bandwidth() * 0.2;
-                })
-                .attr('fill', '#D4AF37');//#D4AF37
+            if (vizScale === "region")  {
+                d3.select(this).attr('class', 'highlight');
+                d3.select(this)
+                    .transition()     // adds animation
+                    .duration(400)
+                    .attr('width', scaleX.bandwidth() * 1)
+                    .attr("x", function (d) {
+                        return scaleX(d.country) - scaleX.bandwidth() * 0.1;
+                    })
+                    .attr('fill', '#D4AF37');//#D4AF37
+            }
+            else {
+                d3.select(this).attr('class', 'highlight');
+                d3.select(this)
+                    .transition()
+                    .duration(400)
+                    .attr('width', scaleX.bandwidth() * 1)
+                    .attr("x", function (d) {
+                        return scaleX(d.country) - scaleX.bandwidth() * 0.2;
+                    })
+                    .attr('fill', '#D4AF37');//#D4AF37
+            }
+            radar_onMapMouseover(d.country);
         }
 
         function onMouseOut(d, i) {
+            radar_onMapMouseout(d.country);
+
             d3.select(this).attr('class', 'bar');
             d3.select(this)
                 .transition()     // adds animation
                 .duration(400)
                 .delay(400)
-                .attr('width', scaleX.bandwidth() * 0.6)
+                .attr('width', (vizScale === "region")? scaleX.bandwidth()* 0.8:scaleX.bandwidth()* 0.6)
                 .attr("x", function (d) {
                     return scaleX(d.country);
                 })
@@ -174,57 +130,61 @@ const bar_draw = () => {
                 .delay(600)
                 .attr('fill', color_seq(d.idx0));
         }
+
+        function onClick(d, i){
+            radar_onMapClick(d.country);
+        }
     });
 };
 
 
 bar_draw();
 
-const bar_test = ()=>{
-    console.log('pippo pappo');
-};
-
 const bar_update = (updateType, countryName) => {
 
     d3.csv(`./Preprocessing/df2.csv`, function (data) {
+        let dataBig = data.filter(obj => obj.year === data_year)
+        dataBig.map((d, i) => d.idx0 = i);
 
         keys = data.columns.slice(4, 11);
         let key_data = d3.stack().keys(keys)(data);
         z.domain(keys);
 
         data = prepareData(data);
-
         // Sort row on basis of Happiness Score
         data.sort(function (a, b) {
             return a.posx - b.posx;
         });
         data.map((d, i) => d.idx1 = i);
-
-        // Change the x axis
-        scaleX.domain(data.map((d) => {
-            return d.country;
-        }));
+        dataBig.map((d, i) => d.idx1 = i);
 
         // Call backs
         if (updateType === 'mapHover') {
-            onMapOver(d_from_country(countryName))
+            onMapOver(d_from_country(countryName));
         } else if (updateType === 'mapOut') {
-            onMapOut()
+            onMapOut();
+        } else if (updateType === 'mapClick') {
+            onMapClick(d_from_country(countryName));
         }
 
+        dataBig.forEach((d,i) => onMapOver(d))
+
         function d_from_country(countryName) {
-            let d = data.find(obj => obj.country === countryName);
+            let d = dataBig.find(obj => obj.country === countryName);
             return d;
         }
 
         function onMapOver(d) {
+            if (d.region != data_region && vizScale == "region")
+                return;
+
             g.append('rect')
-                .attr('class', 'motherfucker')
+                .attr('class', 'cover')
                 .attr("x", function () {
                     return scaleX(d.country);
                 })
                 .attr("y", function () {
-                    return scaleY(0)-5;
+                    return scaleY(0);
                 })
                 .transition()
                 .ease(d3.easeSin)
@@ -232,11 +192,10 @@ const bar_update = (updateType, countryName) => {
                 .attr("height", function () {
                     return scaleY(10);
                 })
-                .attr("width", 0.62 * scaleX.bandwidth())
+                .attr("width", 0.85 * scaleX.bandwidth())
                 .attr("fill", "rgb(241,241,241)");
 
             let elem_idx = d.idx0;  // index when ordered by score
-            console.log(key_data)
             key_data.forEach((item, key_idx) => {
                 g.append('rect')
                     .attr("class", "brushed")
@@ -245,45 +204,48 @@ const bar_update = (updateType, countryName) => {
                     })
                     .attr("y", () => scaleY(item[elem_idx][0]))
                     .attr("height", function () {
-                        return scaleY(item[elem_idx][1] - item[elem_idx][0] + 0.01);
+                        if (key_idx == 7)
+                            return scaleY(d.score - item[elem_idx][0]);
+                        return scaleY(item[elem_idx][1] - item[elem_idx][0] + 0.1);
                     })
-                    .attr("width", 0.60 * scaleX.bandwidth())
+                    .attr("width", 0.80 * scaleX.bandwidth())
                     .attr('fill', z(key_idx))
             })
 
-            if (vizScale === "region") {
-                let offset =  35
-                let dtest = d3.max(data.map(d => d.score));
-                g.append("text")
-                     .attr('class', 'label')
-                     .attr("color", "red")
-                     .attr("x", scaleX(d.country)+ scaleX.bandwidth()/2)
-                     .attr("y", scaleY(dtest) + offset) //+ i%2 * 5
-                     .transition()     // adds animation
-                     .duration(10)
-                     .text(() => {
-                         return d.country;
-                     })
-                     //.attr("transform", "translate("+ scaleX(d.country)+"," + scaleY(dtest) +  + ")")
-            }
+            // if (vizScale === "region") {
+            //     let offset =  35
+            //     let dtest = d3.max(data.map(d => d.score));
+            //     g.append("text")
+            //          .attr('class', 'label')
+            //          .attr("color", "red")
+            //          .attr("x", scaleX(d.country)+ scaleX.bandwidth()/2)
+            //          .attr("y", scaleY(dtest) + offset) //+ i%2 * 5
+            //          .transition()     // adds animation
+            //          .duration(10)
+            //          .text(() => {
+            //              return d.country;
+            //          })
+            //          //.attr("transform", "translate("+ scaleX(d.country)+"," + scaleY(dtest) +  + ")")
+            // }
+            //
+            // d3.selectAll(".label")
+            //     .attr("dx", "-.8em")
+            //     .attr("dy", ".15em")
+            //     .style("text-anchor", "middle")
 
-            d3.selectAll(".label")
-                .attr("dx", "-.8em")
-                .attr("dy", ".15em")
-                .style("text-anchor", "middle")
         }
 
         function onMapOut() {
             d3.transition()
-                .delay(400)
+                .delay(200)
                 .duration(400)
                 .ease(d3.easeSin)
-                .select('#barG').selectAll('.motherfucker')
+                .select('#barG').selectAll('.cover')
                 .attr("height", 0)
                 .remove();
 
             d3.transition()
-                .delay(400)
+                .delay(300)
                 .duration(100)
                 .ease(d3.easeSin)
                 .attr("height", 0)
@@ -292,15 +254,46 @@ const bar_update = (updateType, countryName) => {
             d3.selectAll(".label").transition()     // adds animation
                 .duration(10).remove()
         }
-    });
+
+        function onMapClick(d){
+                data_region = d.region;
+                vizScale = "region";
+
+                data = dataBig.filter(obj => obj.year === data_year)
+
+                data.map((d, i) => d.idx0 = i);
+                data = data.filter(obj => obj.region === data_region);
+
+                data.sort(function (a, b) {
+                    return a.posx - b.posx;
+                });
+
+                // Change the x axis
+                scaleX = scaleX.domain(data.map((d) => {
+                    return d.country;
+                }));
+                console.log(data)
+                console.log(scaleX.bandwidth())
+
+                d3.select('#barG').selectAll('.cover').remove();
+
+                d3.select('#barG').selectAll('.brushed').remove()
+
+                d3.selectAll(".label").transition()     // adds animation
+                    .duration(10).remove()
+
+                g.selectAll("g").select("rect")
+                .attr("x", (d) => (d.region === data_region) ? scaleX(d.country) : 0)
+                .attr("y", (d) => (d.region === data_region) ? scaleY(0) : 0)
+                .attr("height", (d) => (d.region === data_region) ? scaleY(d.score) : 0)
+                .attr("width", (d) => (d.region === data_region) ? 0.80 * scaleX.bandwidth() : 0)
+            }
+        });
 };
 
 
 function prepareData(data){
     data = data.filter(obj => obj.year === data_year);
-    if (vizScale == 'region'){
-        data = data.filter(obj => obj.region === data_region);
-    }
     // adding index
     data.map((d, i) => d.idx0 = i);
 
@@ -312,8 +305,10 @@ function prepareData(data){
     return data;
 }
 
-
-const changeBarYear = () => {
-    data_year = document.getElementById('bar_year').value;
+function bar_changeYear(map_selectedYear){
+    console.log(g)
+    g.selectAll("*").remove()
+    console.log(g)
+    data_year = map_selectedYear;
     bar_draw();
-};
+}
