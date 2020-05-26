@@ -1,13 +1,14 @@
-import * as utils from '../utils/utils.js';
-
 let keys;
-let bar_year = '2019';
+let data_year = '2019';
+let data_region = "Western Europe";
+let vizScale = "region";
 
 let svg = d3.select("#bar"),
     margin = {top: 20, right: 20, bottom: 30, left: 20},
     width = +svg.attr("width") - margin.left - margin.right,
     height = +svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .attr('id', 'barG')
 
 let scaleX = d3.scaleBand()
     .rangeRound([0, width])
@@ -19,7 +20,7 @@ let scaleY = d3.scaleLinear()
 
 let z = d3.scaleOrdinal()
     .range(["RGB(243,202,34)", "RGB(237,233,37)", "RGB(52,161,153)", "RGB(70,180,12)",
-    "RGB(153,148,194)", "RGB(211,102,153)", "RGB(194,63,118)"]);
+        "RGB(153,148,194)", "RGB(211,102,153)", "RGB(194,63,118)"]);
 
 let color_seq = d3.scaleSequential()
     .interpolator(d3.interpolateCool);
@@ -27,45 +28,29 @@ let color_seq = d3.scaleSequential()
 let color_seq2 = d3.scaleSequential()
     .interpolator(d3.interpolatePlasma);
 
-const bar_update = () => {
+
+const bar_draw = () => {
     d3.select('#bar').selectAll('rect').remove();
     d3.select('#bar').selectAll('text').remove();
-    d3.selectAll('#bar tick').remove();
 
-    d3.csv(`./Preprocessing/df2.csv`, function (d) {
-        //bar_year
-        let data = d.filter(obj => obj.year===bar_year);
-        data.map((d, i) => d.idx0 = i);
-        color_seq.domain([0, data.length]);
-        color_seq2.domain([-150, data.length]);
-
-        keys = d.columns.slice(4, 11);
-
+    d3.csv(`./Preprocessing/df2.csv`, function (data) {
+        keys = data.columns.slice(4, 11);
         let key_data = d3.stack().keys(keys)(data);
+        z.domain(keys);
+
+        data = prepareData(data);
 
         // Sort row on basis of Happiness Score
         data.sort(function (a, b) {
-            return b.posx - a.posx;
+            return a.posx - b.posx;
         });
-
-        //d3.shuffle(data);
         data.map((d, i) => d.idx1 = i);
-        // console.log(Object.keys(data));
-
+        // Change the x axis
         scaleX.domain(data.map((d) => {
             return d.country;
         }));
 
-
-        scaleY.domain([0, d3.max(data, function (d) {
-            return d.score;
-        })]).nice();
-
-        //console.log(d3.stack().keys(keys)(data));
-        //console.log(data);
-
-        z.domain(keys);
-
+        // Drawing
         g.selectAll("g")
             .data(data.map((d, i) => d))
             .enter().append("g")
@@ -77,10 +62,10 @@ const bar_update = () => {
             .attr("y", function (d) {
                 return scaleY(0);
             })
-            .transition()
-            .ease(d3.easeSin)
-            .duration(400)
-            .delay(function (d, i) {
+             .transition()
+             .ease(d3.easeSin)
+             .duration(400)
+                .delay(function (d, i) {
                 return i * 5;
             })
             .attr("height", function (d) {
@@ -96,6 +81,24 @@ const bar_update = () => {
             .on("mouseover", onMouseOver) //Add listener for the mouseover event
             .on("mouseout", onMouseOut);   //Add listener for the mouseout event
 
+        if (vizScale === "region") {
+            g.selectAll("g")
+                .data(data.map((d, i) => d))
+                .enter()
+                .append("text")
+                 .attr('class', 'label')
+                 .attr("x", function (d) {
+                     return scaleX(d.country);
+                 })
+                 .attr("y", function (d) {
+                     return scaleY(4);
+                 })
+                 .attr("color", "red")
+                 .text((d) => {
+                     return 'pippo';
+                 });
+
+        };
 
         // g.append("g")
         //     .attr("class", "axis")
@@ -177,15 +180,55 @@ const bar_update = () => {
                 .delay(600)
                 .attr('fill', color_seq(d.idx0));
         }
+    });
+};
 
-        function onMapOver(d, i) {
+
+bar_draw();
+
+const bar_test = ()=>{
+    console.log('pippo pappo');
+};
+
+const bar_update = (updateType, countryName) => {
+
+    d3.csv(`./Preprocessing/df2.csv`, function (data) {
+        keys = data.columns.slice(4, 11);
+        let key_data = d3.stack().keys(keys)(data);
+        z.domain(keys);
+
+        data = prepareData(data);
+
+        // Sort row on basis of Happiness Score
+        data.sort(function (a, b) {
+            return a.posx - b.posx;
+        });
+        data.map((d, i) => d.idx1 = i);
+        // Change the x axis
+        scaleX.domain(data.map((d) => {
+            return d.country;
+        }));
+
+        // Call backs
+        if (updateType === 'mapHover') {
+            onMapOver(d_from_country(countryName))
+        } else if (updateType === 'mapOut') {
+            onMapOut()
+        }
+
+        function d_from_country(countryName) {
+            let d = data.find(obj => obj.country === countryName);
+            return d;
+        }
+
+        function onMapOver(d) {
             g.append('rect')
                 .attr('class', 'motherfucker')
                 .attr("x", function () {
-                    return scaleX(d.country) - scaleX.bandwidth() * 4;
+                    return scaleX(d.country);
                 })
                 .attr("y", function () {
-                    return scaleY(0);
+                    return scaleY(0)-5;
                 })
                 .transition()
                 .ease(d3.easeSin)
@@ -193,49 +236,68 @@ const bar_update = () => {
                 .attr("height", function () {
                     return scaleY(10);
                 })
-                .attr("width", 9 * scaleX.bandwidth())
+                .attr("width", 0.62 * scaleX.bandwidth())
                 .attr("fill", "rgb(241,241,241)");
 
-            let elem_idx = d.idx0;
-
+            let elem_idx = d.idx0;  // index when ordered by score
+            console.log(key_data)
             key_data.forEach((item, key_idx) => {
                 g.append('rect')
                     .attr("class", "brushed")
                     .attr("x", function () {
-                        return scaleX(d.country) - scaleX.bandwidth() * 3;
+                        return scaleX(d.country);
                     })
                     .attr("y", () => scaleY(item[elem_idx][0]))
                     .attr("height", function () {
                         return scaleY(item[elem_idx][1] - item[elem_idx][0] + 0.1);
                     })
-                    .attr("width", 7 * scaleX.bandwidth())
+                    .attr("width", 0.60 * scaleX.bandwidth())
                     .attr('fill', z(key_idx))
             })
         }
 
-        function onMapOut(d, i) {
+        function onMapOut() {
             d3.transition()
-                .delay(700)
+                .delay(400)
                 .duration(400)
                 .ease(d3.easeSin)
-                .select('#bar').selectAll('.motherfucker')
+                .select('#barG').selectAll('.motherfucker')
                 .attr("height", 0)
                 .remove();
 
             d3.transition()
-                .delay(800)
+                .delay(400)
                 .duration(100)
                 .ease(d3.easeSin)
                 .attr("height", 0)
-                .select('#bar').selectAll('.brushed').remove()
+                .select('#barG').selectAll('.brushed').remove()
         }
     });
 };
 
 
-bar_update();
+function prepareData(data){
+    scaleY.domain([0, d3.max(data, function (d) {
+        return d.score;
+    })]).nice();
+
+    data = data.filter(obj => obj.year === data_year);
+    if (vizScale == 'region'){
+        data = data.filter(obj => obj.region === data_region);
+    }
+    // adding index
+    data.map((d, i) => d.idx0 = i);
+
+    // Defining color sequences
+    color_seq.domain([0, data.length]);
+    color_seq2.domain([-150, data.length]);
+
+    // Return filtered data
+    return data;
+}
+
 
 const changeBarYear = () => {
-    bar_year = document.getElementById('bar_year').value;
-    bar_update();
+    data_year = document.getElementById('bar_year').value;
+    bar_draw();
 };
