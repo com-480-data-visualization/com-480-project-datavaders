@@ -24,9 +24,14 @@ let radar_colorScale = d3.scaleSequential()
 // Populate the select element with options, based on the currently selected year.
 const radar_buildOptions = () => {
 	d3.csv('./Preprocessing/finaldfCoordinatesStdev.csv', function(originalData) {
+		let radar_dropdown = document.getElementById("mselect"); 
 		
+		// Delete all old children of dropdown.
+		while(radar_dropdown.firstChild) {
+			radar_dropdown.removeChild(radar_dropdown.firstChild);
+		}
+
 		// Filter incoming data by year.
-		let radar_select = document.getElementById("mselect"); 
 		let radar_options = originalData.filter(el => el.year === String(radar_currentYear))
 		.map(el => el.country)
 		.sort();
@@ -36,8 +41,10 @@ const radar_buildOptions = () => {
 			let element = document.createElement("option");
 			element.textContent = radar_option;
 			element.value = radar_option;
-			radar_select.appendChild(element);
+			element.selected = radar_selected.includes(radar_option) ? true : false;
+			radar_dropdown.appendChild(element);
 		}
+		$("#mselect").trigger("chosen:updated");
 	});
 }
 
@@ -495,6 +502,13 @@ const radar_onMapMouseout = (map_country) => {
 // Remove all selected countries.
 const radar_clear = () => {
 	radar_reset = true;
+	radar_update();
+}
+
+// Update year.
+const radar_changeYear = (year) => {
+	radar_currentYear = Number(year);
+	radar_buildOptions();
 	radar_update();
 }
 	
