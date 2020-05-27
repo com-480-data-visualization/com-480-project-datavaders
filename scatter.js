@@ -247,5 +247,5 @@ const scatter_changeSubmetric = () => {
 const scatter_show = () => {
   document.getElementById('mapContainer').classList.add('project-hide');
   document.getElementById('scatterContainer').classList.remove('project-hide');
-  //document.getElementById('submetric').classList.remove('project-hide');
+  document.getElementById('submetric').classList.remove('project-hide');
 }

@@ -54,16 +54,40 @@
     </div>
     <div class="row">
         <div class="col-8"> <!-- MAP -->
-            <div class = "float-right">
-                <button onClick="map_show()" class="btn btn-outline-secondary">Map</button>
-                <button onClick="scatter_show()" class="btn btn-outline-secondary">Scatter</button>
+            <div class="project-row project-spaced">
+                <div class="project-row">
+                    <form style="margin-right:3px">
+                        <select id="year" class="form-control" onchange="map_changeYear()">
+                          <option value="2015">2015</option>
+                          <option value="2016">2016</option>
+                          <option value="2017">2017</option>
+                          <option value="2018">2018</option>
+                          <option selected value="2019">2019</option>
+                        </select>
+                      </form>
+                      <form>
+                        <select id="submetric" class="form-control project-hide" onchange="scatter_changeSubmetric()" class="hide">
+                          <option selected value="gdp_per_capita">GDP</option>
+                          <option value="corruption_perceptions">Societal Trust</option>
+                          <option value="generosity">Generosity</option>
+                          <option value="freedom_to_life_choice">Freedom</option>
+                          <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
+                        </select>
+                    </form>
+                </div>
+                <div>
+                    <button onClick="map_show()" class="btn btn-outline-secondary">Map</button>
+                    <button onClick="scatter_show()" class="btn btn-outline-secondary">Scatter</button>
+                </div>
             </div>
             <div>
-                <div id="mapContainer" class="svg-container" style="padding-bottom: 50%;">
-                    <svg id="map" class="svg-content" viewBox="0 0 1000 600" preserveAspectRatio="none" style="padding-bottom: 50%;"></svg>
-                </div>
-                <div id="scatterContainer" class="svg-container project-hide" style="padding-bottom: 50%;">
-                    <svg id="scatter" class="svg-content" viewBox="0 0 1000 600" preserveAspectRatio="none"></svg>
+                <div>
+                    <div id="mapContainer" class="svg-container" style="padding-bottom: 50%;">
+                        <svg id="map" class="svg-content" viewBox="0 0 1000 600" preserveAspectRatio="none" style="padding-bottom: 50%;"></svg>
+                    </div>
+                    <div id="scatterContainer" class="svg-container project-hide" style="padding-bottom: 50%;">
+                        <svg id="scatter" class="svg-content" viewBox="0 0 1000 600" preserveAspectRatio="none"></svg>
+                    </div>
                 </div>
             </div>
         </div>
