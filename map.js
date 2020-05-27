@@ -236,8 +236,8 @@ let map_selectedYear = '2019';
 
 // Bind the svg to the html element.
 let map_svg = d3.select("#map"),
-map_width = 1000;
-map_height = 600;
+map_width = 1300;
+map_height = 950;
 
 // Set the map dimensions.
 let map_projection = d3.geoNaturalEarth()
@@ -296,7 +296,7 @@ const map_update = () => {
           //document.querySelector('.project-text').innerHTML = map_names.get(d.id) + '<br>' + 'Happiness score: ' + map_data.get(d.id);
 
           display_onMouseover(map_names.get(d.id), d.id);
-  
+
 
 
           bar_update("mapHover", map_names.get(d.id));
