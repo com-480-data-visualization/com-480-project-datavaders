@@ -54,7 +54,7 @@
             </select>
           </form>
           <form>
-            <select id="submetric" class="form-control" onchange="scatter_changeSubmetric()" class="hide">
+            <select id="submetric" class="form-control project-hide" onchange="scatter_changeSubmetric()" class="hide">
               <option selected value="gdp_per_capita">GDP</option>
               <option value="corruption_perceptions">Societal Trust</option>
               <option value="generosity">Generosity</option>
@@ -85,7 +85,7 @@
             </select>
           </form>
           <div class="radar"></div>
-          <button id='clear-all' onclick="radar_clear()">Clear</button>
+          <button id='clear-all' class="btn btn-outline-secondary" onclick="radar_clear()">Clear</button>
         </div>
       </div>
     </div>
