@@ -2,7 +2,8 @@
   Display component.
 */
 
-flag_codes = {
+// Map storing country ISO-2/ISO-3 code pairs.
+let flag_codes = {
   AFG: "AF",
   ALA: "AX",
   ALB: "AL",
@@ -254,24 +255,26 @@ flag_codes = {
   XKX: "XK"
 };
 
-let display_info = document.getElementById('country-info');
+let div = document.getElementById('flag');
 
+// Map storing country ISO-3 code/flag image pairs.
 let flag_map = new Map();
 
+// Populate the map.
 for (let code in flag_codes) {
-  let new_img = document.createElement('img');
-  new_img.src = `flags/${flag_codes[code].toLowerCase()}.png`;
-  flag_map.set(code, new_img);
+  let img = document.createElement('img');
+  img.src = `flags/${flag_codes[code].toLowerCase()}.png`;
+  flag_map.set(code, img);
 }
 
-
+// Append the requested flag to the DOM.
 display_onMouseover = (code) => {
-  display_info.appendChild(flag_map.get(code));
+  div.appendChild(flag_map.get(code));
 }
 
+// Remove the current flag from the DOM.
 display_onMouseout = () => {
-  if (display_info.firstChild) {
-    display_info.removeChild(display_info.firstChild);
+  if (div.firstChild) {
+    div.removeChild(div.firstChild);
   }
-  
 }

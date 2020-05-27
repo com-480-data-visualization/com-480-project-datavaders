@@ -1,3 +1,8 @@
+.container {
+  width: 1400px;
+  margin: 0 auto;
+}
+
 .row {
   display: flex;
   flex-direction: row;
@@ -8,12 +13,42 @@
   flex-direction: column;
 }
 
+.top {
+  width: 100%;
+  height: 100px;
+}
+
+.middle {
+  width: 100%;
+}
+
+.bottom {
+  width: 100%;
+}
+
+.left {
+  width: 70%;
+}
+
+.right {
+  width: 30%;
+}
+
 .spaced {
   justify-content: space-between;
 }
 
-.container {
-  width: 1000px;
+.around {
+  justify-content: space-around;
+}
+
+.top .left {
+  padding: 0 25px;
+}
+
+.text {
+  font-size: medium;
+  width: 50%;
 }
 
 .radar-container {
@@ -32,7 +67,7 @@
   background-color: red;
 }
 
-/* #map-tooltip {
+/* .text {
   margin: auto;
   width: 200px;
   height: 50px;

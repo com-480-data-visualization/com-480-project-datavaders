@@ -39,9 +39,9 @@
 </style>
 </head>
 <body>
-  <div class="row">
-    <div class="column">
-      <div class="row spaced">
+  <div class="container">
+    <div class="row top">
+      <div class="row spaced left">
         <div>
           <select id="year" onchange="map_changeYear()">
             <option value="2015">2015</option>
@@ -63,31 +63,31 @@
           <button onClick="scatter_show()">Scatter</button>
         </div>
       </div>
-      <div class="container">
-        <div id="scatter" class="hide"></div>
-        <svg id="map" width="1000" height="578" ></svg>
+      <div class="row right around">
+        <div class='text'>Mouse over a country on the map.</div>
+        <div id='flag'></div>
       </div>
     </div>
-    <div class="column">
-      <div class="row">
-        <p id='map-tooltip'>Mouse over a country on the map.</p>
-        <div id='country-info'></div>
+    <div class="row middle">
+      <div>
+        <div id="scatter" class="hide"></div>
+        <svg id="map" width="980" height="566" ></svg>
       </div>
-      
-      <div class='radar-container'>
-        <form>
-          <select id='mselect' multiple="" style="width: 300px" onchange="radar_update();">
-          </select>
-        </form>
-        <div class="radar"></div>
-        <button id='clear-all' onclick="radar_clear()">Clear</button>
+      <div class="column">
+        <div class='radar-container'>
+          <form>
+            <select id='mselect' multiple="" style="width: 300px" onchange="radar_update();">
+            </select>
+          </form>
+          <div class="radar"></div>
+          <button id='clear-all' onclick="radar_clear()">Clear</button>
+        </div>
       </div>
+    </div>
+    <div class="row bottom">
+      <svg id="bar" width="1000" height="350"></svg>
     </div>
   </div>
-
-  <svg id="bar" width="1000" height="350"></svg>
-  <div id="scatter"></div>
-  
   <script> type="text/javascript">
       $(document).ready(function(){
         $('#mselect').chosen()
@@ -98,6 +98,5 @@
   <script src="display.js"></script>
   <script src="map.js"></script>
   <script src='bar_chart/bar_chart.js'></script>
-
 </body>
 </html>
