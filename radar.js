@@ -131,8 +131,8 @@ const radar_update = () => {
 
 	// Set the styling options.
 	let radar_options = {
-		w: 300,
-		h: 300,
+		w: 350,
+		h: 350,
 		margin: margin,
 		maxValue: 6,
 		levels: 6,

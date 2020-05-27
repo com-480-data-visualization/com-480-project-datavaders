@@ -6,6 +6,7 @@
   <link href="style.css" rel="stylesheet" type="text/css">
   <!-- Stylesheets for the searchable dropdown -->
   <link rel="stylesheet" href="./mselect/chosen.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">  <script type="text/javascript" src="./mselect/jquery-3.5.1.min.js"></script>
   <script type="text/javascript" src="./mselect/jquery-3.5.1.min.js"></script>
   <script type="text/javascript" src="./mselect/chosen.jquery.min.js"></script>
   <!-- Load minified d3.js library -->
@@ -39,42 +40,46 @@
 </style>
 </head>
 <body>
-  <div class="container">
-    <div class="row top">
-      <div class="row spaced left">
-        <div>
-          <select id="year" onchange="map_changeYear()">
-            <option value="2015">2015</option>
-            <option value="2016">2016</option>
-            <option value="2017">2017</option>
-            <option value="2018">2018</option>
-            <option selected value="2019">2019</option>
-          </select>
-          <select id="submetric" onchange="scatter_changeSubmetric()" class="hide">
-            <option selected value="gdp_per_capita">GDP</option>
-            <option value="corruption_perceptions">Societal Trust</option>
-            <option value="generosity">Generosity</option>
-            <option value="freedom_to_life_choice">Freedom</option>
-            <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
-          </select>
+  <div class="project-container">
+    <div class="project-row project-top">
+      <div class="project-row project-spaced project-left">
+        <div class="project-row">
+          <form>
+            <select id="year" class="form-control" onchange="map_changeYear()">
+              <option value="2015">2015</option>
+              <option value="2016">2016</option>
+              <option value="2017">2017</option>
+              <option value="2018">2018</option>
+              <option selected value="2019">2019</option>
+            </select>
+          </form>
+          <form>
+            <select id="submetric" class="form-control" onchange="scatter_changeSubmetric()" class="hide">
+              <option selected value="gdp_per_capita">GDP</option>
+              <option value="corruption_perceptions">Societal Trust</option>
+              <option value="generosity">Generosity</option>
+              <option value="freedom_to_life_choice">Freedom</option>
+              <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
+            </select>
+        </form>
         </div>
         <div>
-          <button onClick="map_show()">Map</button>
-          <button onClick="scatter_show()">Scatter</button>
+          <button onClick="map_show()" class="btn btn-outline-secondary">Map</button>
+          <button onClick="scatter_show()" class="btn btn-outline-secondary">Scatter</button>
         </div>
       </div>
-      <div class="row right around">
-        <div class='text'>Mouse over a country on the map.</div>
+      <div class="project-row project-right project-around">
+        <div class='project-text'>Mouse over a country on the map.</div>
         <div id='flag'></div>
       </div>
     </div>
-    <div class="row middle">
+    <div class="project-row project-middle">
       <div>
-        <div id="scatter" class="hide"></div>
-        <svg id="map" width="980" height="566" ></svg>
+        <div id="scatter" class="project-hide"></div>
+        <svg id="map" width="1235" height="713" ></svg>
       </div>
-      <div class="column">
-        <div class='radar-container'>
+      <div class="project-column">
+        <div class='project-radar-container'>
           <form>
             <select id='mselect' multiple="" style="width: 300px" onchange="radar_update();">
             </select>
@@ -84,7 +89,7 @@
         </div>
       </div>
     </div>
-    <div class="row bottom">
+    <div class="project-row project-bottom">
       <svg id="bar" width="1000" height="350"></svg>
     </div>
   </div>

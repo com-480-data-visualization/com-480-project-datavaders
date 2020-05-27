@@ -293,7 +293,7 @@ const map_update = () => {
 
           // Update radar graph with country.
           radar_onMapMouseover(map_names.get(d.id));
-          document.querySelector('.text').innerHTML = map_names.get(d.id) + '<br>' + 'Happiness score: ' + map_data.get(d.id);
+          document.querySelector('.project-text').innerHTML = map_names.get(d.id) + '<br>' + 'Happiness score: ' + map_data.get(d.id);
 
           display_onMouseover(d.id);
   
@@ -305,7 +305,7 @@ const map_update = () => {
       .on("mouseout",function(d) {
         // Reset color to original tone.
         d3.select(this).attr("fill", map_colorScale(map_data.get(d.id) || 0))
-        document.querySelector('.text').innerHTML = 'Mouse over a country on the map.';
+        document.querySelector('.project-text').innerHTML = 'Mouse over a country on the map.';
 
         // Update radar graph by removing country.
         radar_onMapMouseout(map_names.get(d.id));
@@ -341,7 +341,7 @@ const map_changeYear = () => {
 
 // Hide the scatter and show the map.
 const map_show = () => {
-  document.getElementById('scatter').classList.add('hide');
-  document.getElementById('submetric').classList.add('hide');
-  document.getElementById('map').classList.remove('hide');
+  document.getElementById('scatter').classList.add('project-hide');
+  document.getElementById('submetric').classList.add('project-hide');
+  document.getElementById('map').classList.remove('project-hide');
 }

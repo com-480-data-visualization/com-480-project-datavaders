@@ -68,7 +68,7 @@ const scatter_update = () => {
       
       radar_onMapMouseover(d.country);
       display_onMouseover(map_codes.get(d.country))
-      document.querySelector('.text').innerHTML = d.country + '<br>' + 'Happiness score: ' + d.score;
+      document.querySelector('.project-text').innerHTML = d.country + '<br>' + 'Happiness score: ' + d.score;
 
         
           
@@ -85,7 +85,7 @@ const scatter_update = () => {
         radar_onMapMouseout(d.country);
         display_onMouseout();
         d3.select(this).attr("fill", function (d) {return scatter_colorScale(+d.score); })
-        document.querySelector('.text').innerHTML = 'Mouse over a country on the map.';
+        document.querySelector('.project-text').innerHTML = 'Mouse over a country on the map.';
       }
 
       var click = function(d) {
@@ -248,7 +248,7 @@ const scatter_changeSubmetric = () => {
 
 // Hide the map and show the scatter.
 const scatter_show = () => {
-  document.getElementById('map').classList.add('hide');
-  document.getElementById('scatter').classList.remove('hide');
-  document.getElementById('submetric').classList.remove('hide');
+  document.getElementById('map').classList.add('project-hide');
+  document.getElementById('scatter').classList.remove('project-hide');
+  document.getElementById('submetric').classList.remove('project-hide');
 }
