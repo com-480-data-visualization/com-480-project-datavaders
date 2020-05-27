@@ -166,7 +166,7 @@ const bar_update = (updateType, countryName) => {
             onMapClick(d_from_country(countryName));
         }
 
-        dataBig.forEach((d,i) => onMapOver(d))
+        //dataBig.forEach((d,i) => onMapOver(d))
 
         function d_from_country(countryName) {
             let d = dataBig.find(obj => obj.country === countryName);
