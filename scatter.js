@@ -27,9 +27,9 @@ const scatter_lighten = (color, factor) => {
 // Global declaration of the keydown event listener function.
 let keydownEventResponse;
 
-var scatter_margin = { top: 20, right: 20, bottom: 30, left: 30 };
-  width = 900 - scatter_margin.left - scatter_margin.right,
-  height = 578 - scatter_margin.top - scatter_margin.bottom;
+let scatter_margin = { top: 40, right: 40, bottom:40, left: 40 };
+let scat_width = 1000 - scatter_margin.left - scatter_margin.right;
+let scat_height = 500 - scatter_margin.top - scatter_margin.bottom;
 
 // Set the color scale.
 let scatter_colorScale = d3.scaleSequential()
@@ -39,11 +39,8 @@ let scatter_colorScale = d3.scaleSequential()
 // Update the plot based on the currently selected data.
 const scatter_update = () => {
   d3.csv('./Preprocessing/finaldf.csv', function(d) {
-    let scatter_svg = d3.select("#scatter").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + (margin.left + 10) + "," + margin.top + ")");
+    let scatter_svg = d3.select("#scatter").append("g")
+      .attr("transform", "translate(" + (scatter_margin.left+10) + "," + scatter_margin.top + ")");
 
     let data = d.filter((entry) => entry.year === scatter_year);
 
@@ -93,16 +90,16 @@ const scatter_update = () => {
       }
 
   var x = d3.scaleLinear()          
-        .range([0, width])
+        .range([0, scat_width])
         .nice();
 
   var y = d3.scaleLinear()
-      .range([height, 0]);
+      .range([scat_height, 0]);
 
   var xAxis = d3.axisBottom(x).ticks(12),
-      yAxis = d3.axisLeft(y).ticks(12 * height / width);
+      yAxis = d3.axisLeft(y).ticks(12 * scat_height / scat_width);
 
-  var brush = d3.brush().extent([[0, 0], [width, height]]).on("end", brushended),
+  var brush = d3.brush().extent([[0, 0], [scat_width, scat_height]]).on("end", brushended),
       idleTimeout,
       idleDelay = 350;
 
@@ -110,8 +107,8 @@ const scatter_update = () => {
   var clip = scatter_svg.append("defs").append("svg:clipPath")
       .attr("id", "clip")
       .append("svg:rect")
-      .attr("width", width )
-      .attr("height", height )
+      .attr("width", scat_width )
+      .attr("height", scat_height )
       .attr("x", 0) 
       .attr("y", 0); 
 
@@ -142,13 +139,13 @@ const scatter_update = () => {
   scatter_svg.append("g")
       .attr("class", "x axis")
       .attr('id', "axis--x")
-      .attr("transform", "translate(0," + height + ")")
+      .attr("transform", "translate(0," + scat_height + ")")
       .call(xAxis);
 
   scatter_svg.append("text")
     .style("text-anchor", "end")
-      .attr("x", width)
-      .attr("y", height - 8)
+      .attr("x", scat_width)
+      .attr("y", scat_height - 8)
       .attr('id', "x-label-text")
     .text(scatter_metricNames.get(scatter_metric));
 
@@ -248,7 +245,7 @@ const scatter_changeSubmetric = () => {
 
 // Hide the map and show the scatter.
 const scatter_show = () => {
-  document.getElementById('map').classList.add('project-hide');
-  document.getElementById('scatter').classList.remove('project-hide');
-  document.getElementById('submetric').classList.remove('project-hide');
+  document.getElementById('mapContainer').classList.add('project-hide');
+  document.getElementById('scatterContainer').classList.remove('project-hide');
+  //document.getElementById('submetric').classList.remove('project-hide');
 }

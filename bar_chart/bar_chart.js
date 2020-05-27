@@ -5,10 +5,10 @@ let vizScale = "world";
 
 let svg = d3.select("#bar"),
     margin = {top: 20, right: 20, bottom: 30, left: 20},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom,
+    width = 1000 - margin.left - margin.right,
+    height = 300 - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .attr('id', 'barG')
+        .attr('id', 'barG');
 
 let scaleX = d3.scaleBand()
     .rangeRound([0, width])
