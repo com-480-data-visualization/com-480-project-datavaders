@@ -50,7 +50,7 @@ const radar_buildOptions = () => {
 
 // Update the radar based on the currently selected data.
 const radar_update = () => {
-	d3.csv('./Preprocessing/finaldfCoordinatesStdev.csv', function(originalData) {
+	d3.csv('./Preprocessing/finaldfCoordinatesStdev_percent.csv', function(originalData) {
 
 		// Reset the selected countries list, then populate it via the select element.
 		radar_selected = [];
@@ -138,12 +138,12 @@ const radar_update = () => {
 		h: 350,
 		margin: {top: 40, right: 40, bottom: 40, left: 40},  // TODO problem here
 		maxValue: 6,
-		levels: 6,
+		levels: 10,
 		roundStrokes: true,
 		color: d3.scaleOrdinal().range(["#AFC52F", "#ff6600", "#2a2fd4"]),
 		format: '.0f',
 		legend: { title: 'Radar chart', translateX: -420, translateY: 40 },
-		unit: ''
+		unit: '%'
 	};
 
 	// Draw the radar.
@@ -201,7 +201,7 @@ const radar_draw = (parent_selector, data, options) => {
 	 roundStrokes: false,	//If true the area and stroke will follow a round path (cardinal-closed)
 	 color: d3.scaleOrdinal(d3.schemeCategory10),	//Color function,
 	 format: '.2%',
-	 unit: '',
+	 unit: '%',
 	 legend: false
 	};
 
@@ -224,7 +224,7 @@ const radar_draw = (parent_selector, data, options) => {
 		}
 	}
 	maxValue = Math.max(cfg.maxValue, maxValue);	
-	maxValue = 6;
+	maxValue = 100;
 
 
 	const allAxis = data[0].axes.map((i, j) => i.axis),	//Names of each axis
