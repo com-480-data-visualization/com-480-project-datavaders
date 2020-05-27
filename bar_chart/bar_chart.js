@@ -161,7 +161,7 @@ const bar_update = (updateType, countryName) => {
         if (updateType === 'mapHover') {
             onMapOver(d_from_country(countryName));
         } else if (updateType === 'mapOut') {
-            onMapOut();
+            onMapOut(d_from_country(countryName));
         } else if (updateType === 'mapClick') {
             onMapClick(d_from_country(countryName));
         }
@@ -174,80 +174,63 @@ const bar_update = (updateType, countryName) => {
         }
 
         function onMapOver(d) {
-            if (d.region != data_region && vizScale == "region")
-                return;
-
-            g.append('rect')
-                .attr('class', 'cover')
-                .attr("x", function () {
-                    return scaleX(d.country);
-                })
-                .attr("y", function () {
-                    return scaleY(0);
-                })
-                .transition()
-                .ease(d3.easeSin)
-                .duration(400)
-                .attr("height", function () {
-                    return scaleY(10);
-                })
-                .attr("width", 0.85 * scaleX.bandwidth())
-                .attr("fill", "rgb(241,241,241)");
-
-            let elem_idx = d.idx0;  // index when ordered by score
-            key_data.forEach((item, key_idx) => {
-                g.append('rect')
-                    .attr("class", "brushed")
-                    .attr("x", function () {
-                        return scaleX(d.country);
-                    })
-                    .attr("y", () => scaleY(item[elem_idx][0]))
-                    .attr("height", function () {
-                        if (key_idx == 6)
-                            return scaleY(d.score - item[elem_idx][0]);
-                        return scaleY(item[elem_idx][1] - item[elem_idx][0] + 0.1);
-                    })
-                    .attr("width", 0.80 * scaleX.bandwidth())
-                    .attr('fill', z(key_idx))
-            })
-
-            if (vizScale === "region") {
-                g.append("text")
-                     .attr('class', 'label')
-                     .attr("color", "red")
-                     .attr("x", scaleX(d.country)+ scaleX.bandwidth()*0.425)
-                     .attr("y", scaleY(d.score)+15) //+ i%2 * 5
-                     .transition()     // adds animation
-                     .duration(10)
-                     .text(() => {
-                         return map_codes.get(d.country)
-                     })
-                     //.attr("transform", "translate("+ scaleX(d.country)+"," + scaleY(dtest) +  + ")")
-            }
-
-            d3.selectAll(".label")
-                .style("text-anchor", "middle")
-
+            // if (d.region != data_region && vizScale == "region")
+            //     return;
+            //
+            // g.append('rect')
+            //     .attr('class', 'cover')
+            //     .attr("x", function () {
+            //         return scaleX(d.country);
+            //     })
+            //     .attr("y", function () {
+            //         return scaleY(0);
+            //     })
+            //     .transition()
+            //     .ease(d3.easeSin)
+            //     .duration(400)
+            //     .attr("height", function () {
+            //         return scaleY(10);
+            //     })
+            //     .attr("width", 0.85 * scaleX.bandwidth())
+            //     .attr("fill", "rgb(241,241,241)");
+            //
+            // let elem_idx = d.idx0;  // index when ordered by score
+            // key_data.forEach((item, key_idx) => {
+            //     g.append('rect')
+            //         .attr("class", "brushed")
+            //         .attr("x", function () {
+            //             return scaleX(d.country);
+            //         })
+            //         .attr("y", () => scaleY(item[elem_idx][0]))
+            //         .attr("height", function () {
+            //             if (key_idx == 6)
+            //                 return scaleY(d.score - item[elem_idx][0]);
+            //             return scaleY(item[elem_idx][1] - item[elem_idx][0] + 0.1);
+            //         })
+            //         .attr("width", 0.80 * scaleX.bandwidth())
+            //         .attr('fill', z(key_idx))
+            // })
         }
 
-        function onMapOut() {
-            d3.transition()
-                .delay(200)
-                .duration(400)
-                .ease(d3.easeSin)
-                .select('#barG').selectAll('.cover')
-                .attr("height", 0)
-                .remove();
+        function onMapOut(d) {
 
-            d3.transition()
-                .delay(300)
-                .duration(100)
-                .ease(d3.easeSin)
-                .attr("height", 0)
-                .select('#barG').selectAll('.brushed').remove()
-
-            d3.selectAll(".label").transition()     // adds animation
-                .duration(10).remove()
+            // destroy cover rectangle
+            // d3.transition()
+            //     .delay(200)
+            //     .duration(400)
+            //     .ease(d3.easeSin)
+            //     .select('#barG').selectAll('.cover')
+            //     .attr("height", 0)
+            //     .remove();
+            //
+            // // destory rectangles
+            // d3.transition()
+            //     .delay(300)
+            //     .duration(100)
+            //     .ease(d3.easeSin)
+            //     .attr("height", 0)
+            //     .select('#barG').selectAll('.brushed').remove()
+            //
         }
 
         function onMapClick(d){
@@ -282,7 +265,25 @@ const bar_update = (updateType, countryName) => {
                 .attr("y", (d) => (d.region === data_region) ? scaleY(0) : 0)
                 .attr("height", (d) => (d.region === data_region) ? scaleY(d.score) : 0)
                 .attr("width", (d) => (d.region === data_region) ? 0.80 * scaleX.bandwidth() : 0)
-            }
+
+
+                // Add new labels
+                g.selectAll("g").append("text")
+                     .attr('class', 'label')
+                     .attr("color", "#414141")
+                     .attr("x", (d) => scaleX(d.country)+ scaleX.bandwidth()*0.425)
+                     .attr("y", (d) => scaleY(d.score)+15) //+ i%2 * 5
+                     .transition()     // adds animation
+                     .duration(10)
+                     .text((d) => {
+                         if (d.region === data_region)
+                             return map_codes.get(d.country)
+
+                     }).style("text-anchor", "middle")
+                     .style("font-size", (d)=>{
+                        if (d.region==="Sub-Saharan Africa")
+                            return "9.6px"})
+                 }
         });
 };
 
