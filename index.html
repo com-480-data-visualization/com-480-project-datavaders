@@ -33,7 +33,7 @@
 </head>
 <body>
 
-<div class="container-fluid pl-4 pr-4">
+<div class="container-fluid pl-8 pr-8">
     <nav class="navbar navbar-blue default-color justify-content-between">
         <a class="navbar-brand" href="#">Navbar</a>
         <form class="form-inline my-1">
@@ -78,20 +78,15 @@
                 <div class="project-row">
                     <div id='flag'></div>
                 </div>
-                <div>
-                    <button onClick="map_show()" class="btn btn-outline-secondary">Map</button>
-                    <button onClick="scatter_show()" class="btn btn-outline-secondary">Scatter</button>
+                <div class="float-right">
+                    <img id ="toggler" src="svg/scatter_icon.svg" onClick="toggleView()" width="40px" alt="Giragge in a church">
                 </div>
             </div>
-            <div>
-                <div>
-                    <div id="mapContainer" class="svg-container" style="padding-bottom: 50%;">
-                        <svg id="map" class="svg-content" viewBox="0 0 1000 600" preserveAspectRatio="none" style="padding-bottom: 50%;"></svg>
-                    </div>
-                    <div id="scatterContainer" class="svg-container project-hide" style="padding-bottom: 50%;">
-                        <svg id="scatter" class="svg-content" viewBox="0 0 1000 600" preserveAspectRatio="none"></svg>
-                    </div>
+                <div id="mapContainer" class="svg-container" style="padding-bottom: 50%;">
+                    <svg id="map" class="svg-content" viewBox="0 0 1000 600" preserveAspectRatio="none" style="padding-bottom: 50%;"></svg>
                 </div>
+                <div id="scatterContainer" class="svg-container project-hide" style="padding-bottom: 50%;">
+                    <svg id="scatter" class="svg-content" viewBox="0 0 1000 600" preserveAspectRatio="none"></svg>
             </div>
         </div>
         <div class="col-4"> <!-- RADAR -->
@@ -99,7 +94,7 @@
                 <select id='mselect' multiple="" style="width: 300px" onchange="radar_update();">
                 </select>
                 <button type="button" id='clear-all' class="btn btn-outline-secondary float-right" onclick="radar_clear()">
-                  <svg class="bi bi-bootstrap-reboot" width="4em" height="4em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <svg class="bi bi-bootstrap-reboot" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M1.161 8a6.84 6.84 0 1 0 6.842-6.84.58.58 0 0 1 0-1.16 8 8 0 1 1-6.556 3.412l-.663-.577a.58.58 0 0 1 .227-.997l2.52-.69a.58.58 0 0 1 .728.633l-.332 2.592a.58.58 0 0 1-.956.364l-.643-.56A6.812 6.812 0 0 0 1.16 8zm5.48-.079V5.277h1.57c.881 0 1.416.499 1.416 1.32 0 .84-.504 1.324-1.386 1.324h-1.6zm0 3.75V8.843h1.57l1.498 2.828h1.314L9.377 8.665c.897-.3 1.427-1.106 1.427-2.1 0-1.37-.943-2.246-2.456-2.246H5.5v7.352h1.141z"/>
                   </svg>
                 </button>
@@ -120,68 +115,32 @@
         </div>
     </div>
 
-
-
-
-        <!-- <div class="project-row project-spaced project-left">
-                <div class="project-row">
-                    <form>
-                        <select id="year" class="form-control" onchange="map_changeYear()">
-                            <option value="2015">2015</option>
-                            <option value="2016">2016</option>
-                            <option value="2017">2017</option>
-                            <option value="2018">2018</option>
-                            <option selected value="2019">2019</option>
-                        </select>
-                    </form>
-                    <form>
-                        <select id="submetric" class="form-control" onchange="scatter_changeSubmetric()" class="hide">
-                            <option selected value="gdp_per_capita">GDP</option>
-                            <option value="corruption_perceptions">Societal Trust</option>
-                            <option value="generosity">Generosity</option>
-                            <option value="freedom_to_life_choice">Freedom</option>
-                            <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
-                        </select>
-                    </form>
-                </div>
-                <div>
-                    <button onClick="map_show()" class="btn btn-outline-secondary">Map</button>
-                    <button onClick="scatter_show()" class="btn btn-outline-secondary">Scatter</button>
-                </div>
-            </div>
-            <div class="project-row project-right project-around">
-                <div class='project-text'>Mouse over a country on the map.</div>
-                <div id='flag'></div>
-            </div>
-        </div>
-        <div class="project-row project-middle">
-            <div>
-                <div id="scatter" class="project-hide"></div>
-                <svg id="map" width="1235" height="713" ></svg>
-            </div>
-            <div class="project-column">
-                <div class='project-radar-container'>
-                    <form>
-                        <select id='mselect' multiple="" style="width: 300px" onchange="radar_update();">
-                        </select>
-                    </form>
-                    <div class="radar"></div>
-                    <button id='clear-all' onclick="radar_clear()">Clear</button>
-                </div>
-            </div>
-        </div>
-        <div class="project-row project-bottom">
-            <svg id="bar" width="1000" height="350"></svg>
-        </div>
-    </div>
-     -->
-
-
 <script> type="text/javascript">
     $(document).ready(function(){
         $('#mselect').chosen()
     })
 </script>
+
+<script>
+    let toggle = 0
+    function toggleView(){
+        d3.selectAll("#toggler").transition().duration(200).attr("src",
+            () => {if (toggle%2){
+                map_show();
+                return "svg/scatter_icon.svg";
+            } else {
+                scatter_show();
+                return "svg/mapicon.svg";
+            }})
+        console.log(d3.select("#toggler").attr("src"))
+        toggle++;
+
+        //d3.select("#toggler svg").selectAll('*').attr("visibility", "hidden")
+        d3.select("#pippo").attr("src", "svg/mapicon.svg")
+        console.log()
+    }
+</script>
+
 <script src="radar.js" charset="utf-8"></script>
 <script src="scatter.js"></script>
 <script src="display.js"></script>
