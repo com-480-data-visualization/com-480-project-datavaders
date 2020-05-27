@@ -5,10 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="style.css" rel="stylesheet" type="text/css">
     <!-- Stylesheets for the searchable dropdown -->
-    <link rel="stylesheet" href="./mselect/chosen.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">  <script type="text/javascript" src="./mselect/jquery-3.5.1.min.js"></script>
-    <script type="text/javascript" src="./mselect/jquery-3.5.1.min.js"></script>
-    <script type="text/javascript" src="./mselect/chosen.jquery.min.js"></script>
+<!--     <link rel="stylesheet" href="./mselect/chosen.min.css">
+ -->    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">  <script type="text/javascript" src="./mselect/jquery-3.5.1.min.js"></script>
+<!--     <script type="text/javascript" src="./mselect/jquery-3.5.1.min.js"></script>
+ -->    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<script type="text/javascript" src="./mselect/chosen.jquery.min.js"></script>
+
     <!-- Load minified d3.js library -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -17,6 +24,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <link href="dist/css/component-chosen.css" rel="stylesheet">
+
     <title>Data Visualization</title>
 
     <style>
@@ -96,8 +106,15 @@
         </div>
         <div class="col-4"> <!-- RADAR -->
             <form>
-                <select id='mselect' multiple="" style="width: 300px" onchange="radar_update();">
+                <select id='mselect' multiple="" class='form-control form-control-chosen' onchange="radar_update();">
                 </select>
+                <script type="text/javascript">
+                  $('.form-control-chosen').chosen({
+                           // Chosen options here
+                  });
+                  document.querySelector('.chosen-choices').setAttribute('style', 'width: 600px !important')
+                  document.querySelector('.chosen-drop').setAttribute('style', 'width: 600px !important')
+                </script>
                 <button type="button" id='clear-all' class="btn btn-outline-secondary float-right" onclick="radar_clear()">
                   <svg class="bi bi-bootstrap-reboot" width="4em" height="4em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M1.161 8a6.84 6.84 0 1 0 6.842-6.84.58.58 0 0 1 0-1.16 8 8 0 1 1-6.556 3.412l-.663-.577a.58.58 0 0 1 .227-.997l2.52-.69a.58.58 0 0 1 .728.633l-.332 2.592a.58.58 0 0 1-.956.364l-.643-.56A6.812 6.812 0 0 0 1.16 8zm5.48-.079V5.277h1.57c.881 0 1.416.499 1.416 1.32 0 .84-.504 1.324-1.386 1.324h-1.6zm0 3.75V8.843h1.57l1.498 2.828h1.314L9.377 8.665c.897-.3 1.427-1.106 1.427-2.1 0-1.37-.943-2.246-2.456-2.246H5.5v7.352h1.141z"/>
@@ -177,11 +194,11 @@
      -->
 
 
-<script> type="text/javascript">
+<!-- <script> type="text/javascript">
     $(document).ready(function(){
         $('#mselect').chosen()
     })
-</script>
+</script> -->
 <script src="radar.js" charset="utf-8"></script>
 <script src="scatter.js"></script>
 <script src="display.js"></script>
