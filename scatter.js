@@ -64,7 +64,7 @@ const scatter_update = () => {
           .style("display", null)
       
       radar_onMapMouseover(d.country);
-      display_onMouseover(map_codes.get(d.country))
+      display_onMouseover(d.country, map_codes.get(d.country))
       document.querySelector('.project-text').innerHTML = d.country + '<br>' + 'Happiness score: ' + d.score;
 
         
