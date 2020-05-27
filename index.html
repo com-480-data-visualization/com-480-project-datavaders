@@ -57,11 +57,14 @@
       <div class="container">
         <div id="scatter" class="hide"></div>
         <svg id="map" width="1000" height="578" ></svg>
-        <div id='map-tooltip'></div>
       </div>
     </div>
     <div class="column">
-      <div id='country-info'></div>
+      <div class="row">
+        <p id='map-tooltip'>Mouse over a country on the map.</p>
+        <div id='country-info'></div>
+      </div>
+      
       <div class='radar-container'>
         <form>
           <select id='mselect' multiple="" style="width: 300px" onchange="radar_update();">
