@@ -17,6 +17,7 @@ let scatter_metricNames = new Map([
   ['generosity', 'Generosity'],
   ['freedom_to_life_choice', 'Freedom'],
   ['healthy_life_expectancy', 'Healthy Life Expectancy'],
+  ['social_support', 'Social Support']
 ]);
 
 // Helper function to lighten color tones upon mouseover.
@@ -38,7 +39,7 @@ let scatter_colorScale = d3.scaleSequential()
 
 // Update the plot based on the currently selected data.
 const scatter_update = () => {
-  d3.csv('./Preprocessing/finaldf.csv', function(d) {
+  d3.csv('./Preprocessing/finaldf_with_social_support.csv', function(d) {
     let scatter_svg = d3.select("#scatter").append("g")
       .attr("transform", "translate(" + (scatter_margin.left+10) + "," + scatter_margin.top + ")");
 
