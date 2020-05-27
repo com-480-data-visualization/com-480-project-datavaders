@@ -236,8 +236,8 @@ let map_selectedYear = '2019';
 
 // Bind the svg to the html element.
 let map_svg = d3.select("#map"),
-map_width = +map_svg.attr("width"),
-map_height = +map_svg.attr("height");
+map_width = 1000;
+map_height = 600;
 
 // Set the map dimensions.
 let map_projection = d3.geoNaturalEarth()

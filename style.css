@@ -51,11 +51,6 @@
   width: 50%;
 }
 
-#map {
-  margin-left: -175px;
-  margin-top: -75px;
-}
-
 .project-radar-container {
   display: flex;
   flex-direction: column;
@@ -87,5 +82,21 @@
 
 .project-hide {
   display: none !important;
+}
+
+
+.svg-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 50%;
+  vertical-align: top;
+  overflow: hidden;
+}
+.svg-content {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
