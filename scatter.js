@@ -64,8 +64,7 @@ const scatter_update = () => {
           .style("display", null)
       
       radar_onMapMouseover(d.country);
-      display_onMouseover(map_codes.get(d.country))
-      document.querySelector('.project-text').innerHTML = d.country + '<br>' + 'Happiness score: ' + d.score;
+      display_onMouseover(d.country, map_codes.get(d.country))
 
         
           
@@ -82,7 +81,6 @@ const scatter_update = () => {
         radar_onMapMouseout(d.country);
         display_onMouseout();
         d3.select(this).attr("fill", function (d) {return scatter_colorScale(+d.score); })
-        document.querySelector('.project-text').innerHTML = 'Mouse over a country on the map.';
       }
 
       var click = function(d) {

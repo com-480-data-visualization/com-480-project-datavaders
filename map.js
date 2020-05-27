@@ -295,7 +295,7 @@ const map_update = () => {
           radar_onMapMouseover(map_names.get(d.id)); // TODO commented line
           //document.querySelector('.project-text').innerHTML = map_names.get(d.id) + '<br>' + 'Happiness score: ' + map_data.get(d.id);
 
-          display_onMouseover(d.id);
+          display_onMouseover(map_names.get(d.id), d.id);
   
 
 

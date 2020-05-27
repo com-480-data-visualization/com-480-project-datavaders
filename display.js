@@ -256,6 +256,7 @@ let flag_codes = {
 };
 
 let div = document.getElementById('flag');
+div.style.fontSize = '1.1rem';
 
 // Map storing country ISO-3 code/flag image pairs.
 let flag_map = new Map();
@@ -265,16 +266,20 @@ for (let code in flag_codes) {
   let img = document.createElement('img');
   img.src = `flags/${flag_codes[code].toLowerCase()}.png`;
   flag_map.set(code, img);
+  img.style.height = '38px';
+  img.style.marginLeft = '10px';
 }
 
 // Append the requested flag to the DOM.
-display_onMouseover = (code) => {
+display_onMouseover = (name, code) => {
+  let text = document.createTextNode(name);
+  div.appendChild(text);
   div.appendChild(flag_map.get(code));
 }
 
 // Remove the current flag from the DOM.
 display_onMouseout = () => {
-  if (div.firstChild) {
+  while (div.firstChild) {
     div.removeChild(div.firstChild);
   }
 }
