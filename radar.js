@@ -488,7 +488,6 @@ const radar_draw = (parent_selector, data, options) => {
 
 // Set currently hovered country.
 const radar_onMapMouseover = (map_country) => {
-	console.log(radar_selected.length);
 	if (radar_selected.length < 4) {
 		radar_hovered = map_country;
 		radar_update();
