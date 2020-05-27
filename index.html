@@ -42,13 +42,22 @@
   <div class="row">
     <div class="column">
       <div class="row spaced">
-        <select id="year" onchange="map_changeYear()">
-          <option value="2015">2015</option>
-          <option value="2016">2016</option>
-          <option value="2017">2017</option>
-          <option value="2018">2018</option>
-          <option selected value="2019">2019</option>
-        </select>
+        <div>
+          <select id="year" onchange="map_changeYear()">
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+            <option value="2018">2018</option>
+            <option selected value="2019">2019</option>
+          </select>
+          <select id="submetric" onchange="scatter_changeSubmetric()" class="hide">
+            <option selected value="gdp_per_capita">GDP</option>
+            <option value="corruption_perceptions">Societal Trust</option>
+            <option value="generosity">Generosity</option>
+            <option value="freedom_to_life_choice">Freedom</option>
+            <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
+          </select>
+        </div>
         <div>
           <button onClick="map_show()">Map</button>
           <button onClick="scatter_show()">Scatter</button>
@@ -78,13 +87,7 @@
 
   <svg id="bar" width="1000" height="350"></svg>
   <div id="scatter"></div>
-  <select id="submetric" onchange="scatter_changeSubmetric()">
-    <option selected value="gdp_per_capita">GDP</option>
-    <option value="corruption_perceptions">Societal Trust</option>
-    <option value="generosity">Generosity</option>
-    <option value="freedom_to_life_choice">Freedom</option>
-    <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
-  </select>
+  
   <script> type="text/javascript">
       $(document).ready(function(){
         $('#mselect').chosen()

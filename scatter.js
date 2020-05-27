@@ -250,4 +250,5 @@ const scatter_changeSubmetric = () => {
 const scatter_show = () => {
   document.getElementById('map').classList.add('hide');
   document.getElementById('scatter').classList.remove('hide');
+  document.getElementById('submetric').classList.remove('hide');
 }

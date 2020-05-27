@@ -342,5 +342,6 @@ const map_changeYear = () => {
 // Hide the scatter and show the map.
 const map_show = () => {
   document.getElementById('scatter').classList.add('hide');
+  document.getElementById('submetric').classList.add('hide');
   document.getElementById('map').classList.remove('hide');
 }
