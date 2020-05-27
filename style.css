@@ -69,6 +69,10 @@
   background-color: red;
 }
 
+#toggler:hover {
+  cursor: pointer;
+}
+
 /* .text {
   margin: auto;
   width: 200px;
