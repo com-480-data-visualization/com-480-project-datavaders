@@ -90,7 +90,8 @@ const radar_update = () => {
 			{axis: 'Societal Trust', value: +radar_hoveredData.corruption_perceptions},
 			{axis: 'Generosity', value: +radar_hoveredData.generosity},
 			{axis: 'Freedom', value: +radar_hoveredData.freedom_to_life_choice},
-			{axis: 'Healthy Life Expectancy', value: +radar_hoveredData.healthy_life_expectancy}
+			{axis: 'Healthy Life Expectancy', value: +radar_hoveredData.healthy_life_expectancy},
+			{axis: 'Social support', value: +radar_hoveredData.social_support}
 		], 
 		color: radar_colorScale(+radar_hoveredData.score),
 	};
@@ -104,7 +105,8 @@ const radar_update = () => {
 				{axis: 'Societal Trust', value: +d.corruption_perceptions},
 				{axis: 'Generosity', value: +d.generosity},
 				{axis: 'Freedom', value: +d.freedom_to_life_choice},
-				{axis: 'Healthy Life Expectancy', value: +d.healthy_life_expectancy}
+				{axis: 'Healthy Life Expectancy', value: +d.healthy_life_expectancy},
+				{axis: 'Social support', value: +d.social_support}
 			], 
 			color: radar_colorScale(+d.score),
 		};
@@ -125,6 +127,7 @@ const radar_update = () => {
 				{axis: 'Generosity'},
 				{axis: 'Freedom'},
 				{axis: 'Healthy Life Expectancy'},
+				{axis: 'Social support'},
 			], 
 		}];
 	}
