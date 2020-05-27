@@ -488,16 +488,22 @@ const radar_draw = (parent_selector, data, options) => {
 
 // Set currently hovered country.
 const radar_onMapMouseover = (map_country) => {
-	radar_hovered = map_country
-	radar_update();
+	console.log(radar_selected.length);
+	if (radar_selected.length < 4) {
+		radar_hovered = map_country;
+		radar_update();
+	}
 }
 
 // Add clicked country to radar graph.
 const radar_onMapClick = (map_country) => {
-	document.querySelector(`#mselect option[value='${map_country}']`).selected = true;
-	$("#mselect").trigger("chosen:updated");
-	radar_selected.push(map_country);
-	radar_update();
+	if (radar_selected.length < 4) {
+		document.querySelector(`#mselect option[value='${map_country}']`).selected = true;
+		$("#mselect").trigger("chosen:updated");
+		radar_selected.push(map_country);
+		radar_update();
+	}
+	
 }
 
 // Remove currently hovered country.
