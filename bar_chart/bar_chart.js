@@ -29,7 +29,7 @@ let color_seq = d3.scaleSequential()
 let color_seq2 = d3.scaleSequential()
     .interpolator(d3.interpolatePlasma);
 
-console.log(map_codes)
+
 const bar_draw = () => {
     g.selectAll().remove()
     console.log(vizScale, data_region);
@@ -97,8 +97,7 @@ const bar_draw = () => {
                         return scaleX(d.country) - scaleX.bandwidth() * 0.1;
                     })
                     .attr('fill', '#D4AF37');//#D4AF37
-            }
-            else {
+            } else {
                 d3.select(this).attr('class', 'highlight');
                 d3.select(this)
                     .transition()
@@ -204,7 +203,7 @@ const bar_update = (updateType, countryName) => {
                     })
                     .attr("y", () => scaleY(item[elem_idx][0]))
                     .attr("height", function () {
-                        if (key_idx == 7)
+                        if (key_idx == 6)
                             return scaleY(d.score - item[elem_idx][0]);
                         return scaleY(item[elem_idx][1] - item[elem_idx][0] + 0.1);
                     })
@@ -212,26 +211,22 @@ const bar_update = (updateType, countryName) => {
                     .attr('fill', z(key_idx))
             })
 
-            // if (vizScale === "region") {
-            //     let offset =  35
-            //     let dtest = d3.max(data.map(d => d.score));
-            //     g.append("text")
-            //          .attr('class', 'label')
-            //          .attr("color", "red")
-            //          .attr("x", scaleX(d.country)+ scaleX.bandwidth()/2)
-            //          .attr("y", scaleY(dtest) + offset) //+ i%2 * 5
-            //          .transition()     // adds animation
-            //          .duration(10)
-            //          .text(() => {
-            //              return d.country;
-            //          })
-            //          //.attr("transform", "translate("+ scaleX(d.country)+"," + scaleY(dtest) +  + ")")
-            // }
-            //
-            // d3.selectAll(".label")
-            //     .attr("dx", "-.8em")
-            //     .attr("dy", ".15em")
-            //     .style("text-anchor", "middle")
+            if (vizScale === "region") {
+                g.append("text")
+                     .attr('class', 'label')
+                     .attr("color", "red")
+                     .attr("x", scaleX(d.country)+ scaleX.bandwidth()*0.425)
+                     .attr("y", scaleY(d.score)+15) //+ i%2 * 5
+                     .transition()     // adds animation
+                     .duration(10)
+                     .text(() => {
+                         return map_codes.get(d.country)
+                     })
+                     //.attr("transform", "translate("+ scaleX(d.country)+"," + scaleY(dtest) +  + ")")
+            }
+
+            d3.selectAll(".label")
+                .style("text-anchor", "middle")
 
         }
 
