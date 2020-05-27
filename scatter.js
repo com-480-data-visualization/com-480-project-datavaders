@@ -27,9 +27,9 @@ const scatter_lighten = (color, factor) => {
 // Global declaration of the keydown event listener function.
 let keydownEventResponse;
 
-let scatter_margin = { top: 20, right: 20, bottom: 30, left: 30 };
+let scatter_margin = { top: 40, right: 40, bottom:40, left: 40 };
 let scat_width = 1000 - scatter_margin.left - scatter_margin.right;
-let scat_height = 600 - scatter_margin.top - scatter_margin.bottom;
+let scat_height = 500 - scatter_margin.top - scatter_margin.bottom;
 
 // Set the color scale.
 let scatter_colorScale = d3.scaleSequential()
@@ -39,12 +39,8 @@ let scatter_colorScale = d3.scaleSequential()
 // Update the plot based on the currently selected data.
 const scatter_update = () => {
   d3.csv('./Preprocessing/finaldf.csv', function(d) {
-    let scatter_svg = d3.select("#scatter").append("svg")
-      .attr("viewbox", "[0,0,"+(scat_width + scatter_margin.left + scatter_margin.right)+","+ (scat_height + scatter_margin.top + scatter_margin.bottom) + "]")
-        .attr("class", "svg-content")
-        .attr("preserveAspectRatio", "none")
-        .append("g")
-      .attr("transform", "translate(" + (scatter_margin.left + 10) + "," + scatter_margin.top + ")");
+    let scatter_svg = d3.select("#scatter").append("g")
+      .attr("transform", "translate(" + (scatter_margin.left+10) + "," + scatter_margin.top + ")");
 
     let data = d.filter((entry) => entry.year === scatter_year);
 
@@ -249,7 +245,7 @@ const scatter_changeSubmetric = () => {
 
 // Hide the map and show the scatter.
 const scatter_show = () => {
-  document.getElementById('map').classList.add('project-hide');
-  document.getElementById('scatter').classList.remove('project-hide');
-  document.getElementById('submetric').classList.remove('project-hide');
+  document.getElementById('mapContainer').classList.add('project-hide');
+  document.getElementById('scatterContainer').classList.remove('project-hide');
+  //document.getElementById('submetric').classList.remove('project-hide');
 }

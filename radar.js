@@ -133,7 +133,7 @@ const radar_update = () => {
 	let radar_options = {
 		w: 350,
 		h: 350,
-		margin: margin,
+		margin: {top: 40, right: 40, bottom: 40, left: 40},  // TODO problem here
 		maxValue: 6,
 		levels: 6,
 		roundStrokes: true,
@@ -238,16 +238,20 @@ const radar_draw = (parent_selector, data, options) => {
 	/////////////////////////////////////////////////////////
 	//////////// Create the container SVG and g /////////////
 	/////////////////////////////////////////////////////////
-	const parent = d3.select(parent_selector);
+	//const parent = d3.select(parent_selector);
 
 	//Remove whatever chart with the same id/class was present before
-	parent.select("svg").remove();
+	//parent.select("svg").remove();
 
 	//Initiate the radar chart SVG
-	let svg = parent.append("svg")
-			.attr("width",  cfg.w + cfg.margin.left + cfg.margin.right + 100)
-			.attr("height", cfg.h + cfg.margin.top + cfg.margin.bottom + 100)
-			.attr("class", "radar");
+	//let svg = parent.append("svg")
+	//		.attr("width",  cfg.w + cfg.margin.left + cfg.margin.right + 100)
+	//		.attr("height", cfg.h + cfg.margin.top + cfg.margin.bottom + 100)
+	//		.attr("class", "radar");
+
+	let svg = d3.select("#radarContent");
+	svg.selectAll('*').remove();
+	svg.attr("class", "radar");
 
 	//Append a g element
 	let g = svg.append("g")
@@ -359,7 +363,7 @@ const radar_draw = (parent_selector, data, options) => {
 		.style("fill-opacity", cfg.opacityArea)
 		.on('mouseover', function(d, i) {
 			//Dim all blobs
-			parent.selectAll(".radarArea")
+			svg.selectAll(".radarArea")
 				.transition().duration(200)
 				.style("fill-opacity", 0.1);
 			//Bring back the hovered over blob
@@ -369,7 +373,7 @@ const radar_draw = (parent_selector, data, options) => {
 		})
 		.on('mouseout', () => {
 			//Bring back all blobs
-			parent.selectAll(".radarArea")
+			svg.selectAll(".radarArea")
 				.transition().duration(200)
 				.style("fill-opacity", cfg.opacityArea);
 		});
