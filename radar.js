@@ -120,17 +120,20 @@ const radar_update = () => {
 	// so that the graph will still be rendered.
 	if(radar_selectedData.length === 0 && radar_hoveredData === null)	{
 		radar_selectedData = [{
-			name: '',
+			name: 'average',
 			axes: [
-				{axis: 'GDP'},
-				{axis: 'Societal Trust'},
-				{axis: 'Generosity'},
-				{axis: 'Freedom'},
-				{axis: 'Healthy Life Expectancy'},
-				{axis: 'Social support'},
-			], 
+				{axis: 'GDP', value: 50},
+				{axis: 'Societal Trust', value: 50},
+				{axis: 'Generosity', value: 50},
+				{axis: 'Freedom', value: 50},
+				{axis: 'Healthy Life Expectancy', value: 50},
+				{axis: 'Social support', value: 50}
+			],
+			color: radar_colorScale(4.9), 
 		}];
 	}
+
+	console.log(radar_selectedData)
 
 	// Set the styling options.
 	let radar_options = {
@@ -444,7 +447,7 @@ const radar_draw = (parent_selector, data, options) => {
 		.attr("text-anchor", "middle")
 		.attr("dy", "0.35em");
 
-	if (cfg.legend !== false && typeof cfg.legend === "object") {
+	if (cfg.legend !== false && typeof cfg.legend === "object" && data[0].name !== 'average') {
 		let legendZone = svg.append('g');
 		let names = data.map(el => el.name);
 		if (cfg.legend.title) {

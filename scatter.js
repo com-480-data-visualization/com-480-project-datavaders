@@ -124,7 +124,7 @@ const scatter_update = () => {
       .data(data)
     .enter().append("circle")
       .attr("class", "dot")
-      .attr("r", 6)
+      .attr("r", 8)
       .attr("cx", function (d) { return x(+d[scatter_metric]); })
       .attr("cy", function (d) { return y(+d.score); })
       .attr("opacity", 1)
