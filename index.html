@@ -32,6 +32,9 @@
     <title>Data Visualization</title>
 
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         body {
             font-family: "Avenir Next", sans-serif;
             font-size: 12px;
@@ -40,26 +43,30 @@
             text-align: center;
             /* text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff; */
             cursor: default;
+            
         }
     </style>
 </head>
 <body style="background-color:#eeeeee">
 
-<div class="container-fluid pl-8 pr-8">
-    <nav class="navbar navbar-blue default-color justify-content-between">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <form class="form-inline my-1">
-            <button class="btn btn-outline-white btn-sm my-0"  onClick="introJs().start();"> TUTORIAL</button>
-        </form>
-    </nav>
-    <div class="row pb-4">
-        <div class="col-2"> <!-- TITLE -->
-            <h1>Happiviz</h1>
-        </div>
-        <div class="col"> <!-- DESCRIPTION -->
-            <h7>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</h7>
-        </div>
+<div id="landing">
+    <div class="sticky">
+        <nav class="navbar navbar-blue default-color justify-content-between">
+            <a class="navbar-brand" href="#">Happiviz</a>
+            <form class="form-inline my-1">
+                <button class="btn btn-outline-white btn-sm my-0"  onClick="introJs().start();" type="submit"> TUTORIAL</button>
+                <button class="btn btn-outline-white btn-sm my-0" type="submit">Process Book</button>
+                <button class="btn btn-outline-white btn-sm my-0" type="submit">Screencast</button>
+            </form>
+        </nav>
     </div>
+    <div class="">
+        <h1>Happiviz</h1>
+        <a href="#visual">Click to see visualization</a>
+    </div>
+</div>
+
+<div id="visual" class="container-fluid pl-8 pr-8">
     <div class="row">
         <div class="col-8" data-step="1" data-intro="This is a map colored by happiness!"  data-position='left'> <!-- MAP -->
             <div class="project-row project-spaced">
