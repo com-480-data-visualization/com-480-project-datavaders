@@ -81,14 +81,19 @@
                 </div>
                 <div class="float-right">
                     <div class="icons">
-                      <img id ="gdp-icon" class="submetric project-hide scatter-icon" src="svg/gdp_icon.svg"  title="GDP" onClick="scatter_changeSubmetric('gdp_per_capita')" width="40px" alt="Giraffe in a church">
-                      <img id ="corr-icon" class="submetric project-hide scatter-icon" src="svg/trust_icon.svg"  title="Trust" onClick="scatter_changeSubmetric('corruption_perceptions')" width="40px" alt="Giraffe in a church">
-                      <img id ="gen-icon" class="submetric project-hide scatter-icon" src="svg/generosity_icon.svg"  title="Generosity" onClick="scatter_changeSubmetric('generosity')" width="40px" alt="Giraffe in a church">
-                      <img id ="freed-icon" class="submetric project-hide scatter-icon" src="svg/freedom_icon.svg"  title="Freedom" onClick="scatter_changeSubmetric('freedom_to_life_choice')" width="40px" alt="Giraffe in a church">
-                      <img id ="health-icon" class="submetric project-hide scatter-icon" src="svg/health_icon.svg"  title="Health" onClick="scatter_changeSubmetric('healthy_life_expectancy')" width="40px" alt="Giraffe in a church">
-                      <img id ="supp-icon" class="submetric project-hide scatter-icon" src="svg/support_icon.svg"  title="Support" onClick="scatter_changeSubmetric('social_support')" width="40px" alt="Giraffe in a church">
-                      <img id ="toggler" src="svg/scatter_icon.svg" title="Change to scatter view" onClick="toggleView()" width="40px" alt="Giraffe in a church">
+                      <img id ="gdp-icon" class="submetric project-hide scatter-icon" src="svg/gdp_icon.svg" data-toggle='tooltip' title="GDP" onClick="scatter_changeSubmetric('gdp_per_capita')" width="40px" alt="Giraffe in a church">
+                      <img id ="corr-icon" class="submetric project-hide scatter-icon" src="svg/trust_icon.svg"  data-toggle='tooltip' title="Trust" onClick="scatter_changeSubmetric('corruption_perceptions')" width="40px" alt="Giraffe in a church">
+                      <img id ="gen-icon" class="submetric project-hide scatter-icon" src="svg/generosity_icon.svg"  data-toggle='tooltip' title="Generosity" onClick="scatter_changeSubmetric('generosity')" width="40px" alt="Giraffe in a church">
+                      <img id ="freed-icon" class="submetric project-hide scatter-icon" src="svg/freedom_icon.svg"  data-toggle='tooltip' title="Freedom" onClick="scatter_changeSubmetric('freedom_to_life_choice')" width="40px" alt="Giraffe in a church">
+                      <img id ="health-icon" class="submetric project-hide scatter-icon" src="svg/health_icon.svg"  data-toggle='tooltip' title="Health" onClick="scatter_changeSubmetric('healthy_life_expectancy')" width="40px" alt="Giraffe in a church">
+                      <img id ="supp-icon" class="submetric project-hide scatter-icon" src="svg/support_icon.svg"  data-toggle='tooltip' title="Support" onClick="scatter_changeSubmetric('social_support')" width="40px" alt="Giraffe in a church">
+                      <img id ="toggler" src="svg/scatter_icon.svg" title="Change to scatter view" data-toggle='tooltip' onClick="toggleView()" width="40px" alt="Giraffe in a church">
                     </div>
+                    <script>
+                        $(document).ready(function(){
+                          $('[data-toggle="tooltip"]').tooltip();   
+                        });
+                        </script>
                 </div>
             </div>
                 <div id="mapContainer" class="svg-container" style="padding-bottom: 50%;">
