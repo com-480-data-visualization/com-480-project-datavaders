@@ -122,12 +122,12 @@ const radar_update = () => {
 		radar_selectedData = [{
 			name: 'average',
 			axes: [
-				{axis: 'GDP', value: 50},
-				{axis: 'Societal Trust', value: 50},
-				{axis: 'Generosity', value: 50},
-				{axis: 'Freedom', value: 50},
-				{axis: 'Healthy Life Expectancy', value: 50},
-				{axis: 'Social support', value: 50}
+				{axis: 'GDP', value: 50.8},
+				{axis: 'Societal Trust', value: 24.9},
+				{axis: 'Generosity', value: 29.13},
+				{axis: 'Freedom', value: 61.44},
+				{axis: 'Healthy Life Expectancy', value: 53.41},
+				{axis: 'Social support', value: 61.82}
 			],
 			color: radar_colorScale(4.9), 
 		}];
