@@ -72,7 +72,7 @@
         <div class="col-8" data-step="1" data-intro="This is a map colored by happiness!"  data-position='left'> <!-- MAP -->
             <div class="project-row project-spaced">
                 <div class="project-row">
-                    <form style="margin-right:3px" data-step="2" data-intro="You can change the year by using this form"  data-position='left'>
+                    <form style="margin-right:3px" data-step="2" data-intro="Change the year through this dropdown."  data-position='left'>
                         <select id="year" class="form-control" onchange="map_changeYear()">
                           <option value="2015">2015</option>
                           <option value="2016">2016</option>
@@ -93,7 +93,7 @@
                       <img id ="freed-icon" class="submetric project-hide scatter-icon" src="svg/freedom_icon.svg"  data-toggle='tooltip' title="Freedom" onClick="scatter_changeSubmetric('freedom_to_life_choice')" width="50px" alt="Giraffe in a church">
                       <img id ="health-icon" class="submetric project-hide scatter-icon" src="svg/health_icon.svg"  data-toggle='tooltip' title="Health" onClick="scatter_changeSubmetric('healthy_life_expectancy')" width="50px" alt="Giraffe in a church">
                       <img id ="supp-icon" class="submetric project-hide scatter-icon" src="svg/support_icon.svg"  data-toggle='tooltip' title="Support" onClick="scatter_changeSubmetric('social_support')" width="50px" alt="Giraffe in a church">
-                      <img id ="toggler" src="svg/scatter_icon.svg" title="Change to scatter view" data-toggle='tooltip' onClick="toggleView()" width="60px" alt="Giraffe in a church" data-step="3" data-click data-intro="And pass to the scatter when you get bored">
+                      <img id ="toggler" src="svg/scatter_icon.svg" title="Change to scatter view" data-toggle='tooltip' onClick="toggleView()" width="60px" alt="Giraffe in a church" data-step="3" data-click data-intro="Click the icon to toggle to a scatter plot.">
                     </div>
                     <script>
                         $(document).ready(function(){
@@ -110,8 +110,8 @@
             </div>
         </div>
 
-        <div class="col-4" data-step="6" data-intro="This radar chart will help you learn even more about happiness"> <!-- RADAR -->
-            <form data-step="7" data-intro="Add up to four contries, on the selector, or click them on the map, everything is connected!">
+        <div class="col-4" data-step="6" data-intro="Countries selected in the map and scatter appear hear."> <!-- RADAR -->
+            <form data-step="7" data-intro="You can also search for countries here, up to a total of four.">
                 <select id='mselect' multiple="" class='form-control form-control-chosen' onchange="radar_update();">
                 </select>
                 <script type="text/javascript">
@@ -136,7 +136,7 @@
         </div>
     </div>
     <div class="row" style="margin-top: -20% ">
-        <div class="col-8" data-step="8" data-intro="How cool is this barchart?"> <!-- BAR -->
+        <div class="col-8" data-step="8" data-intro="Use the bar chart to compare every country in one look!"> <!-- BAR -->
             <div class="svg-container" style="padding-bottom: 20%">
                 <svg id="bar" viewBox="0 0 1000 275" class="svg-content"  preserveAspectRatio="none"></svg>
             </div>
