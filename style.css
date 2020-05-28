@@ -69,6 +69,10 @@
   background-color: red;
 }
 
+.submetric:hover {
+  cursor: pointer;
+}
+
 #toggler:hover {
   cursor: pointer;
 }
