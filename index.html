@@ -8,9 +8,9 @@
 <!--     <link rel="stylesheet" href="./mselect/chosen.min.css">
  -->    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">  <script type="text/javascript" src="./mselect/jquery-3.5.1.min.js"></script>
 <!--     <script type="text/javascript" src="./mselect/jquery-3.5.1.min.js"></script>
- -->    
+ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-    
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
@@ -75,22 +75,32 @@
                           <option selected value="2019">2019</option>
                         </select>
                       </form>
-                      <form>
-                        <select id="submetric" class="form-control project-hide" onchange="scatter_changeSubmetric()" class="hide">
-                          <option selected value="gdp_per_capita">GDP</option>
-                          <option value="corruption_perceptions">Societal Trust</option>
-                          <option value="generosity">Generosity</option>
-                          <option value="freedom_to_life_choice">Freedom</option>
-                          <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
-                          <option value="social_support">Social Support</option>
-                        </select>
-                    </form>
                 </div>
                 <div class="project-row">
                     <div id='flag'></div>
                 </div>
                 <div class="float-right">
-                    <img id ="toggler" src="svg/scatter_icon.svg" onClick="toggleView()" width="40px" alt="Giragge in a church">
+                    <div class="icons">
+                        <!-- <form>
+                          <select id="submetric" class="form-control project-hide" onchange="scatter_changeSubmetric()" class="hide">
+                            <option selected value="gdp_per_capita">GDP</option>
+                            <option value="corruption_perceptions">Societal Trust</option>
+                            <option value="generosity">Generosity</option>
+                            <option value="freedom_to_life_choice">Freedom</option>
+                            <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
+                            <option value="social_support">Social Support</option>
+                          </select>
+                      </form> -->
+                      <img id ="gdp-icon" class="submetric project-hide scatter-icon" src="svg/gdp_icon.svg" onClick="scatter_changeSubmetric('gdp_per_capita')" width="40px" alt="Giraffe in a church">
+                      <img id ="corr-icon" class="submetric project-hide scatter-icon" src="svg/trust_icon.svg" onClick="scatter_changeSubmetric('corruption_perceptions')" width="40px" alt="Giraffe in a church">
+                      <img id ="gen-icon" class="submetric project-hide scatter-icon" src="svg/generosity_icon.svg" onClick="scatter_changeSubmetric('generosity')" width="40px" alt="Giraffe in a church">
+                      <img id ="freed-icon" class="submetric project-hide scatter-icon" src="svg/freedom_icon.svg" onClick="scatter_changeSubmetric('freedom_to_life_choice')" width="40px" alt="Giraffe in a church">
+                      <img id ="health-icon" class="submetric project-hide scatter-icon" src="svg/health_icon.svg" onClick="scatter_changeSubmetric('healthy_life_expectancy')" width="40px" alt="Giraffe in a church">
+                      <img id ="supp-icon" class="submetric project-hide scatter-icon" src="svg/support_icon.svg" onClick="scatter_changeSubmetric('social_support')" width="40px" alt="Giraffe in a church">
+                      <img id ="toggler" src="svg/scatter_icon.svg" onClick="toggleView()" width="40px" alt="Giraffe in a church">
+
+                    </div>
+
                 </div>
             </div>
                 <div id="mapContainer" class="svg-container" style="padding-bottom: 50%;">
@@ -132,74 +142,8 @@
             <span>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</span>
         </div>
     </div>
+</div>
 
-
-
-
-        <!-- <div class="project-row project-spaced project-left">
-                <div class="project-row">
-                    <form>
-                        <select id="year" class="form-control" onchange="map_changeYear()">
-                            <option value="2015">2015</option>
-                            <option value="2016">2016</option>
-                            <option value="2017">2017</option>
-                            <option value="2018">2018</option>
-                            <option selected value="2019">2019</option>
-                        </select>
-                    </form>
-                    <form>
-                        <select id="submetric" class="form-control" onchange="scatter_changeSubmetric()" class="hide">
-                            <option selected value="gdp_per_capita">GDP</option>
-                            <option value="corruption_perceptions">Societal Trust</option>
-                            <option value="generosity">Generosity</option>
-                            <option value="freedom_to_life_choice">Freedom</option>
-                            <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
-                        </select>
-                    </form>
-                </div>
-                <div>
-                    <button onClick="map_show()" class="btn btn-outline-secondary">Map</button>
-                    <button onClick="scatter_show()" class="btn btn-outline-secondary">Scatter</button>
-                </div>
-            </div>
-            <div class="project-row project-right project-around">
-                <div class='project-text'>Mouse over a country on the map.</div>
-                <div id='flag'></div>
-            </div>
-        </div>
-        <div class="project-row project-middle">
-            <div>
-                <div id="scatter" class="project-hide"></div>
-                <svg id="map" width="1235" height="713" ></svg>
-            </div>
-            <div class="project-column">
-                <div class='project-radar-container'>
-                    <form>
-                        <select id='mselect' multiple="" style="width: 300px" onchange="radar_update();">
-                        </select>
-                    </form>
-                    <div class="radar"></div>
-                    <button id='clear-all' onclick="radar_clear()">Clear</button>
-                </div>
-            </div>
-        </div>
-        <div class="project-row project-bottom">
-            <svg id="bar" width="1000" height="350"></svg>
-        </div>
-    </div>
-     -->
-
-
-<!-- <script> type="text/javascript">
-    $(document).ready(function(){
-        $('#mselect').chosen()
-    })
-</script> -->
-<!-- <script> type="text/javascript">
-    $(document).ready(function(){
-        $('#mselect').chosen()
-    })
-</script> -->
 
 <script>
     let toggle = 0
@@ -212,12 +156,7 @@
                 scatter_show();
                 return "svg/mapicon.svg";
             }})
-        console.log(d3.select("#toggler").attr("src"))
         toggle++;
-
-        //d3.select("#toggler svg").selectAll('*').attr("visibility", "hidden")
-        d3.select("#pippo").attr("src", "svg/mapicon.svg")
-        console.log()
     }
 </script>
 

@@ -287,7 +287,6 @@ const map_update = () => {
 
         // Lighten color and change cursor to pointer upon mouseover of a country with data.
         if (map_data.get(d.id)) {
-          console.log('mouseover');
           d3.select(this).attr("fill", map_lighten(map_colorScale(map_data.get(d.id)), 0.8))
             .style("cursor", "pointer");
 
@@ -343,6 +342,10 @@ const map_changeYear = () => {
 // Hide the scatter and show the map.
 const map_show = () => {
   document.getElementById('scatterContainer').classList.add('project-hide');
-  document.getElementById('submetric').classList.add('project-hide');
+  //document.getElementById('submetric').classList.add('project-hide');
   document.getElementById('mapContainer').classList.remove('project-hide');
+  let icon_elements = document.getElementsByClassName('submetric');
+  for (let i = 0; i < icon_elements.length; i++) {
+      icon_elements[i].classList.add('project-hide');
+   }
 };
