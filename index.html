@@ -54,13 +54,14 @@
         <nav class="navbar navbar-blue default-color justify-content-between">
             <a class="navbar-brand" href="#">Happiviz</a>
             <form class="form-inline my-1">
-                <button class="btn btn-outline-white btn-sm my-0"  onClick="introJs().start();" type="submit"> Tutorial</button>
+                <button id='tutorial-button' class="btn btn-outline-white btn-sm my-0" type="button" onclick="window.location.href='#visual'; introJs().start();"> Tutorial</button>
                 <button class="btn btn-outline-white btn-sm my-0" type="submit">Process Book</button>
                 <button class="btn btn-outline-white btn-sm my-0" type="submit">Screencast</button>
             </form>
+           
         </nav>
     </div>
-    <div class="">
+    <div class="#visual">
         <h1>Happiviz</h1>
         <a href="#visual">Click to see visualization</a>
     </div>
@@ -183,6 +184,20 @@
         toggle++;
     }
 </script>
+
+<!-- <script type="text/javascript">
+
+    function scroll_and_intro () {
+        console.log('In scroll and intro')
+        var elmnt = document.getElementById("visual");
+        elmnt.scrollIntoView(false);
+        //window.scrollTo(0,window.body.scrollHeight);
+        //location.href = '#visual'
+        //window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+        introJs().start();
+        }
+
+</script> -->
 
 <script src="radar.js" charset="utf-8"></script>
 <script src="scatter.js"></script>
