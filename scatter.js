@@ -128,6 +128,8 @@ const scatter_update = () => {
       .attr("cx", function (d) { return x(+d[scatter_metric]); })
       .attr("cy", function (d) { return y(+d.score); })
       .attr("opacity", 1)
+      .attr("stroke", "white")
+      .attr("stroke-width", 1)
       .attr("fill", function (d) {return scatter_colorScale(+d.score); })
       .on('mouseover', mouseover)
       .on('mousemove', mousemove)
