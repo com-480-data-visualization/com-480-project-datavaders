@@ -105,3 +105,13 @@
   left: 0;
 }
 
+
+.scatter_icon {
+    opacity: 0.5;
+}
+
+.scatter_icon:hover {
+    opacity: 1;
+    -webkit-transition: opacity 1s;
+    transition: opacity 1s;
+}

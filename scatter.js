@@ -10,7 +10,7 @@ let scatter_year = '2019';
 let scatter_zoomable = false;
 let scatter_initialRender = true;
 
-// Map storing field name/label pairs. 
+// Map storing field name/label pairs.
 let scatter_metricNames = new Map([
   ['gdp_per_capita', 'GDP'],
   ['corruption_perceptions', 'Societal Trust'],
@@ -55,7 +55,7 @@ const scatter_update = () => {
       .style("padding", "5px")
       .style("position", "absolute")
       .style("display", "none");
-      
+
 
       // Three function that change the tooltip when user hover / move / leave a cell
       var mouseover = function(d) {
@@ -63,12 +63,12 @@ const scatter_update = () => {
         .style("cursor", "pointer");
         tooltip
           .style("display", null)
-      
+
       radar_onMapMouseover(d.country);
       display_onMouseover(d.country, map_codes.get(d.country))
 
-        
-          
+
+
       }
       var mousemove = function(d) {
         tooltip
@@ -88,7 +88,7 @@ const scatter_update = () => {
         radar_onMapClick(d.country);
       }
 
-  var x = d3.scaleLinear()          
+  var x = d3.scaleLinear()
         .range([0, scat_width])
         .nice();
 
@@ -102,14 +102,14 @@ const scatter_update = () => {
       idleTimeout,
       idleDelay = 350;
 
-  
+
   var clip = scatter_svg.append("defs").append("svg:clipPath")
       .attr("id", "clip")
       .append("svg:rect")
       .attr("width", scat_width )
       .attr("height", scat_height )
-      .attr("x", 0) 
-      .attr("y", 0); 
+      .attr("x", 0)
+      .attr("y", 0);
 
   var xExtent = d3.extent(data, function (d) { return +d[scatter_metric]; });
   var yExtent = d3.extent(data, function (d) { return +d.score; });
@@ -119,7 +119,7 @@ const scatter_update = () => {
   var scatter = scatter_svg.append("g")
         .attr("id", "scatterplot")
         .attr("clip-path", "url(#clip)");
-      
+
   scatter.selectAll(".dot")
       .data(data)
     .enter().append("circle")
@@ -155,7 +155,7 @@ const scatter_update = () => {
       .attr('id', "axis--y")
       .call(yAxis);
 
-  
+
     scatter_svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
@@ -164,7 +164,7 @@ const scatter_update = () => {
       .attr('id', "y-label-text")
       .text("Happiness Score");
   }
-      
+
   keydownEventResponse = (event) => {
     if (event.shiftKey) {
       event.shiftKey = false;
@@ -181,9 +181,9 @@ const scatter_update = () => {
   }
 
     document.addEventListener('keydown', keydownEventResponse);
-  
 
-  
+
+
 
   function brushended() {
 
@@ -193,7 +193,7 @@ const scatter_update = () => {
           x.domain(d3.extent(data, function (d) { return +d[scatter_metric]; })).nice();
           y.domain(d3.extent(data, function (d) { return +d.score; })).nice();
       } else {
-          
+
           x.domain([s[0][0], s[1][0]].map(x.invert, x));
           y.domain([s[1][1], s[0][1]].map(y.invert, y));
           scatter.select(".brush").call(brush.move, null);
@@ -222,7 +222,7 @@ const scatter_update = () => {
 
 scatter_update();
 
-      
+
 // Fires when user toggles year dropdown.
 const scatter_changeYear = () => {
   d3.select('#scatter').selectAll('*').remove();
@@ -231,14 +231,16 @@ const scatter_changeYear = () => {
   scatter_update();
 }
 
+
 // Fires when user toggles submetric dropdown.
-const scatter_changeSubmetric = () => {
+const scatter_changeSubmetric = (val) => {
   d3.select('#scatter').selectAll('*').remove();
   document.removeEventListener('keydown', keydownEventResponse);
   // d3.select('#scatter').selectAll('circle').remove();
   // d3.selectAll('#axis--x').remove();
   // d3.selectAll('#x-label-text').remove();
-  scatter_metric = document.getElementById('submetric').value;
+  //scatter_metric = document.getElementById('submetric').value;
+  scatter_metric = val;
   scatter_update();
 }
 
@@ -246,5 +248,8 @@ const scatter_changeSubmetric = () => {
 const scatter_show = () => {
   document.getElementById('mapContainer').classList.add('project-hide');
   document.getElementById('scatterContainer').classList.remove('project-hide');
-  document.getElementById('submetric').classList.remove('project-hide');
+  let icon_elements = document.getElementsByClassName('submetric');
+  for (let i = 0; i < icon_elements.length; i++) {
+      icon_elements[i].classList.remove('project-hide');
+   }
 }
