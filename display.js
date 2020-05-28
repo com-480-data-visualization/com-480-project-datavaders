@@ -274,7 +274,8 @@ for (let code in flag_codes) {
 display_onMouseover = (name, code, score) => {
   let text = document.createTextNode(name);
   let title = document.createTextNode(' Happiness Score: ');
-  let testScore = document.createTextNode(score);
+  let roundScore = Math.round(score*100)/100
+  let testScore = document.createTextNode(roundScore);
   div.appendChild(text);
   div.appendChild(flag_map.get(code));
   div.appendChild(title);

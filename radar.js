@@ -26,8 +26,8 @@ let radar_colorScale = d3.scaleSequential()
 // Populate the select element with options, based on the currently selected year.
 const radar_buildOptions = () => {
 	d3.csv('./Preprocessing/finaldfCoordinatesStdev_percent.csv', function(originalData) {
-		let radar_dropdown = document.getElementById("mselect"); 
-		
+		let radar_dropdown = document.getElementById("mselect");
+
 		// Delete all old children of dropdown.
 		while(radar_dropdown.firstChild) {
 			radar_dropdown.removeChild(radar_dropdown.firstChild);
@@ -53,7 +53,7 @@ const radar_buildOptions = () => {
 // Update the radar based on the currently selected data.
 const radar_update = () => {
 	d3.csv('./Preprocessing/finaldfCoordinatesStdev_percent.csv', function(originalData) {
-		
+
 		// Reset the selected countries list, then populate it via the select element.
 		radar_selected = [];
 
@@ -66,15 +66,15 @@ const radar_update = () => {
 			$("#mselect").trigger("chosen:updated");
 		} else {
 			for (let radar_option of document.getElementById('mselect').options) {
-				if (radar_option.selected) { 
+				if (radar_option.selected) {
 					radar_selected.push(radar_option.value);
 				}
-			}	
+			}
 		}
-		
+
 	// Retrieve the relevant hovered data based on the hovered country name.
 	radar_hoveredData = originalData.find(d => d.country === radar_hovered && +d.year === radar_currentYear);
-	
+
 	// Retrieve the relevant selected data based on the selected country names.
 	radar_selectedData = [];
 	for (let selected of radar_selected) {
@@ -85,7 +85,7 @@ const radar_update = () => {
 	}
 
 	// Modify the hovered data into the correct format to plot the radar.
-	radar_hoveredData = radar_hoveredData === undefined || radar_hoveredData === null ? null : { 
+	radar_hoveredData = radar_hoveredData === undefined || radar_hoveredData === null ? null : {
 		name: radar_hoveredData.country,
 		axes: [
 			{axis: 'GDP', value: +radar_hoveredData.gdp_per_capita},
@@ -94,12 +94,12 @@ const radar_update = () => {
 			{axis: 'Freedom', value: +radar_hoveredData.freedom_to_life_choice},
 			{axis: 'Healthy Life Expectancy', value: +radar_hoveredData.healthy_life_expectancy},
 			{axis: 'Social support', value: +radar_hoveredData.social_support}
-		], 
+		],
 		color: radar_colorScale(+radar_hoveredData.score),
 	};
-	
+
 	// Modify the selected data into the correct format to plot the radar.
-	radar_selectedData = radar_selectedData.map(d => { 
+	radar_selectedData = radar_selectedData.map(d => {
 		return {
 			name: d.country,
 			axes: [
@@ -109,35 +109,35 @@ const radar_update = () => {
 				{axis: 'Freedom', value: +d.freedom_to_life_choice},
 				{axis: 'Healthy Life Expectancy', value: +d.healthy_life_expectancy},
 				{axis: 'Social support', value: +d.social_support}
-			], 
+			],
 			color: radar_colorScale(+d.score),
 		};
 	});
-	
+
 	// Sort the data based on GDP.
 	if(radar_selectedData.length > 0)
 		radar_selectedData.sort( (a, b) => (a.axes[0].value < b.axes[0].value) ? 1 : -1);
-	
+
 	// If there is no current data (selected or hovered), then create a placeholder
 	// so that the graph will still be rendered.
-	if(radar_selectedData.length === 0 && radar_hoveredData === null && radar_firstRun)	{
+	if(radar_selectedData.length === 0 && radar_hoveredData === null)	{
 		radar_selectedData = [{
 			name: 'average',
 			axes: [
-				{axis: 'GDP', value: 50.8},
-				{axis: 'Societal Trust', value: 24.9},
-				{axis: 'Generosity', value: 29.13},
-				{axis: 'Freedom', value: 61.44},
-				{axis: 'Healthy Life Expectancy', value: 53.41},
-				{axis: 'Social support', value: 61.82}
+				{axis: 'GDP', value: 50},
+				{axis: 'Societal Trust', value: 50},
+				{axis: 'Generosity', value: 50},
+				{axis: 'Freedom', value: 50},
+				{axis: 'Healthy Life Expectancy', value: 50},
+				{axis: 'Social support', value: 50}
 			],
-			color: radar_colorScale(4.9), 
+			color: radar_colorScale(4.9),
 		}];
 
 		radar_firstRun = false;
 	}
 
-	else if(radar_selectedData.length === 0 && radar_hoveredData === null && !radar_firstRun)	{
+	else if(radar_selectedData.length === 0 && radar_hoveredData === null)	{
 		radar_selectedData = [{
 			name: '',
 			axes: [
@@ -148,7 +148,7 @@ const radar_update = () => {
 				{axis: 'Healthy Life Expectancy'},
 				{axis: 'Social support'}
 			],
-			color: radar_colorScale(4.9), 
+			color: radar_colorScale(4.9),
 		}];
 	}
 
@@ -169,7 +169,7 @@ const radar_update = () => {
 	};
 
 	// Draw the radar.
-	radar_draw(".radar", radar_selectedData.concat(radar_hoveredData === null 
+	radar_draw(".radar", radar_selectedData.concat(radar_hoveredData === null
 		|| radar_selectedData.filter(el => {
 			if (radar_hoveredData === null) { return false; }
 			else { return el.name === radar_hoveredData.name; }
@@ -177,7 +177,7 @@ const radar_update = () => {
 		? [] : radar_hoveredData), radar_options);
 	});
 }
-			
+
 // Draw the radar given an element, data, and options.
 const radar_draw = (parent_selector, data, options) => {
 
@@ -245,7 +245,7 @@ const radar_draw = (parent_selector, data, options) => {
 			}
 		}
 	}
-	maxValue = Math.max(cfg.maxValue, maxValue);	
+	maxValue = Math.max(cfg.maxValue, maxValue);
 	maxValue = 100;
 
 
@@ -524,7 +524,7 @@ const radar_onMapClick = (map_country) => {
 		radar_selected.push(map_country);
 		radar_update();
 	}
-	
+
 }
 
 // Remove currently hovered country.
@@ -545,8 +545,7 @@ const radar_changeYear = (year) => {
 	radar_buildOptions();
 	radar_update();
 }
-	
+
 // First update radar upon initial page load.
 radar_buildOptions();
 radar_update();
-

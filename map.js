@@ -293,7 +293,6 @@ const map_update = () => {
           // Update radar graph with country.
           radar_onMapMouseover(map_names.get(d.id)); // TODO commented line
           //document.querySelector('.project-text').innerHTML = map_names.get(d.id) + '<br>' + 'Happiness score: ' + map_data.get(d.id);
-          console.log('map-hover', map_data.get(d.id));
           display_onMouseover(map_names.get(d.id), d.id, map_data.get(d.id));
 
 

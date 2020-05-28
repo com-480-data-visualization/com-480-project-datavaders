@@ -150,6 +150,12 @@
   margin-right: 15px;
 }
 
+.resp-icon{
+  width: 85%;
+  max-width: 80px;
+  height: auto;
+}
+
 .metric-explain-text p {
   margin-bottom: -9px;
   font-size: large;
