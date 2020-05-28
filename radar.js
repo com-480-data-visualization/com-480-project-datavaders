@@ -23,7 +23,7 @@ let radar_colorScale = d3.scaleSequential()
 
 // Populate the select element with options, based on the currently selected year.
 const radar_buildOptions = () => {
-	d3.csv('./Preprocessing/finaldfCoordinatesStdev.csv', function(originalData) {
+	d3.csv('./Preprocessing/finaldfCoordinatesStdev_percent.csv', function(originalData) {
 		let radar_dropdown = document.getElementById("mselect"); 
 		
 		// Delete all old children of dropdown.
