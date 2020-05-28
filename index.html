@@ -43,7 +43,7 @@
             text-align: center;
             /* text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff; */
             cursor: default;
-            
+
         }
     </style>
 </head>
@@ -54,7 +54,7 @@
         <nav class="navbar navbar-blue default-color justify-content-between">
             <a class="navbar-brand" href="#">Happiviz</a>
             <form class="form-inline my-1">
-                <button class="btn btn-outline-white btn-sm my-0"  onClick="introJs().start();" type="submit"> TUTORIAL</button>
+                <button class="btn btn-outline-white btn-sm my-0"  onClick="introJs().start();" type="submit"> Tutorial</button>
                 <button class="btn btn-outline-white btn-sm my-0" type="submit">Process Book</button>
                 <button class="btn btn-outline-white btn-sm my-0" type="submit">Screencast</button>
             </form>
@@ -135,14 +135,24 @@
     </div>
     <div class="row" style="margin-top: -20% ">
         <div class="col-8" data-step="8" data-intro="How cool is this barchart?"> <!-- BAR -->
-            <div class="svg-container" style="padding-bottom: 30%">
+            <div class="svg-container" style="padding-bottom: 20%">
                 <svg id="bar" viewBox="0 0 1000 275" class="svg-content"  preserveAspectRatio="none"></svg>
             </div>
         </div>
-        <div class="col-4" style="margin-top:10"> <!-- LEGEND -->
-            <div>
-
-                <span>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</span>
+        <div class="col-4"> <!-- LEGEND -->
+            <div style="margin-top: 20px;"">
+                <h1>Learn about the metrics</h1>
+                <div class="icons" data-step="4" data-intro="Will you find some correlations?">
+                  <img id ="gdp-icon" class="scatter-icon" src="svg/gdp_icon.svg" data-toggle='tooltip' title="GDP" width="40px" alt="Giraffe in a church">
+                  <img id ="corr-icon" class="scatter-icon" src="svg/trust_icon.svg"  data-toggle='tooltip' title="Trust"  width="40px" alt="Giraffe in a church">
+                  <img id ="gen-icon" class="scatter-icon" src="svg/generosity_icon.svg"  data-toggle='tooltip' title="Generosity"  width="40px" alt="Giraffe in a church">
+                  <img id ="freed-icon" class="scatter-icon" src="svg/freedom_icon.svg"  data-toggle='tooltip' title="Freedom" width="40px" alt="Giraffe in a church">
+                  <img id ="health-icon" class="scatter-icon" src="svg/health_icon.svg"  data-toggle='tooltip' title="Health"  width="40px" alt="Giraffe in a church">
+                  <img id ="supp-icon" class="scatter-icon" src="svg/support_icon.svg"  data-toggle='tooltip' title="Support" width="40px" alt="Giraffe in a church">
+                </div>
+                <div id="teacher">
+                    Text will appear smoothly when you hover on a metric
+                </div>
             </div>
         </div>
     </div>
