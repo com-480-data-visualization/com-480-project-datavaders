@@ -256,7 +256,7 @@ let flag_codes = {
 };
 
 let div = document.getElementById('flag');
-div.style.fontSize = '1.1rem';
+div.style.fontSize = '20px';
 
 // Map storing country ISO-3 code/flag image pairs.
 let flag_map = new Map();
