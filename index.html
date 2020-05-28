@@ -81,22 +81,12 @@
                 </div>
                 <div class="float-right">
                     <div class="icons">
-                        <!-- <form>
-                          <select id="submetric" class="form-control project-hide" onchange="scatter_changeSubmetric()" class="hide">
-                            <option selected value="gdp_per_capita">GDP</option>
-                            <option value="corruption_perceptions">Societal Trust</option>
-                            <option value="generosity">Generosity</option>
-                            <option value="freedom_to_life_choice">Freedom</option>
-                            <option value="healthy_life_expectancy">Healthy Life Expectancy</option>
-                            <option value="social_support">Social Support</option>
-                          </select>
-                      </form> -->
-                      <img id ="gdp-icon" class="submetric project-hide scatter-icon" src="svg/gdp_icon.svg" onClick="scatter_changeSubmetric('gdp_per_capita')" width="40px" alt="Giraffe in a church">
-                      <img id ="corr-icon" class="submetric project-hide scatter-icon" src="svg/trust_icon.svg" onClick="scatter_changeSubmetric('corruption_perceptions')" width="40px" alt="Giraffe in a church">
-                      <img id ="gen-icon" class="submetric project-hide scatter-icon" src="svg/generosity_icon.svg" onClick="scatter_changeSubmetric('generosity')" width="40px" alt="Giraffe in a church">
-                      <img id ="freed-icon" class="submetric project-hide scatter-icon" src="svg/freedom_icon.svg" onClick="scatter_changeSubmetric('freedom_to_life_choice')" width="40px" alt="Giraffe in a church">
-                      <img id ="health-icon" class="submetric project-hide scatter-icon" src="svg/health_icon.svg" onClick="scatter_changeSubmetric('healthy_life_expectancy')" width="40px" alt="Giraffe in a church">
-                      <img id ="supp-icon" class="submetric project-hide scatter-icon" src="svg/support_icon.svg" onClick="scatter_changeSubmetric('social_support')" width="40px" alt="Giraffe in a church">
+                      <img id ="gdp-icon" class="submetric project-hide scatter-icon" src="svg/gdp_icon.svg"  title="GDP" onClick="scatter_changeSubmetric('gdp_per_capita')" width="40px" alt="Giraffe in a church">
+                      <img id ="corr-icon" class="submetric project-hide scatter-icon" src="svg/trust_icon.svg"  title="Trust" onClick="scatter_changeSubmetric('corruption_perceptions')" width="40px" alt="Giraffe in a church">
+                      <img id ="gen-icon" class="submetric project-hide scatter-icon" src="svg/generosity_icon.svg"  title="Generosity" onClick="scatter_changeSubmetric('generosity')" width="40px" alt="Giraffe in a church">
+                      <img id ="freed-icon" class="submetric project-hide scatter-icon" src="svg/freedom_icon.svg"  title="Freedom" onClick="scatter_changeSubmetric('freedom_to_life_choice')" width="40px" alt="Giraffe in a church">
+                      <img id ="health-icon" class="submetric project-hide scatter-icon" src="svg/health_icon.svg"  title="Health" onClick="scatter_changeSubmetric('healthy_life_expectancy')" width="40px" alt="Giraffe in a church">
+                      <img id ="supp-icon" class="submetric project-hide scatter-icon" src="svg/support_icon.svg"  title="Support" onClick="scatter_changeSubmetric('social_support')" width="40px" alt="Giraffe in a church">
                       <img id ="toggler" src="svg/scatter_icon.svg" onClick="toggleView()" width="40px" alt="Giraffe in a church">
 
                     </div>
@@ -110,6 +100,7 @@
                     <svg id="scatter" class="svg-content" viewBox="0 0 1000 600" preserveAspectRatio="none"></svg>
             </div>
         </div>
+
         <div class="col-4"> <!-- RADAR -->
             <form>
                 <select id='mselect' multiple="" class='form-control form-control-chosen' onchange="radar_update();">
@@ -118,9 +109,11 @@
                   $('.form-control-chosen').chosen({
                     //max_selected_options:4, //Max select limit 
                   });
-                  document.querySelector('.chosen-choices').setAttribute('style', 'width: 80% !important')
-                  document.querySelector('.chosen-drop').setAttribute('style', 'width: 80% !important')
+                  document.querySelector('.chosen-container').setAttribute('style', 'width: el')
+                  document.querySelector('.chosen-choices').setAttribute('style', 'width: el')
+                  document.querySelector('.chosen-drop').setAttribute('style', 'width: el')
                 </script>
+
                 <button type="button" id='clear-all' class="btn btn-outline-secondary float-right" onclick="radar_clear()">
                   <svg class="bi bi-bootstrap-reboot" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M1.161 8a6.84 6.84 0 1 0 6.842-6.84.58.58 0 0 1 0-1.16 8 8 0 1 1-6.556 3.412l-.663-.577a.58.58 0 0 1 .227-.997l2.52-.69a.58.58 0 0 1 .728.633l-.332 2.592a.58.58 0 0 1-.956.364l-.643-.56A6.812 6.812 0 0 0 1.16 8zm5.48-.079V5.277h1.57c.881 0 1.416.499 1.416 1.32 0 .84-.504 1.324-1.386 1.324h-1.6zm0 3.75V8.843h1.57l1.498 2.828h1.314L9.377 8.665c.897-.3 1.427-1.106 1.427-2.1 0-1.37-.943-2.246-2.456-2.246H5.5v7.352h1.141z"/>
@@ -135,7 +128,7 @@
     <div class="row" style="margin-top: -20% ">
         <div class="col-8"> <!-- BAR -->
             <div class="svg-container" style="padding-bottom: 30%">
-                <svg id="bar" viewBox="0 0 1000 300" class="svg-content"  preserveAspectRatio="none"></svg>
+                <svg id="bar" viewBox="0 0 1000 275" class="svg-content"  preserveAspectRatio="none"></svg>
             </div>
         </div>
         <div class="col-4"> <!-- LEGEND -->
