@@ -80,7 +80,7 @@
 #landing {
   width: 100%;
   height: 100vh;
-  background: #eeeeee;
+  background: #e9e7e7;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -137,4 +137,20 @@
     opacity: 1;
     -webkit-transition: opacity 1s;
     transition: opacity 1s;
+}
+
+.metric-explain-text {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.scatter-icon {
+  margin-right: 15px;
+}
+
+.metric-explain-text p {
+  margin-bottom: -9px;
+  font-size: large;
 }

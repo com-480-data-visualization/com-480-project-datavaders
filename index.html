@@ -47,7 +47,7 @@
         }
     </style>
 </head>
-<body style="background-color:#eeeeee">
+<body style="background-color:#e9e7e7">
 
 <div id="landing">
     <div class="sticky">
@@ -63,7 +63,7 @@
     </div>
     <div class="#visual">
         <h1>Happiviz</h1>
-        <a href="#visual">Click to see visualization</a>
+        <a href="#visual" style="font-size: xx-large;">Click to see visualization</a>
     </div>
 </div>
 
@@ -87,13 +87,13 @@
                 </div>
                 <div class="float-right">
                     <div class="icons" data-step="4" data-intro="Will you find some correlations?">
-                      <img id ="gdp-icon" class="submetric project-hide scatter-icon" src="svg/gdp_icon.svg" data-toggle='tooltip' title="GDP" onClick="scatter_changeSubmetric('gdp_per_capita')" width="40px" alt="Giraffe in a church">
-                      <img id ="corr-icon" class="submetric project-hide scatter-icon" src="svg/trust_icon.svg"  data-toggle='tooltip' title="Trust" onClick="scatter_changeSubmetric('corruption_perceptions')" width="40px" alt="Giraffe in a church">
-                      <img id ="gen-icon" class="submetric project-hide scatter-icon" src="svg/generosity_icon.svg"  data-toggle='tooltip' title="Generosity" onClick="scatter_changeSubmetric('generosity')" width="40px" alt="Giraffe in a church">
-                      <img id ="freed-icon" class="submetric project-hide scatter-icon" src="svg/freedom_icon.svg"  data-toggle='tooltip' title="Freedom" onClick="scatter_changeSubmetric('freedom_to_life_choice')" width="40px" alt="Giraffe in a church">
-                      <img id ="health-icon" class="submetric project-hide scatter-icon" src="svg/health_icon.svg"  data-toggle='tooltip' title="Health" onClick="scatter_changeSubmetric('healthy_life_expectancy')" width="40px" alt="Giraffe in a church">
-                      <img id ="supp-icon" class="submetric project-hide scatter-icon" src="svg/support_icon.svg"  data-toggle='tooltip' title="Support" onClick="scatter_changeSubmetric('social_support')" width="40px" alt="Giraffe in a church">
-                      <img id ="toggler" src="svg/scatter_icon.svg" title="Change to scatter view" data-toggle='tooltip' onClick="toggleView()" width="40px" alt="Giraffe in a church" data-step="3" data-click data-intro="And pass to the scatter when you get bored">
+                      <img id ="gdp-icon" class="submetric project-hide scatter-icon" src="svg/gdp_icon.svg" data-toggle='tooltip' title="GDP" onClick="scatter_changeSubmetric('gdp_per_capita')" width="50px" alt="Giraffe in a church">
+                      <img id ="corr-icon" class="submetric project-hide scatter-icon" src="svg/trust_icon.svg"  data-toggle='tooltip' title="Trust" onClick="scatter_changeSubmetric('corruption_perceptions')" width="50px" alt="Giraffe in a church">
+                      <img id ="gen-icon" class="submetric project-hide scatter-icon" src="svg/generosity_icon.svg"  data-toggle='tooltip' title="Generosity" onClick="scatter_changeSubmetric('generosity')" width="50px" alt="Giraffe in a church">
+                      <img id ="freed-icon" class="submetric project-hide scatter-icon" src="svg/freedom_icon.svg"  data-toggle='tooltip' title="Freedom" onClick="scatter_changeSubmetric('freedom_to_life_choice')" width="50px" alt="Giraffe in a church">
+                      <img id ="health-icon" class="submetric project-hide scatter-icon" src="svg/health_icon.svg"  data-toggle='tooltip' title="Health" onClick="scatter_changeSubmetric('healthy_life_expectancy')" width="50px" alt="Giraffe in a church">
+                      <img id ="supp-icon" class="submetric project-hide scatter-icon" src="svg/support_icon.svg"  data-toggle='tooltip' title="Support" onClick="scatter_changeSubmetric('social_support')" width="50px" alt="Giraffe in a church">
+                      <img id ="toggler" src="svg/scatter_icon.svg" title="Change to scatter view" data-toggle='tooltip' onClick="toggleView()" width="60px" alt="Giraffe in a church" data-step="3" data-click data-intro="And pass to the scatter when you get bored">
                     </div>
                     <script>
                         $(document).ready(function(){
@@ -116,10 +116,8 @@
                 </select>
                 <script type="text/javascript">
                   $('.form-control-chosen').chosen({
-                    //max_selected_options:4, //Max select limit
+                    max_selected_options: 4, //Max select limit
                     placeholder_text_multiple:"Select some countries", 
-
-                    
                   });
                   document.querySelector('.chosen-container').setAttribute('style', 'width: el')
                   document.querySelector('.chosen-choices').setAttribute('style', 'width: el')
@@ -144,19 +142,25 @@
             </div>
         </div>
         <div class="col-4"> <!-- LEGEND -->
-            <div style="margin-top: 20px;"">
+            <div style="margin-top: 20px;">
                 <h1>Learn about the metrics</h1>
                 <div class="icons" data-step="4" data-intro="Will you find some correlations?">
-                  <img id ="gdp-icon" class="scatter-icon" src="svg/gdp_icon.svg" data-toggle='tooltip' title="GDP" width="40px" alt="Giraffe in a church">
-                  <img id ="corr-icon" class="scatter-icon" src="svg/trust_icon.svg"  data-toggle='tooltip' title="Trust"  width="40px" alt="Giraffe in a church">
-                  <img id ="gen-icon" class="scatter-icon" src="svg/generosity_icon.svg"  data-toggle='tooltip' title="Generosity"  width="40px" alt="Giraffe in a church">
-                  <img id ="freed-icon" class="scatter-icon" src="svg/freedom_icon.svg"  data-toggle='tooltip' title="Freedom" width="40px" alt="Giraffe in a church">
-                  <img id ="health-icon" class="scatter-icon" src="svg/health_icon.svg"  data-toggle='tooltip' title="Health"  width="40px" alt="Giraffe in a church">
-                  <img id ="supp-icon" class="scatter-icon" src="svg/support_icon.svg"  data-toggle='tooltip' title="Support" width="40px" alt="Giraffe in a church">
-                </div>
-                <div id="teacher">
-                    Text will appear smoothly when you hover on a metric
-                </div>
+                  <div>
+                      <div class='metric-explain-text'>
+                      <img id ="gdp-icon" class="scatter-icon" src="svg/gdp_icon.svg" data-toggle='tooltip' title="GDP" width="40px" alt="Giraffe in a church">
+                      <p>Average income earned per person</p></div>     
+                            
+              <div class='metric-explain-text'><img id ="corr-icon" class="scatter-icon" src="svg/trust_icon.svg"  data-toggle='tooltip' title="Trust"  width="40px" alt="Giraffe in a church">
+                  
+                      <p>A belief in the honesty, integrity and reliability of others</p></div>
+              <div class='metric-explain-text'><img id ="gen-icon" class="scatter-icon" src="svg/generosity_icon.svg"  data-toggle='tooltip' title="Generosity"  width="40px" alt="Giraffe in a church">
+                  <p>How much people contribute to charity</p></div>
+              <div class='metric-explain-text'><img id ="freed-icon" class="scatter-icon" src="svg/freedom_icon.svg"  data-toggle='tooltip' title="Freedom" width="40px" alt="Giraffe in a church">
+                  <p>Freedom to choose what you do with your life</p></div>
+              <div class='metric-explain-text'><img id ="health-icon" class="scatter-icon" src="svg/health_icon.svg"  data-toggle='tooltip' title="Health"  width="40px" alt="Giraffe in a church">
+                 <p>Years that a newborn can expect to live in "full health"</p></div>
+              <div class='metric-explain-text'><img id ="supp-icon" class="scatter-icon" src="svg/support_icon.svg"  data-toggle='tooltip' title="Support" width="40px" alt="Giraffe in a church">
+                  <p>Having people to turn to in times of need</p></div>
             </div>
         </div>
     </div>

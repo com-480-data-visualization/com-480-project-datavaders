@@ -271,10 +271,14 @@ for (let code in flag_codes) {
 }
 
 // Append the requested flag to the DOM.
-display_onMouseover = (name, code) => {
+display_onMouseover = (name, code, score) => {
   let text = document.createTextNode(name);
+  let title = document.createTextNode(' Happiness Score: ');
+  let testScore = document.createTextNode(score);
   div.appendChild(text);
   div.appendChild(flag_map.get(code));
+  div.appendChild(title);
+  div.appendChild(testScore);
 }
 
 // Remove the current flag from the DOM.

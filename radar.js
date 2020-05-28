@@ -5,10 +5,12 @@
 // Name and corresponding data of all currently selected countries.
 let radar_selected = [];
 let radar_selectedData = [];
+let radar_firstRun = true;
 
 // Name and corresponding data of country currently being hovered upon.
 let radar_hovered = null;
 let radar_hoveredData = [];
+// let radar_firstRun = true;
 
 // Flag to indicate a clearing of all selected countries.
 let radar_reset = false;
@@ -51,7 +53,7 @@ const radar_buildOptions = () => {
 // Update the radar based on the currently selected data.
 const radar_update = () => {
 	d3.csv('./Preprocessing/finaldfCoordinatesStdev_percent.csv', function(originalData) {
-
+		
 		// Reset the selected countries list, then populate it via the select element.
 		radar_selected = [];
 
@@ -118,7 +120,7 @@ const radar_update = () => {
 	
 	// If there is no current data (selected or hovered), then create a placeholder
 	// so that the graph will still be rendered.
-	if(radar_selectedData.length === 0 && radar_hoveredData === null)	{
+	if(radar_selectedData.length === 0 && radar_hoveredData === null && radar_firstRun)	{
 		radar_selectedData = [{
 			name: 'average',
 			axes: [
@@ -128,6 +130,23 @@ const radar_update = () => {
 				{axis: 'Freedom', value: 61.44},
 				{axis: 'Healthy Life Expectancy', value: 53.41},
 				{axis: 'Social support', value: 61.82}
+			],
+			color: radar_colorScale(4.9), 
+		}];
+
+		radar_firstRun = false;
+	}
+
+	else if(radar_selectedData.length === 0 && radar_hoveredData === null && !radar_firstRun)	{
+		radar_selectedData = [{
+			name: '',
+			axes: [
+				{axis: 'GDP'},
+				{axis: 'Societal Trust'},
+				{axis: 'Generosity'},
+				{axis: 'Freedom'},
+				{axis: 'Healthy Life Expectancy'},
+				{axis: 'Social support'}
 			],
 			color: radar_colorScale(4.9), 
 		}];

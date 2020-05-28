@@ -65,7 +65,7 @@ const scatter_update = () => {
           .style("display", null)
 
       radar_onMapMouseover(d.country);
-      display_onMouseover(d.country, map_codes.get(d.country))
+      display_onMouseover(d.country, map_codes.get(d.country), d.score)
 
 
 
