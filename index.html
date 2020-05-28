@@ -87,10 +87,8 @@
                       <img id ="freed-icon" class="submetric project-hide scatter-icon" src="svg/freedom_icon.svg"  title="Freedom" onClick="scatter_changeSubmetric('freedom_to_life_choice')" width="40px" alt="Giraffe in a church">
                       <img id ="health-icon" class="submetric project-hide scatter-icon" src="svg/health_icon.svg"  title="Health" onClick="scatter_changeSubmetric('healthy_life_expectancy')" width="40px" alt="Giraffe in a church">
                       <img id ="supp-icon" class="submetric project-hide scatter-icon" src="svg/support_icon.svg"  title="Support" onClick="scatter_changeSubmetric('social_support')" width="40px" alt="Giraffe in a church">
-                      <img id ="toggler" src="svg/scatter_icon.svg" onClick="toggleView()" width="40px" alt="Giraffe in a church">
-
+                      <img id ="toggler" src="svg/scatter_icon.svg" title="Change to scatter view" onClick="toggleView()" width="40px" alt="Giraffe in a church">
                     </div>
-
                 </div>
             </div>
                 <div id="mapContainer" class="svg-container" style="padding-bottom: 50%;">
@@ -107,7 +105,7 @@
                 </select>
                 <script type="text/javascript">
                   $('.form-control-chosen').chosen({
-                    //max_selected_options:4, //Max select limit 
+                    //max_selected_options:4, //Max select limit
                   });
                   document.querySelector('.chosen-container').setAttribute('style', 'width: el')
                   document.querySelector('.chosen-choices').setAttribute('style', 'width: el')
@@ -149,6 +147,13 @@
                 scatter_show();
                 return "svg/mapicon.svg";
             }})
+            .attr("title",
+                () => {
+                if (toggle%2)
+                    return "Change to scatter view";
+                 else
+                    return "Change to map view";
+            });
         toggle++;
     }
 </script>
