@@ -6,7 +6,7 @@ let vizScale = "world";
 let svg = d3.select("#bar"),
     margin = {top: 20, right: 20, bottom: 30, left: 20},
     width = 1000 - margin.left - margin.right,
-    height = 300 - margin.top - margin.bottom,
+    height = 290 - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr('id', 'barG');
 
