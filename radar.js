@@ -513,7 +513,7 @@ const radar_draw = (parent_selector, data, options) => {
 
 // Set currently hovered country.
 const radar_onMapMouseover = (map_country) => {
-    if (radar_selected.length < 4) {
+    if (radar_selected.length < 3) {
         radar_hovered = map_country;
         radar_update();
     }
@@ -521,7 +521,7 @@ const radar_onMapMouseover = (map_country) => {
 
 // Add clicked country to radar graph.
 const radar_onMapClick = (map_country) => {
-    if (radar_selected.length < 4) {
+    if (radar_selected.length < 3) {
         document.querySelector(`#mselect option[value='${map_country}']`).selected = true;
         $("#mselect").trigger("chosen:updated");
         radar_selected.push(map_country);
