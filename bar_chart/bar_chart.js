@@ -32,7 +32,6 @@ let color_seq2 = d3.scaleSequential()
 
 const bar_draw = () => {
     g.selectAll().remove()
-    console.log(vizScale, data_region);
 
     d3.csv(`./Preprocessing/df2.csv`, function (data) {
         let dataBig = data.filter(obj => obj.year === data_year);
@@ -87,8 +86,6 @@ const bar_draw = () => {
             .on("click", onClick);
 
         function onMouseOver(d, i) {
-            radar_onMapMouseover(d.country);
-            display_onMouseover(d.country, map_codes.get(d.country), d.score)
             if (vizScale === "region")  {
                 d3.select(this).attr('class', 'highlight');
                 d3.select(this)
@@ -103,20 +100,22 @@ const bar_draw = () => {
                 d3.select(this).attr('class', 'highlight');
                 d3.select(this)
                     .transition()
-                    .duration(300)
+                    .duration(200)
                     .attr('width', scaleX.bandwidth() * 1)
                     .attr("x", function (d) {
                         return scaleX(d.country) - scaleX.bandwidth() * 0.2;
                     })
                     .attr('fill', '#D4AF37');//#D4AF37
             }
+            radar_onMapMouseover(d.country);
+            display_onMouseover(d.country, map_codes.get(d.country), d.score)
         }
 
         function onMouseOut(d, i) {
             d3.select(this).attr('class', 'bar');
             d3.select(this)
                 .transition()     // adds animation
-                .duration(200)
+                .duration(400)
                 .attr('width', (vizScale === "region")? scaleX.bandwidth()* 0.8:scaleX.bandwidth()* 0.6)
                 .attr("x", function (d) {
                     return scaleX(d.country);
@@ -141,6 +140,13 @@ bar_draw();
 
 const bar_update = (updateType, countryName) => {
 
+    // Removed in the last version, very slow in browser
+    if (updateType === 'mapHover') {
+        return;
+    } else if (updateType === 'mapOut') {
+        return;
+    }
+
     d3.csv(`./Preprocessing/df2.csv`, function (data) {
         let dataBig = data.filter(obj => obj.year === data_year)
         dataBig.map((d, i) => d.idx0 = i);
@@ -158,11 +164,8 @@ const bar_update = (updateType, countryName) => {
         dataBig.map((d, i) => d.idx1 = i);
 
         // Call backs
-        if (updateType === 'mapHover') {
-            onMapOver(d_from_country(countryName));
-        } else if (updateType === 'mapOut') {
-            onMapOut(d_from_country(countryName));
-        } else if (updateType === 'mapClick') {
+
+        if (updateType === 'mapClick') {
             onMapClick(d_from_country(countryName));
         }
 
@@ -250,8 +253,8 @@ const bar_update = (updateType, countryName) => {
                 scaleX = scaleX.domain(data.map((d) => {
                     return d.country;
                 }));
-                console.log(data)
-                console.log(scaleX.bandwidth())
+                //console.log(data)
+                //console.log(scaleX.bandwidth())
 
                 d3.select('#barG').selectAll('.cover').remove();
 
@@ -302,9 +305,9 @@ function prepareData(data){
 }
 
 function bar_changeYear(map_selectedYear){
-    console.log(g)
+    //console.log(g)
     g.selectAll("*").remove()
-    console.log(g)
+    //console.log(g)
     data_year = map_selectedYear;
     bar_draw();
 }

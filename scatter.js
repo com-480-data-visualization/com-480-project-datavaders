@@ -232,7 +232,7 @@ const scatter_update = () => {
             scatter_svg.select("#axis--y").transition(t).call(yAxis);
             scatter.selectAll("circle").transition(t)
                 .attr("cx", function (d) {
-                    console.log(x(+d[scatter_metric]))
+                    //console.log(x(+d[scatter_metric]))
                     return x(+d[scatter_metric]);
                 })
                 .attr("cy", function (d) {

@@ -147,18 +147,28 @@
     margin-bottom: 5px;
 }
 
-.scatter-icon {
-    margin-right: 10px;
+.scatter-icon2 {
+    margin-right: 5%;
+    margin-left: 5%;
     opacity: 0.5;
 }
 
+.scatter-icon2:hover {
+    opacity: 0.8;
+}
+
+.scatter-icon {
+    opacity: 0.8;
+}
+
 .scatter-icon:hover {
-    opacity: 1.0;
+    opacity: 1;
 }
 
 .resp-icon {
     width: 85%;
     max-width: 80px;
+    min-width: 40px;
     height: auto;
 }
 

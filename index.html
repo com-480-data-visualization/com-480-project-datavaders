@@ -66,9 +66,8 @@
         <nav class="navbar navbar-blue default-color justify-content-between">
             <a class="navbar-brand" href="#">Happiviz</a>
             <form class="form-inline my-1">
-                <button id='tutorial-button' class="btn btn-outline-white btn-sm my-0" type="button"
-                        onclick="window.location.href='#visual'; introJs().start();"> Tutorial
-                </button>
+                <a onclick="showTutorial()"
+                    style="color:#212529; font-size:14px; font-family:'Avenir Next', sans-serif; margin-right: 10px">Tutorial</a>
                 <a href="./Report.pdf"
                    style="color:#212529; font-size:14px; font-family:'Avenir Next', sans-serif; margin-right: 10px">Process
                     Book</a>
@@ -86,7 +85,7 @@
 
 <div id="visual" class="container-fluid pl-8 pr-8">
     <div class="row">
-        <div class="col-8" data-step="1" data-intro="This is a map colored by happiness!" data-position='left'>
+        <div class="col-8" data-step="1" data-intro="This is a map colored by happiness!" data-position='middle-aligned'>
             <!-- MAP -->
             <div class="project-row project-spaced">
                 <div class="project-row">
@@ -129,7 +128,7 @@
                              width="40px" alt="Giraffe in a church">
                         <img id="toggler" src="svg/scatter_icon.svg" title="Change to scatter view"
                              data-toggle='tooltip' onClick="toggleView()" width="40px" alt="Giraffe in a church"
-                             data-step="3" data-click data-intro="And pass to the scatter when you get bored">
+                             data-step="3" data-click data-intro="And pass to the scatter when you get bored<br>there you can see the relation of happiness and the other metrics">
                     </div>
                     <script>
                         $(document).ready(function () {
@@ -147,7 +146,7 @@
             </div>
         </div>
 
-        <div class="col-4" data-step="6" data-intro="Countries selected in the map and scatter appear hear.">
+        <div class="col-4" data-step="6" data-intro="Countries selected in the map and scatter appear here.">
             <!-- RADAR -->
             <form data-step="7" data-intro="You can also search for countries here, up to a total of four.">
                 <select id='mselect' multiple="" class='form-control form-control-chosen' onchange="radar_update();">
@@ -187,41 +186,41 @@
         <div class="col-4"> <!-- LEGEND -->
             <div>
                 <div class="icons" data-step="4" data-intro="Will you find some correlations?"
-                     style="padding-left:10em; padding-right:10em; padding-top:4em">
+                     style="padding-left:10em; padding-right:10em; padding-top:3em">
                     <!-- <h1 style="font-size:2vw; text-align:center">Metrics</h1> -->
                     <div class="row">
                         <div class="col">
-                            <img id="gdp-icon" class="scatter-icon resp-icon" src="svg/gdp_icon.svg"
+                            <img id="gdp-icon" class="scatter-icon2 resp-icon" src="svg/gdp_icon.svg"
                                  data-toggle='tooltip'
-                                 alt="Giraffe in a church" ,
+                                 alt="Giraffe in a church"
                                  title="Average income earned per person">
                         </div>
                         <div class="col">
-                            <img id="corr-icon" class="scatter-icon resp-icon" src="svg/trust_icon.svg"
+                            <img id="corr-icon" class="scatter-icon2 resp-icon" src="svg/trust_icon.svg"
                                  data-toggle='tooltip'
                                  alt="Giraffe in a church"
                                  title="A belief in the honesty, integrity and reliability"></div>
                         <div class="col">
-                            <img id="gen-icon" class="scatter-icon resp-icon" src="svg/generosity_icon.svg"
+                            <img id="gen-icon" class="scatter-icon2 resp-icon" src="svg/generosity_icon.svg"
                                  data-toggle='tooltip'
                                  alt="Giraffe in a church"
                                  title="People contribution to charity"></div>
                     </div>
                     <div class="row" style="margin-top: 1em;">
                         <div class="col">
-                            <img id="freed-icon" class="scatter-icon resp-icon" src="svg/freedom_icon.svg"
+                            <img id="freed-icon" class="scatter-icon2 resp-icon" src="svg/freedom_icon.svg"
                                  data-toggle='tooltip'
                                  alt="Giraffe in a church"
                                  title="Preceived freedom of choice">
                         </div>
                         <div class="col">
-                            <img id="health-icon" class="scatter-icon resp-icon" src="svg/health_icon.svg"
+                            <img id="health-icon" class="scatter-icon2 resp-icon" src="svg/health_icon.svg"
                                  data-toggle='tooltip'
                                  alt="Giraffe in a church"
                                  title="Years length a new born is expected to live">
                         </div>
                         <div class="col">
-                            <img id="supp-icon" class="scatter-icon resp-icon" src="svg/support_icon.svg"
+                            <img id="supp-icon" class="scatter-icon2 resp-icon" src="svg/support_icon.svg"
                                  data-toggle='tooltip'
                                  alt="Giraffe in a church"
                                  title="Perception of being cared for">
@@ -255,6 +254,12 @@
                         });
                 toggle++;
             }
+        </script>
+        <script>
+        function showTutorial() {
+            window.setTimeout(introJs().start(), 2000);
+            window.location.href='#visual';
+        }
         </script>
 
         <!-- <script type="text/javascript">

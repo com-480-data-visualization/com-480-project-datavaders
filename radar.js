@@ -150,8 +150,6 @@ const radar_update = () => {
             }];
         }
 
-        console.log(radar_selectedData)
-
         // Set the styling options.
         let radar_options = {
             w: 350,
