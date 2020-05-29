@@ -28,3 +28,5 @@ You can access the pdf report [by clicking here](milestonetwo_report.pdf), and t
 
 **80% of the final grade**
 
+You can access the pdf report [by clicking here](reports/final_report.pdf), and the website skeleton [by clicking here](https://com-480-data-visualization.github.io/com-480-project-datavaders/).
+
