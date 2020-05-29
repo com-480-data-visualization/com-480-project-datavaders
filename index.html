@@ -66,9 +66,14 @@
         <nav class="navbar navbar-blue default-color justify-content-between">
             <a class="navbar-brand" href="#">Happiviz</a>
             <form class="form-inline my-1">
-                <button id='tutorial-button' class="btn btn-outline-white btn-sm my-0" type="button" onclick="window.location.href='#visual'; introJs().start();"> Tutorial</button>
-                <a href="./Report.pdf" style="color:#212529; font-size:14px; font-family:'Avenir Next', sans-serif; margin-right: 10px">Process Book</a>
-                <a href="https://www.youtube.com/watch?v=Myp4sQ_SIzQ&feature=youtu.be" style="color:#212529; font-size:14px; font-family:'Avenir Next', sans-serif;">Screencast</a>
+                <button id='tutorial-button' class="btn btn-outline-white btn-sm my-0" type="button"
+                        onclick="window.location.href='#visual'; introJs().start();"> Tutorial
+                </button>
+                <a href="./Report.pdf"
+                   style="color:#212529; font-size:14px; font-family:'Avenir Next', sans-serif; margin-right: 10px">Process
+                    Book</a>
+                <a href="https://www.youtube.com/watch?v=Myp4sQ_SIzQ&feature=youtu.be"
+                   style="color:#212529; font-size:14px; font-family:'Avenir Next', sans-serif;">Screencast</a>
             </form>
 
         </nav>
@@ -142,7 +147,8 @@
             </div>
         </div>
 
-        <div class="col-4" data-step="6" data-intro="Countries selected in the map and scatter appear hear."> <!-- RADAR -->
+        <div class="col-4" data-step="6" data-intro="Countries selected in the map and scatter appear hear.">
+            <!-- RADAR -->
             <form data-step="7" data-intro="You can also search for countries here, up to a total of four.">
                 <select id='mselect' multiple="" class='form-control form-control-chosen' onchange="radar_update();">
                 </select>
@@ -172,15 +178,17 @@
         </div>
     </div>
     <div class="row" style="margin-top: -20% ">
-        <div class="col-8" data-step="8" data-intro="Use the bar chart to compare every country in one look!"> <!-- BAR -->
+        <div class="col-8" data-step="8" data-intro="Use the bar chart to compare every country in one look!">
+            <!-- BAR -->
             <div class="svg-container" style="padding-bottom: 22%">
-                <svg id="bar" viewBox="0 0 1000 290" class="svg-content" preserveAspectRatio="none"></svg>
+                <svg id="bar" viewBox="0 0 1000 280" class="svg-content" preserveAspectRatio="none"></svg>
             </div>
         </div>
         <div class="col-4"> <!-- LEGEND -->
             <div>
-                <div class="icons" data-step="4" data-intro="Will you find some correlations?" style="padding-left:10em; padding-right:10em; padding-top:4em">
-                     <!-- <h1 style="font-size:2vw; text-align:center">Metrics</h1> -->
+                <div class="icons" data-step="4" data-intro="Will you find some correlations?"
+                     style="padding-left:10em; padding-right:10em; padding-top:4em">
+                    <!-- <h1 style="font-size:2vw; text-align:center">Metrics</h1> -->
                     <div class="row">
                         <div class="col">
                             <img id="gdp-icon" class="scatter-icon resp-icon" src="svg/gdp_icon.svg"

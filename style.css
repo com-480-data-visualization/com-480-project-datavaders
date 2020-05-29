@@ -1,99 +1,99 @@
 .project-container {
-  width: 1250px;
-  margin: 0 auto;
+    width: 1250px;
+    margin: 0 auto;
 }
 
 .project-row {
-  display: flex;
-  flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 
 .project-column {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .project-top {
-  width: 100%;
-  height: 100px;
+    width: 100%;
+    height: 100px;
 }
 
 .project-middle {
-  width: 100%;
+    width: 100%;
 }
 
 .project-bottom {
-  width: 100%;
+    width: 100%;
 }
 
 .project-left {
-  width: 70%;
+    width: 70%;
 }
 
 .project-right {
-  width: 30%;
+    width: 30%;
 }
 
 .project-spaced {
-  justify-content: space-between;
+    justify-content: space-between;
 }
 
 .project-around {
-  justify-content: space-around;
+    justify-content: space-around;
 }
 
 .project-top .projectleft {
-  padding: 0 25px;
+    padding: 0 25px;
 }
 
 .project-text {
-  font-size: medium;
-  width: 50%;
+    font-size: medium;
+    width: 50%;
 }
 
 
 .project-radar-container {
-  display: flex;
-  flex-direction: column;
-  margin-left: -225px;
+    display: flex;
+    flex-direction: column;
+    margin-left: -225px;
 }
 
 .ranking_wrapper {
-  height: 200px;
-  overflow-y: scroll;
+    height: 200px;
+    overflow-y: scroll;
 }
 
 .scatter_tooltip {
-  width: 50px;
-  height: 50px;
-  background-color: red;
+    width: 50px;
+    height: 50px;
+    background-color: red;
 }
 
 .submetric:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 #toggler:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 #landing {
-  width: 100%;
-  height: 100vh;
-  background: #e9e7e7;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    width: 100%;
+    height: 100vh;
+    background: #e9e7e7;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #visual {
-  padding-top: 55px;
+    padding-top: 55px;
 }
 
 .sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
+    position: fixed;
+    top: 0;
+    width: 100%;
 }
 
 /* .text {
@@ -109,24 +109,24 @@
 } */
 
 .project-hide {
-  display: none !important;
+    display: none !important;
 }
 
 
 .svg-container {
-  display: inline-block;
-  position: relative;
-  width: 100%;
-  padding-bottom: 50%;
-  vertical-align: top;
-  overflow: hidden;
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 50%;
+    vertical-align: top;
+    overflow: hidden;
 }
 
 .svg-content {
-  display: inline-block;
-  position: absolute;
-  top: 0;
-  left: 0;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 
@@ -141,23 +141,28 @@
 }
 
 .metric-explain-text {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 5px;
 }
 
 .scatter-icon {
-  margin-right: 15px;
+    margin-right: 10px;
+    opacity: 0.5;
 }
 
-.resp-icon{
-  width: 85%;
-  max-width: 80px;
-  height: auto;
+.scatter-icon:hover {
+    opacity: 1.0;
+}
+
+.resp-icon {
+    width: 85%;
+    max-width: 80px;
+    height: auto;
 }
 
 .metric-explain-text p {
-  margin-bottom: -9px;
-  font-size: large;
+    margin-bottom: -9px;
+    font-size: large;
 }

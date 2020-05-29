@@ -6,7 +6,7 @@ let vizScale = "world";
 let svg = d3.select("#bar"),
     margin = {top: 20, right: 20, bottom: 30, left: 20},
     width = 1000 - margin.left - margin.right,
-    height = 290 - margin.top - margin.bottom,
+    height = 280 - margin.top - margin.bottom,
     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .attr('id', 'barG');
 
@@ -87,11 +87,13 @@ const bar_draw = () => {
             .on("click", onClick);
 
         function onMouseOver(d, i) {
+            radar_onMapMouseover(d.country);
+            display_onMouseover(d.country, map_codes.get(d.country), d.score)
             if (vizScale === "region")  {
                 d3.select(this).attr('class', 'highlight');
                 d3.select(this)
                     .transition()     // adds animation
-                    .duration(400)
+                    .duration(300)
                     .attr('width', scaleX.bandwidth() * 1)
                     .attr("x", function (d) {
                         return scaleX(d.country) - scaleX.bandwidth() * 0.1;
@@ -101,33 +103,31 @@ const bar_draw = () => {
                 d3.select(this).attr('class', 'highlight');
                 d3.select(this)
                     .transition()
-                    .duration(400)
+                    .duration(300)
                     .attr('width', scaleX.bandwidth() * 1)
                     .attr("x", function (d) {
                         return scaleX(d.country) - scaleX.bandwidth() * 0.2;
                     })
                     .attr('fill', '#D4AF37');//#D4AF37
             }
-            radar_onMapMouseover(d.country);
         }
 
         function onMouseOut(d, i) {
-            radar_onMapMouseout(d.country);
-
             d3.select(this).attr('class', 'bar');
             d3.select(this)
                 .transition()     // adds animation
-                .duration(400)
-                .delay(400)
+                .duration(200)
                 .attr('width', (vizScale === "region")? scaleX.bandwidth()* 0.8:scaleX.bandwidth()* 0.6)
                 .attr("x", function (d) {
                     return scaleX(d.country);
                 })
                 .attr('fill', color_seq2(d.idx1))
                 .transition()     // adds animation
-                .duration(400)
-                .delay(600)
+                .duration(200)
+                .delay(200)
                 .attr('fill', color_seq(d.idx0));
+            display_onMouseout();
+            radar_onMapMouseout(d.country);
         }
 
         function onClick(d, i){
